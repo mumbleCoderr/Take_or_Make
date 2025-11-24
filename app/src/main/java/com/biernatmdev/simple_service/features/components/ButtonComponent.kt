@@ -1,5 +1,6 @@
 package com.biernatmdev.simple_service.features.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,10 +47,10 @@ fun Button(
 ) {
     Surface(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable{ onClick() },
         shape = RoundedCornerShape(roundedCornerShapeValue),
         color = backgroundColor,
-        onClick = { onClick() }
     ) {
         Box(
             modifier = Modifier
