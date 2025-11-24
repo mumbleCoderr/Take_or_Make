@@ -48,7 +48,8 @@ fun Button(
         modifier = Modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(roundedCornerShapeValue),
-        color = backgroundColor
+        color = backgroundColor,
+        onClick = { onClick() }
     ) {
         Box(
             modifier = Modifier

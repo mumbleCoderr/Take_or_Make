@@ -52,7 +52,6 @@ import com.biernatmdev.simple_service.ui.theme.momoFont
 @Preview(showBackground = true)
 @Composable
 fun AuthScreen(){
-
     val iconSize = 180.dp
     val scales = rememberOvershootScales(count = 4)
 
@@ -139,7 +138,7 @@ fun AuthScreen(){
             onClick = {},
             imageVector = LogIn,
             textFontSize = EXTRA_MEDIUM,
-            backgroundColor = ColorSecondary,
+            backgroundColor = ColorSecondaryText, //TODO CHANGE NAME OF THE COLOR
             text = stringResource(R.string.auth_btn_text_guest)
         )
     }

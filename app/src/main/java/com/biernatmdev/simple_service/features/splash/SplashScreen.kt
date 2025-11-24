@@ -39,7 +39,9 @@ import com.biernatmdev.simple_service.ui.theme.momoFont
 
 @Composable
 @Preview(showBackground = true)
-fun SplashScreen() {
+fun SplashScreen(
+    navigateToAuth: () -> Unit
+) {
     val scale = rememberOvershootScale()
 
     Column(
@@ -78,7 +80,7 @@ fun SplashScreen() {
         )
         Spacer(Modifier.height(100.dp))
         Button(
-            onClick = {},
+            onClick = { navigateToAuth() },
             imageVector = LogIn,
             text = stringResource(R.string.splash_btn_text)
         )
