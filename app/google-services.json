@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "315121017964",
+    "project_id": "simple-service-c97a0",
+    "storage_bucket": "simple-service-c97a0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315121017964:android:5516ea31d3ead2fff8a449",
+        "android_client_info": {
+          "package_name": "com.biernatmdev.simple_service"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDme_x8yKhWfY7vabN9PX0Mohwk8EBMdlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

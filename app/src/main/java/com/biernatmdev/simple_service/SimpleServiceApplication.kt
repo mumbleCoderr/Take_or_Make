@@ -1,7 +1,7 @@
 package com.biernatmdev.simple_service
 
 import android.app.Application
-import com.biernatmdev.simple_service.di.appModule
+import com.biernatmdev.simple_service.core.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
