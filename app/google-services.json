@@ -12,7 +12,20 @@
           "package_name": "com.biernatmdev.simple_service"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "315121017964-nip9teo43i6pel1k2dce3tmntn4omm3h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.biernatmdev.simple_service",
+            "certificate_hash": "269d81767cbb27eb190383047c90fe216bf1e57f"
+          }
+        },
+        {
+          "client_id": "315121017964-ek5rsj8hsb3qpvjtd7seudfsg655ghu9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDme_x8yKhWfY7vabN9PX0Mohwk8EBMdlA"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315121017964-ek5rsj8hsb3qpvjtd7seudfsg655ghu9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

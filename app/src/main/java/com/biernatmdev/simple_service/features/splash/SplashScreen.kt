@@ -38,7 +38,7 @@ import com.biernatmdev.simple_service.ui.theme.Resources.Icon.LogIn
 import com.biernatmdev.simple_service.ui.theme.momoFont
 
 @Composable
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 fun SplashScreen(
     navigateToAuth: () -> Unit
 ) {
@@ -82,7 +82,8 @@ fun SplashScreen(
         Button(
             onClick = { navigateToAuth() },
             imageVector = LogIn,
-            text = stringResource(R.string.splash_btn_text)
+            text = stringResource(R.string.splash_btn_text),
+            isAnimated = false
         )
     }
 }
