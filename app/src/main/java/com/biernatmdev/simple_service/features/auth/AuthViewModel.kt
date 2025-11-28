@@ -5,41 +5,58 @@ import androidx.lifecycle.viewModelScope
 import com.biernatmdev.simple_service.core.data.domain.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private val userRepository: UserRepository,
     private val auth: FirebaseAuth
 ) : ViewModel() {
-    private val _uiEvent = MutableStateFlow<AuthUiEvent>(AuthUiEvent.Idle)
-    val uiEvent: StateFlow<AuthUiEvent> = _uiEvent
+    private val _state = MutableStateFlow(AuthState())
+    val state = _state.asStateFlow()
 
-    fun startLoading() {
-        _uiEvent.value = AuthUiEvent.Loading
-    }
+    private val _effect = Channel<AuthEffect>()
+    val effect = _effect.receiveAsFlow()
 
-    fun consumeEvent() {
-        _uiEvent.value = AuthUiEvent.Idle
-    }
+    fun onAuthEvent(event: AuthEvent) {
+        when (event) {
+            AuthEvent.StartSignin -> {
+                _state.update { it.copy(isLoading = true) }
+            }
 
-    fun emitError(message: String) {
-        _uiEvent.value = AuthUiEvent.Error(message)
-    }
+            AuthEvent.ClearError -> {
+                _state.update { it.copy(error = null) }
+            }
 
-    fun onFirebaseUserSignIn(user: FirebaseUser) {
-        _uiEvent.value = AuthUiEvent.Loading
-        viewModelScope.launch {
-            val result = userRepository.createUser(user)
-            if (result.isSuccess) {
-                _uiEvent.value = AuthUiEvent.Success
-            } else {
-                val message =
-                    result.exceptionOrNull()?.message ?: "Something wrong with creating user"
-                _uiEvent.value = AuthUiEvent.Error(message)
+            is AuthEvent.SetSigninFail -> {
+                _state.update {
+                    it.copy(isLoading = false, error = event.message)
+                }
+            }
+
+            is AuthEvent.SetSigninSuccess -> {
+                createUserInDatabase(event.user)
             }
         }
     }
 
+    private fun createUserInDatabase(user: FirebaseUser) {
+        viewModelScope.launch {
+            val result = userRepository.createUser(user)
+
+            _state.update { it.copy(isLoading = false) }
+
+            if (result.isSuccess) {
+                _effect.send(AuthEffect.NavigateToHome)
+            } else {
+                val msg = result.exceptionOrNull()?.message ?: "Database error"
+                _state.update { it.copy(error = msg) }
+            }
+        }
+    }
 }
+
