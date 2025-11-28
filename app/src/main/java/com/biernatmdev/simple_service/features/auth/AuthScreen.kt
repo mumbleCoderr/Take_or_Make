@@ -1,10 +1,8 @@
 package com.biernatmdev.simple_service.features.auth
 
 import android.app.Activity
-import android.view.animation.OvershootInterpolator
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,14 +15,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,29 +30,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.data.auth.GoogleUiClient
 import com.biernatmdev.simple_service.features.components.Button
 import com.biernatmdev.simple_service.features.components.rememberOvershootScales
-import com.biernatmdev.simple_service.ui.theme.ColorBtnText
 import com.biernatmdev.simple_service.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.ui.theme.ColorPrimaryText
-import com.biernatmdev.simple_service.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.ui.theme.ColorSecondaryText
 import com.biernatmdev.simple_service.ui.theme.ColorSurface
-import com.biernatmdev.simple_service.ui.theme.ColorTertiary
-import com.biernatmdev.simple_service.ui.theme.FontSize.EXTRA_LARGE
 import com.biernatmdev.simple_service.ui.theme.FontSize.EXTRA_MEDIUM
 import com.biernatmdev.simple_service.ui.theme.FontSize.LARGE
-import com.biernatmdev.simple_service.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.ui.theme.Resources.Icon.Approval
 import com.biernatmdev.simple_service.ui.theme.Resources.Icon.Campaign
 import com.biernatmdev.simple_service.ui.theme.Resources.Icon.Construction
 import com.biernatmdev.simple_service.ui.theme.Resources.Icon.Google
-import com.biernatmdev.simple_service.ui.theme.Resources.Icon.Handshake
 import com.biernatmdev.simple_service.ui.theme.Resources.Icon.LogIn
 import com.biernatmdev.simple_service.ui.theme.Resources.Icon.Sell
 import com.biernatmdev.simple_service.ui.theme.momoFont
@@ -77,24 +66,23 @@ fun AuthScreen(
     val authViewModel: AuthViewModel = koinViewModel()
     val googleUiClient: GoogleUiClient = koinInject()
 
-    val uiEvent by authViewModel.uiEvent.collectAsStateWithLifecycle()
+    val state by authViewModel.state.collectAsStateWithLifecycle()
 
-    val loading = uiEvent is AuthUiEvent.Loading
-
-    LaunchedEffect(uiEvent) {
-        when (uiEvent) {
-            is AuthUiEvent.Success -> {
-                navigateToHome()
-                authViewModel.consumeEvent()
+    LaunchedEffect(Unit) {
+        authViewModel.effect.collect { effect ->
+            when (effect) {
+                AuthEffect.NavigateToHome -> navigateToHome()
             }
-
-            is AuthUiEvent.Error -> {
-                authViewModel.consumeEvent()
-            }
-
-            else -> Unit
         }
     }
+
+    // TODO TOAST ONLY IN CASE OF EXTERNAL ERROR
+    /*LaunchedEffect(state.error) {
+        state.error?.let { msg ->
+            Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+            authViewModel.onAuthEvent(AuthEvent.ClearError)
+        }
+    }*/
 
     val iconSize = 180.dp
     val scales = rememberOvershootScales(count = 4)
@@ -156,9 +144,9 @@ fun AuthScreen(
         }
         Spacer(Modifier.height(48.dp))
         AnimatedContent(
-            targetState = loading
-        ) { loadingState ->
-            if (!loadingState) {
+            targetState = state.isLoading
+        ) { isLoading ->
+            if (!isLoading) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -271,18 +259,20 @@ fun AuthScreen(
             isAnimated = false,
             additionalText = stringResource(R.string.auth_btn_additional_text_google),
             onClick = {
+                if (state.isLoading) return@Button
+
                 scope.launch {
-                    authViewModel.startLoading()
+                    authViewModel.onAuthEvent(AuthEvent.StartSignin)
                     try {
                         val authResult = googleUiClient.signInWithGoogle(activity)
                         val user = authResult.user
                         if (user != null) {
-                            authViewModel.onFirebaseUserSignIn(user)
+                            authViewModel.onAuthEvent(AuthEvent.SetSigninSuccess(user))
                         } else {
-                            authViewModel.emitError("Google sign in failed")
+                            authViewModel.onAuthEvent(AuthEvent.SetSigninFail("Google sign in failed"))
                         }
                     } catch (e: Exception) {
-                        authViewModel.emitError(e.message ?: "Google sign in error")
+                        authViewModel.onAuthEvent(AuthEvent.SetSigninFail(e.message ?: "Error"))
                     }
                 }
             },
@@ -294,18 +284,20 @@ fun AuthScreen(
         Spacer(Modifier.height(16.dp))
         Button(
             onClick = {
+                if (state.isLoading) return@Button
+
                 scope.launch {
                     try {
-                        authViewModel.startLoading()
+                        authViewModel.onAuthEvent(AuthEvent.StartSignin)
                         val userResult = googleUiClient.signInGuest()
                         val user = userResult.user
                         if (user != null) {
-                            authViewModel.onFirebaseUserSignIn(user)
+                            authViewModel.onAuthEvent(AuthEvent.SetSigninSuccess(user))
                         } else {
-                            authViewModel.emitError("Guest sign in failed")
+                            authViewModel.onAuthEvent(AuthEvent.SetSigninFail("Guest sign in failed"))
                         }
                     } catch (e: Exception) {
-                        authViewModel.emitError(e.message ?: "Guest sign in error")
+                        authViewModel.onAuthEvent(AuthEvent.SetSigninFail(e.message ?: "Error"))
                     }
                 }
             },
