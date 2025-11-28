@@ -1,10 +1,13 @@
 package com.biernatmdev.simple_service.features.auth
 
+import android.app.Activity
 import android.view.animation.OvershootInterpolator
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,20 +17,28 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.biernatmdev.simple_service.R
+import com.biernatmdev.simple_service.core.data.auth.GoogleUiClient
 import com.biernatmdev.simple_service.features.components.Button
 import com.biernatmdev.simple_service.features.components.rememberOvershootScales
 import com.biernatmdev.simple_service.ui.theme.ColorBtnText
@@ -37,6 +48,7 @@ import com.biernatmdev.simple_service.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.ui.theme.ColorSecondaryText
 import com.biernatmdev.simple_service.ui.theme.ColorSurface
 import com.biernatmdev.simple_service.ui.theme.ColorTertiary
+import com.biernatmdev.simple_service.ui.theme.FontSize.EXTRA_LARGE
 import com.biernatmdev.simple_service.ui.theme.FontSize.EXTRA_MEDIUM
 import com.biernatmdev.simple_service.ui.theme.FontSize.LARGE
 import com.biernatmdev.simple_service.ui.theme.FontSize.MEDIUM
@@ -48,10 +60,41 @@ import com.biernatmdev.simple_service.ui.theme.Resources.Icon.Handshake
 import com.biernatmdev.simple_service.ui.theme.Resources.Icon.LogIn
 import com.biernatmdev.simple_service.ui.theme.Resources.Icon.Sell
 import com.biernatmdev.simple_service.ui.theme.momoFont
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun AuthScreen(){
+fun AuthScreen(
+    navigateToHome: () -> Unit
+) {
+    val context = LocalContext.current
+    val activity = context as Activity
+    val scope = rememberCoroutineScope()
+
+    // KOIN INJECTION
+    val authViewModel: AuthViewModel = koinViewModel()
+    val googleUiClient: GoogleUiClient = koinInject()
+
+    val uiEvent by authViewModel.uiEvent.collectAsStateWithLifecycle()
+
+    val loading = uiEvent is AuthUiEvent.Loading
+
+    LaunchedEffect(uiEvent) {
+        when (uiEvent) {
+            is AuthUiEvent.Success -> {
+                navigateToHome()
+                authViewModel.consumeEvent()
+            }
+
+            is AuthUiEvent.Error -> {
+                authViewModel.consumeEvent()
+            }
+
+            else -> Unit
+        }
+    }
 
     val iconSize = 180.dp
     val scales = rememberOvershootScales(count = 4)
@@ -63,13 +106,13 @@ fun AuthScreen(){
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
-        ){
+        ) {
             Icon(
                 imageVector = Construction,
                 contentDescription = "Construction",
@@ -92,7 +135,7 @@ fun AuthScreen(){
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
-        ){
+        ) {
             Icon(
                 imageVector = Campaign,
                 contentDescription = "Campaign",
@@ -112,35 +155,165 @@ fun AuthScreen(){
             )
         }
         Spacer(Modifier.height(48.dp))
-        Text(
-            text = stringResource(R.string.auth_header),
-            color = ColorPrimaryText,
-            fontFamily = momoFont(),
-            fontSize = LARGE,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(Modifier.height(22.dp))
-        Text(
-            text = stringResource(R.string.auth_subtext),
-            color = ColorSecondaryText,
-            fontFamily = momoFont(),
-            fontSize = LARGE,
-            fontWeight = FontWeight.Bold
-        )
+        AnimatedContent(
+            targetState = loading
+        ) { loadingState ->
+            if (!loadingState) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.auth_header),
+                        color = ColorPrimaryText,
+                        fontFamily = momoFont(),
+                        fontSize = LARGE,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.height(22.dp))
+                    Text(
+                        text = stringResource(R.string.auth_subtext),
+                        color = ColorSecondaryText,
+                        fontFamily = momoFont(),
+                        fontSize = LARGE,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            } else {
+
+                // OPTION 1
+                /*Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "PLEASE WAIT",
+                        color = ColorPrimaryText,
+                        fontFamily = momoFont(),
+                        fontSize = LARGE,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.width(22.dp))
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(36.dp),
+                        strokeWidth = 4.dp,
+                        color = ColorPrimaryText
+                    )
+                }*/
+
+                // OPTION 2
+                /*Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "PLEASE WAIT",
+                        color = ColorPrimaryText,
+                        fontFamily = momoFont(),
+                        fontSize = LARGE,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(Modifier.height(22.dp))
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(48.dp),
+                        strokeWidth = 4.dp,
+                        color = ColorPrimaryText
+                    )
+                }*/
+
+                //OPTION 3
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    ) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.CenterStart),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = "AUTHORIZATION",
+                            color = ColorPrimaryText,
+                            fontFamily = momoFont(),
+                            fontSize = LARGE,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(22.dp))
+                        Text(
+                            text = "PLEASE WAIT...",
+                            color = ColorSecondaryText,
+                            fontFamily = momoFont(),
+                            fontSize = LARGE,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .align(Alignment.CenterEnd),
+                        strokeWidth = 4.dp,
+                        color = ColorPrimaryText
+                    )
+                }
+            }
+        }
         Spacer(Modifier.height(86.dp))
         Button(
-            onClick = {},
+            isAnimated = false,
+            additionalText = stringResource(R.string.auth_btn_additional_text_google),
+            onClick = {
+                scope.launch {
+                    authViewModel.startLoading()
+                    try {
+                        val authResult = googleUiClient.signInWithGoogle(activity)
+                        val user = authResult.user
+                        if (user != null) {
+                            authViewModel.onFirebaseUserSignIn(user)
+                        } else {
+                            authViewModel.emitError("Google sign in failed")
+                        }
+                    } catch (e: Exception) {
+                        authViewModel.emitError(e.message ?: "Google sign in error")
+                    }
+                }
+            },
             painterResource = Google,
+            iconTint = Color.Unspecified,
             textFontSize = EXTRA_MEDIUM,
             text = stringResource(R.string.auth_btn_text_google)
         )
         Spacer(Modifier.height(16.dp))
         Button(
-            onClick = {},
+            onClick = {
+                scope.launch {
+                    try {
+                        authViewModel.startLoading()
+                        val userResult = googleUiClient.signInGuest()
+                        val user = userResult.user
+                        if (user != null) {
+                            authViewModel.onFirebaseUserSignIn(user)
+                        } else {
+                            authViewModel.emitError("Guest sign in failed")
+                        }
+                    } catch (e: Exception) {
+                        authViewModel.emitError(e.message ?: "Guest sign in error")
+                    }
+                }
+            },
             imageVector = LogIn,
             textFontSize = EXTRA_MEDIUM,
-            backgroundColor = ColorSecondary,
-            text = stringResource(R.string.auth_btn_text_guest)
+            backgroundColor = ColorSecondaryText, //TODO CHANGE NAME OF THE COLOR
+            text = stringResource(R.string.auth_btn_text_guest),
+            isAnimated = false
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.biernatmdev.simple_service.features.ui.nav
+package com.biernatmdev.simple_service.features.nav
 
 import kotlinx.serialization.Serializable
 
