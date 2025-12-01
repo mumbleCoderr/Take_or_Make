@@ -80,10 +80,7 @@ dependencies {
     implementation(libs.kotlinx.serialization)
 
     // Coil
-    implementation(libs.coil3)
-    implementation(libs.coil3.compose)
-    implementation(libs.coil3.compose.core)
-    implementation(libs.coil3.network.ktor)
+    implementation(libs.bundles.coil)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
