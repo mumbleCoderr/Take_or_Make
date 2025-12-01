@@ -1,17 +1,11 @@
 package com.biernatmdev.simple_service.ui.theme
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Dvr
 import androidx.compose.material.icons.automirrored.filled.Login
-import androidx.compose.material.icons.automirrored.filled.Rtt
-import androidx.compose.material.icons.automirrored.filled.Toc
-import androidx.compose.material.icons.filled.Approval
-import androidx.compose.material.icons.filled.Campaign
-import androidx.compose.material.icons.filled.Construction
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Handshake
-import androidx.compose.material.icons.filled.Login
-import androidx.compose.material.icons.filled.Sell
-import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.outlined.Campaign
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Construction
@@ -35,13 +29,13 @@ object Resources {
 
         // BUTTONS
         val LogIn = Icons.AutoMirrored.Filled.Login
-        val Google = R.drawable.googleicon
+        val Google = R.drawable.google
 
         // BOTTOM BAR
-        val Home = Icons.Outlined.Home
-        val Category = Icons.Outlined.Category
-        val Notification = Icons.Outlined.Notifications
-        val Profile = Icons.Outlined.AccountCircle
+        val Home = Icons.Filled.Home
+        val Category = Icons.Filled.Category
+        val Notification = Icons.Filled.Notifications
+        val Profile = R.drawable.profile
     }
 
     object Image {

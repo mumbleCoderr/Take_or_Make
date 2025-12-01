@@ -7,27 +7,27 @@ import com.biernatmdev.simple_service.features.nav.Screen
 import com.biernatmdev.simple_service.ui.theme.Resources
 
 enum class BottomBarScreenChip(
-    val icon: ImageVector,
+    val icon: BottomBarScreenChipIcon,
     @StringRes val title: Int,
     val screen: Screen,
 ) {
     HOME_SCREEN(
-        icon = Resources.Icon.Home,
+        icon = BottomBarScreenChipIcon.Vector(Resources.Icon.Home),
         title = R.string.bottom_bar_home,
         screen = Screen.HomeScreen,
     ),
     CATEGORY(
-        icon = Resources.Icon.Category,
+        icon = BottomBarScreenChipIcon.Vector(Resources.Icon.Category),
         title = R.string.bottom_bar_category,
         screen = Screen.CategoryScreen,
     ),
     NOTIFICATIONS(
-        icon = Resources.Icon.Notification,
+        icon = BottomBarScreenChipIcon.Vector(Resources.Icon.Notification),
         title = R.string.bottom_bar_notifications,
         screen = Screen.NotificationScreen,
     ),
     PROFILE(
-        icon = Resources.Icon.Profile,
+        icon = BottomBarScreenChipIcon.Drawable(Resources.Icon.Profile),
         title = R.string.bottom_bar_profile,
         screen = Screen.ProfileScreen,
     )
