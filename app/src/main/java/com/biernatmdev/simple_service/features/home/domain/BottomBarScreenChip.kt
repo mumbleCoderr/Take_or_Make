@@ -6,7 +6,7 @@ import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.features.nav.Screen
 import com.biernatmdev.simple_service.ui.theme.Resources
 
-enum class BottomBarScreen(
+enum class BottomBarScreenChip(
     val icon: ImageVector,
     @StringRes val title: Int,
     val screen: Screen,
