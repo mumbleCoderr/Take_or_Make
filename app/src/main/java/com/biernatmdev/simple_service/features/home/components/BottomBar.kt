@@ -23,15 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.biernatmdev.simple_service.features.components.IconType
 import com.biernatmdev.simple_service.features.home.domain.BottomBarScreenChip
-import com.biernatmdev.simple_service.features.home.domain.BottomBarScreenChipIcon
 import com.biernatmdev.simple_service.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.ui.theme.ColorSecondary
-import com.biernatmdev.simple_service.ui.theme.ColorSecondaryText
 import com.biernatmdev.simple_service.ui.theme.ColorSurface
 import com.biernatmdev.simple_service.ui.theme.FontSize.EXTRA_SMALL
-import com.biernatmdev.simple_service.ui.theme.FontSize.LARGE
-import com.biernatmdev.simple_service.ui.theme.FontSize.SMALL
 import com.biernatmdev.simple_service.ui.theme.momoFont
 
 @Composable
@@ -58,7 +55,7 @@ fun BottomBar(
                     onClick = { onSelect(screenChip) }
                 ) {
                     when (val icon = screenChip.icon) {
-                        is BottomBarScreenChipIcon.Vector -> {
+                        is IconType.Vector -> {
                             Icon(
                                 imageVector = icon.imageVector,
                                 tint = tint,
@@ -67,7 +64,7 @@ fun BottomBar(
                             )
                         }
 
-                        is BottomBarScreenChipIcon.Drawable -> {
+                        is IconType.Drawable -> {
                             Icon(
                                 painter = painterResource(id = icon.id),
                                 tint = tint,
