@@ -10,4 +10,8 @@
     <string name="auth_btn_text_google">Sign in with Google</string>
     <string name="auth_btn_additional_text_google">Authenticating...</string>
     <string name="auth_btn_text_guest">Continue as guest</string>
+    <string name="bottom_bar_home">HOME</string>
+    <string name="bottom_bar_category">CATEGORY</string>
+    <string name="bottom_bar_notifications">NOTIFICATIONS</string>
+    <string name="bottom_bar_profile">PROFILE</string>
 </resources>
