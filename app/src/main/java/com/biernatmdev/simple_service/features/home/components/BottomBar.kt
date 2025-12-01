@@ -3,6 +3,7 @@ package com.biernatmdev.simple_service.features.home.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,11 +19,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import com.biernatmdev.simple_service.features.home.domain.BottomBarScreenChip
+import com.biernatmdev.simple_service.features.home.domain.BottomBarScreenChipIcon
 import com.biernatmdev.simple_service.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.ui.theme.ColorSecondary
+import com.biernatmdev.simple_service.ui.theme.ColorSecondaryText
 import com.biernatmdev.simple_service.ui.theme.ColorSurface
+import com.biernatmdev.simple_service.ui.theme.FontSize.EXTRA_SMALL
+import com.biernatmdev.simple_service.ui.theme.FontSize.LARGE
+import com.biernatmdev.simple_service.ui.theme.FontSize.SMALL
+import com.biernatmdev.simple_service.ui.theme.momoFont
 
 @Composable
 fun BottomBar(
@@ -43,15 +53,38 @@ fun BottomBar(
             val tint by animateColorAsState(
                 targetValue = if (selected == screenChip) ColorPrimary else ColorSecondary
             )
-            IconButton(
-                onClick = { onSelect(screenChip) }
-            ) {
-                Icon( // TODO CATEGORY AND PROFILE ICON CHANGE
-                    imageVector = screenChip.icon,
-                    tint = tint,
-                    contentDescription = stringResource(id = screenChip.title),
-                    modifier = Modifier
-                        .size(64.dp)
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                IconButton(
+                    onClick = { onSelect(screenChip) }
+                ) {
+                    when (val icon = screenChip.icon) {
+                        is BottomBarScreenChipIcon.Vector -> {
+                            Icon(
+                                imageVector = icon.imageVector,
+                                tint = tint,
+                                contentDescription = stringResource(id = screenChip.title),
+                                modifier = Modifier.size(64.dp)
+                            )
+                        }
+
+                        is BottomBarScreenChipIcon.Drawable -> {
+                            Icon(
+                                painter = painterResource(id = icon.id),
+                                tint = tint,
+                                contentDescription = stringResource(id = screenChip.title),
+                                modifier = Modifier.size(64.dp)
+                            )
+                        }
+                    }
+                }
+                Text(
+                    text = stringResource(id = screenChip.title),
+                    color = ColorSecondary,
+                    fontFamily = momoFont(),
+                    fontSize = EXTRA_SMALL,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 1.2 * EXTRA_SMALL
                 )
             }
         }
