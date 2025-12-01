@@ -179,7 +179,7 @@ fun AuthScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "PLEASE WAIT",
+                        text = stringResource(R.string.auth_subtext_loading),
                         color = ColorPrimaryText,
                         fontFamily = momoFont(),
                         fontSize = LARGE,
@@ -202,7 +202,7 @@ fun AuthScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "PLEASE WAIT",
+                        text = stringResource(R.string.auth_subtext_loading),
                         color = ColorPrimaryText,
                         fontFamily = momoFont(),
                         fontSize = LARGE,
@@ -221,7 +221,7 @@ fun AuthScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    ) {
+                ) {
                     Column(
                         modifier = Modifier
                             .align(Alignment.CenterStart),
@@ -229,7 +229,7 @@ fun AuthScreen(
                         horizontalAlignment = Alignment.Start
                     ) {
                         Text(
-                            text = "AUTHORIZATION",
+                            text = stringResource(R.string.auth_header_loading),
                             color = ColorPrimaryText,
                             fontFamily = momoFont(),
                             fontSize = LARGE,
@@ -237,7 +237,7 @@ fun AuthScreen(
                         )
                         Spacer(Modifier.height(22.dp))
                         Text(
-                            text = "PLEASE WAIT...",
+                            text = stringResource(R.string.auth_subtext_loading),
                             color = ColorSecondaryText,
                             fontFamily = momoFont(),
                             fontSize = LARGE,

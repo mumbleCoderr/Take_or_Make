@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.biernatmdev.simple_service.R
+import com.biernatmdev.simple_service.core.data.auth.GoogleUiClient
 import com.biernatmdev.simple_service.features.components.Button
 import com.biernatmdev.simple_service.features.components.rememberOvershootScale
 import com.biernatmdev.simple_service.ui.theme.ColorPrimary
@@ -36,12 +37,17 @@ import com.biernatmdev.simple_service.ui.theme.FontSize.LARGE
 import com.biernatmdev.simple_service.ui.theme.Resources.Icon.Handshake
 import com.biernatmdev.simple_service.ui.theme.Resources.Icon.LogIn
 import com.biernatmdev.simple_service.ui.theme.momoFont
+import com.google.firebase.auth.FirebaseAuth
+import org.koin.compose.koinInject
 
 @Composable
 //@Preview(showBackground = true)
 fun SplashScreen(
-    navigateToAuth: () -> Unit
+    navigateToAuth: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
+    val googleUiClient: GoogleUiClient = koinInject()
+
     val scale = rememberOvershootScale()
 
     Column(
@@ -80,7 +86,14 @@ fun SplashScreen(
         )
         Spacer(Modifier.height(100.dp))
         Button(
-            onClick = { navigateToAuth() },
+            onClick = {
+                val user = googleUiClient.currentUser
+                if (user != null) {
+                    navigateToHome()
+                } else {
+                    navigateToAuth()
+                }
+            },
             imageVector = LogIn,
             text = stringResource(R.string.splash_btn_text),
             isAnimated = false

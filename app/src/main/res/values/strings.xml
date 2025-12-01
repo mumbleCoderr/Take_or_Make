@@ -5,6 +5,8 @@
     <string name="splash_btn_text">Let\'s explore</string>
     <string name="auth_header">You\'re one step away</string>
     <string name="auth_subtext">Sign in to continue</string>
+    <string name="auth_header_loading">AUTHORIZATION</string>
+    <string name="auth_subtext_loading">PLEASE WAIT...</string>
     <string name="auth_btn_text_google">Sign in with Google</string>
     <string name="auth_btn_additional_text_google">Authenticating...</string>
     <string name="auth_btn_text_guest">Continue as guest</string>

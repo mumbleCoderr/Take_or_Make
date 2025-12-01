@@ -9,6 +9,6 @@ sealed interface AuthEvent {
     data object ClearError : AuthEvent
 }
 
-sealed interface AuthEffect {
+sealed interface AuthEffect {   
     data object NavigateToHome : AuthEffect
 }
