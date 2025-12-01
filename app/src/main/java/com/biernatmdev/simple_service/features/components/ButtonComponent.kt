@@ -42,8 +42,7 @@ import com.biernatmdev.simple_service.ui.theme.momoFont
 fun Button(
     modifier: Modifier = Modifier,
     backgroundColor: Color = ColorPrimary,
-    imageVector: ImageVector? = null,
-    painterResource: Int? = null,
+    icon: IconType? = null,
     iconSize: Dp = 32.dp,
     iconTint: Color = ColorBtnText,
     text: String,
@@ -59,7 +58,7 @@ fun Button(
     onClick: () -> Unit,
 ) {
     var buttonText by remember { mutableStateOf(text) }
-    if(isAnimated) {
+    if (isAnimated) {
         LaunchedEffect(loading) {
             buttonText = if (loading) additionalText else text
         }
@@ -68,7 +67,7 @@ fun Button(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable{ onClick() },
+            .clickable { onClick() },
         shape = RoundedCornerShape(roundedCornerShapeValue),
         color = backgroundColor,
     ) {
@@ -92,26 +91,28 @@ fun Button(
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
             ) { loadingState ->
-                if(!loadingState) {
-                    when {
-                        imageVector != null -> {
-                            Icon(
-                                imageVector = imageVector,
-                                contentDescription = imageVector.name,
-                                tint = iconTint,
-                                modifier = Modifier
-                                    .size(iconSize)
-                            )
-                        }
+                if (!loadingState) {
+                    if (icon != null) {
+                        when (icon) {
+                            is IconType.Vector -> {
+                                Icon(
+                                    imageVector = icon.imageVector,
+                                    contentDescription = icon.imageVector.name,
+                                    tint = iconTint,
+                                    modifier = Modifier
+                                        .size(iconSize)
+                                )
+                            }
 
-                        painterResource != null -> {
-                            Icon(
-                                painter = painterResource(painterResource),
-                                contentDescription = painterResource.toString(),
-                                tint = iconTint,
-                                modifier = Modifier
-                                    .size(iconSize)
-                            )
+                            is IconType.Drawable -> {
+                                Icon(
+                                    painter = painterResource(icon.id),
+                                    contentDescription = icon.id.toString(),
+                                    tint = iconTint,
+                                    modifier = Modifier
+                                        .size(iconSize)
+                                )
+                            }
                         }
                     }
                 } else {

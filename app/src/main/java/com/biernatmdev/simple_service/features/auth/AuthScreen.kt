@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.data.auth.GoogleUiClient
 import com.biernatmdev.simple_service.features.components.Button
+import com.biernatmdev.simple_service.features.components.IconType
 import com.biernatmdev.simple_service.features.components.rememberOvershootScales
 import com.biernatmdev.simple_service.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.ui.theme.ColorPrimaryText
@@ -276,7 +277,7 @@ fun AuthScreen(
                     }
                 }
             },
-            painterResource = Google,
+            icon = IconType.Drawable(Google),
             iconTint = Color.Unspecified,
             textFontSize = EXTRA_MEDIUM,
             text = stringResource(R.string.auth_btn_text_google)
@@ -301,7 +302,7 @@ fun AuthScreen(
                     }
                 }
             },
-            imageVector = LogIn,
+            icon = IconType.Vector(LogIn),
             textFontSize = EXTRA_MEDIUM,
             backgroundColor = ColorSecondaryText, //TODO CHANGE NAME OF THE COLOR
             text = stringResource(R.string.auth_btn_text_guest),
