@@ -36,6 +36,10 @@ object Resources {
         val Category = Icons.Filled.Category
         val Notification = Icons.Filled.Notifications
         val Profile = R.drawable.profile
+
+        // TOP BAR
+        val Take = R.drawable.take
+        val Make = R.drawable.make
     }
 
     object Image {

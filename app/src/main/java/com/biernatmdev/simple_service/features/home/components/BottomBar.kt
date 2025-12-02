@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.biernatmdev.simple_service.features.components.IconType
-import com.biernatmdev.simple_service.features.home.domain.BottomBarScreenChip
+import com.biernatmdev.simple_service.features.home.domain.BottomBarScreen
 import com.biernatmdev.simple_service.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.ui.theme.ColorSurface
@@ -34,8 +34,8 @@ import com.biernatmdev.simple_service.ui.theme.momoFont
 @Composable
 fun BottomBar(
     modifier: Modifier = Modifier,
-    selected: BottomBarScreenChip,
-    onSelect: (BottomBarScreenChip) -> Unit
+    selectedScreen: BottomBarScreen,
+    onScreenSelect: (BottomBarScreen) -> Unit
 ) {
     Row(
         modifier = modifier
@@ -46,13 +46,13 @@ fun BottomBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        BottomBarScreenChip.entries.forEach { screenChip ->
+        BottomBarScreen.entries.forEach { screenChip ->
             val tint by animateColorAsState(
-                targetValue = if (selected == screenChip) ColorPrimary else ColorSecondary
+                targetValue = if (selectedScreen == screenChip) ColorPrimary else ColorSecondary
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 IconButton(
-                    onClick = { onSelect(screenChip) }
+                    onClick = { onScreenSelect(screenChip) }
                 ) {
                     when (val icon = screenChip.icon) {
                         is IconType.Vector -> {
