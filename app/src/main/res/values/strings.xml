@@ -14,4 +14,6 @@
     <string name="bottom_bar_category">CATEGORY</string>
     <string name="bottom_bar_notifications">NOTIFICATIONS</string>
     <string name="bottom_bar_profile">PROFILE</string>
+    <string name="top_bar_take">TAKE</string>
+    <string name="top_bar_make">MAKE</string>
 </resources>

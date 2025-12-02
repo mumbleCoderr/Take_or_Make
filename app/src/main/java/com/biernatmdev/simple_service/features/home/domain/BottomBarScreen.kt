@@ -1,18 +1,17 @@
 package com.biernatmdev.simple_service.features.home.domain
 
 import androidx.annotation.StringRes
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.features.components.IconType
 import com.biernatmdev.simple_service.features.nav.Screen
 import com.biernatmdev.simple_service.ui.theme.Resources
 
-enum class BottomBarScreenChip(
+enum class BottomBarScreen(
     val icon: IconType,
     @StringRes val title: Int,
     val screen: Screen,
 ) {
-    HOME_SCREEN(
+    HOME(
         icon = IconType.Vector(Resources.Icon.Home),
         title = R.string.bottom_bar_home,
         screen = Screen.HomeScreen,

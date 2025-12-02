@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.times
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.data.auth.GoogleUiClient
 import com.biernatmdev.simple_service.features.components.Button
+import com.biernatmdev.simple_service.features.components.IconType
 import com.biernatmdev.simple_service.features.components.rememberOvershootScale
 import com.biernatmdev.simple_service.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.ui.theme.ColorPrimaryText
@@ -94,7 +95,7 @@ fun SplashScreen(
                     navigateToAuth()
                 }
             },
-            imageVector = LogIn,
+            icon = IconType.Vector(LogIn),
             text = stringResource(R.string.splash_btn_text),
             isAnimated = false
         )
