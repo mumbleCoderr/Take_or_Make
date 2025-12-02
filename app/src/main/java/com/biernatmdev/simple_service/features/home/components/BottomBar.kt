@@ -26,7 +26,9 @@ import androidx.compose.ui.unit.times
 import com.biernatmdev.simple_service.features.components.IconType
 import com.biernatmdev.simple_service.features.home.domain.BottomBarScreen
 import com.biernatmdev.simple_service.ui.theme.ColorPrimary
+import com.biernatmdev.simple_service.ui.theme.ColorPrimaryText
 import com.biernatmdev.simple_service.ui.theme.ColorSecondary
+import com.biernatmdev.simple_service.ui.theme.ColorSecondaryText
 import com.biernatmdev.simple_service.ui.theme.ColorSurface
 import com.biernatmdev.simple_service.ui.theme.FontSize.EXTRA_SMALL
 import com.biernatmdev.simple_service.ui.theme.momoFont
@@ -48,7 +50,7 @@ fun BottomBar(
     ) {
         BottomBarScreen.entries.forEach { screenChip ->
             val tint by animateColorAsState(
-                targetValue = if (selectedScreen == screenChip) ColorPrimary else ColorSecondary
+                targetValue = if (selectedScreen == screenChip) ColorPrimary else ColorSecondaryText
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 IconButton(
@@ -76,7 +78,7 @@ fun BottomBar(
                 }
                 Text(
                     text = stringResource(id = screenChip.title),
-                    color = ColorSecondary,
+                    color = ColorSecondaryText,
                     fontFamily = momoFont(),
                     fontSize = EXTRA_SMALL,
                     fontWeight = FontWeight.Normal,

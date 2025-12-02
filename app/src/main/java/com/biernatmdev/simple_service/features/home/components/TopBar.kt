@@ -75,7 +75,7 @@ fun TopBar(
                             is IconType.Vector -> {
                                 Icon(
                                     imageVector = icon.imageVector,
-                                    tint = ColorPrimaryText,
+                                    tint = ColorSecondaryText,
                                     contentDescription = stringResource(mode.title),
                                     modifier = Modifier.size(32.dp)
                                 )
@@ -83,7 +83,7 @@ fun TopBar(
                             is IconType.Drawable -> {
                                 Icon(
                                     painter = painterResource(id = icon.id),
-                                    tint = ColorPrimaryText,
+                                    tint = ColorSecondaryText,
                                     contentDescription = stringResource(mode.title),
                                     modifier = Modifier.size(32.dp)
                                 )
@@ -92,7 +92,7 @@ fun TopBar(
                         Spacer(Modifier.width(12.dp))
                         Text(
                             text = stringResource(mode.title),
-                            color = ColorPrimaryText,
+                            color = ColorSecondaryText,
                             fontFamily = momoFont(),
                             fontSize = MEDIUM,
                             fontWeight = FontWeight.Normal,
