@@ -23,21 +23,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
-import com.biernatmdev.simple_service.features.components.IconType
-import com.biernatmdev.simple_service.features.home.domain.BottomBarScreen
-import com.biernatmdev.simple_service.ui.theme.ColorPrimary
-import com.biernatmdev.simple_service.ui.theme.ColorPrimaryText
-import com.biernatmdev.simple_service.ui.theme.ColorSecondary
-import com.biernatmdev.simple_service.ui.theme.ColorSecondaryText
-import com.biernatmdev.simple_service.ui.theme.ColorSurface
-import com.biernatmdev.simple_service.ui.theme.FontSize.EXTRA_SMALL
-import com.biernatmdev.simple_service.ui.theme.momoFont
+import com.biernatmdev.simple_service.core.ui.model.IconType
+import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
+import com.biernatmdev.simple_service.core.ui.theme.ColorSecondaryText
+import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
+import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_SMALL
+import com.biernatmdev.simple_service.core.ui.theme.momoFont
+import com.biernatmdev.simple_service.features.home.domain.HomeSubscreen
 
 @Composable
 fun BottomBar(
     modifier: Modifier = Modifier,
-    selectedScreen: BottomBarScreen,
-    onScreenSelect: (BottomBarScreen) -> Unit
+    selectedScreen: HomeSubscreen,
+    onScreenSelect: (HomeSubscreen) -> Unit
 ) {
     Row(
         modifier = modifier
@@ -48,7 +46,7 @@ fun BottomBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        BottomBarScreen.entries.forEach { screenChip ->
+        HomeSubscreen.entries.forEach { screenChip ->
             val tint by animateColorAsState(
                 targetValue = if (selectedScreen == screenChip) ColorPrimary else ColorSecondaryText
             )
