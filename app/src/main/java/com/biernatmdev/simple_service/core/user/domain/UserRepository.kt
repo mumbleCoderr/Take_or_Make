@@ -8,4 +8,5 @@ interface UserRepository {
     suspend fun createUser(user: FirebaseUser): Result<Unit>
     suspend fun signOut(): Result<Unit>
     suspend fun getUserDetails(): Result<User>
+    suspend fun updateUserDetails(user: User): Result<Unit>
 }
