@@ -8,9 +8,12 @@ data class User(
     val firstName: String,
     val lastName: String,
     val email: String,
+    val address: String? = null,
+    val addressAdditional: String? = null,
     val city: String? = null,
     val postalCode: Int? = null,
     val phoneNumber: PhoneNumber? = null,
+    val profilePicture: String? = null
 )
 
 @Serializable
