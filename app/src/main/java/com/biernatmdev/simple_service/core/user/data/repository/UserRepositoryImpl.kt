@@ -5,12 +5,12 @@ import com.biernatmdev.simple_service.core.user.domain.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 
 class UserRepositoryImpl : UserRepository {
     override fun getCurrentUserId(): String? = FirebaseAuth.getInstance().currentUser?.uid
-
 
     override suspend fun createUser(user: FirebaseUser): Result<Unit> = runCatching {
         val userCollection = Firebase.firestore.collection("user")
@@ -27,5 +27,9 @@ class UserRepositoryImpl : UserRepository {
             documentReference.set(user).await()
         }
         Unit
+    }
+
+    override suspend fun signOut(): Result<Unit> = runCatching{
+        Firebase.auth.signOut()
     }
 }
