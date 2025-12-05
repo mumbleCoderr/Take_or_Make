@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,7 +19,8 @@ import androidx.navigation.compose.rememberNavController
 import com.biernatmdev.simple_service.features.home.components.BottomBar
 import com.biernatmdev.simple_service.features.home.domain.HomeSubscreen
 import com.biernatmdev.simple_service.core.nav.Screen
-import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
+import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 
 @Composable
 fun HomeScreen() {
@@ -51,7 +53,7 @@ fun HomeScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(ColorSurface)
+                .background(ColorBackground)
                 .padding(padding)
         ) {
             NavHost(

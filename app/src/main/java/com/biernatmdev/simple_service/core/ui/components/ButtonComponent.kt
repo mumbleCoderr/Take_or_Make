@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,11 +30,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.biernatmdev.simple_service.core.ui.theme.ColorBtnText
-import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.model.IconType
+import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
+import com.biernatmdev.simple_service.core.ui.theme.onColorPrimary
 
 @Composable
 fun Button(
@@ -41,11 +43,11 @@ fun Button(
     backgroundColor: Color = ColorPrimary,
     icon: IconType? = null,
     iconSize: Dp = 32.dp,
-    iconTint: Color = ColorBtnText,
+    iconTint: Color = ColorPrimary,
     text: String,
     additionalText: String = "",
     loading: Boolean = false,
-    textColor: Color = ColorBtnText,
+    textColor: Color = onColorPrimary,
     textFont: FontFamily = momoFont(),
     textFontSize: TextUnit = SEMI_LARGE,
     textFontWeight: FontWeight = FontWeight.Normal,
@@ -118,7 +120,7 @@ fun Button(
                             .size(iconSize)
                             .align(Alignment.Center),
                         strokeWidth = 3.dp,
-                        color = ColorBtnText
+                        color = onColorPrimary
                     )
                 }
             }

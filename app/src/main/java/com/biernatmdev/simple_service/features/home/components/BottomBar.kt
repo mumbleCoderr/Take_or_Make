@@ -24,11 +24,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.biernatmdev.simple_service.core.ui.model.IconType
+import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
-import com.biernatmdev.simple_service.core.ui.theme.ColorSecondaryText
-import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_SMALL
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 import com.biernatmdev.simple_service.features.home.domain.HomeSubscreen
 
 @Composable
@@ -40,7 +41,7 @@ fun BottomBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(ColorSurface)
+            .background(ColorBackground)
             .padding(vertical = 12.dp)
             .clip(RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp)),
         verticalAlignment = Alignment.CenterVertically,
@@ -48,7 +49,7 @@ fun BottomBar(
     ) {
         HomeSubscreen.entries.forEach { screenChip ->
             val tint by animateColorAsState(
-                targetValue = if (selectedScreen == screenChip) ColorPrimary else ColorSecondaryText
+                targetValue = if (selectedScreen == screenChip) ColorPrimary else onColorBackground
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 IconButton(
@@ -76,7 +77,7 @@ fun BottomBar(
                 }
                 Text(
                     text = stringResource(id = screenChip.title),
-                    color = ColorSecondaryText,
+                    color = onColorBackground,
                     fontFamily = momoFont(),
                     fontSize = EXTRA_SMALL,
                     fontWeight = FontWeight.Normal,

@@ -24,14 +24,15 @@ import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
 import com.biernatmdev.simple_service.core.ui.components.Button
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.components.rememberOvershootScale
+import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
-import com.biernatmdev.simple_service.core.ui.theme.ColorPrimaryText
-import com.biernatmdev.simple_service.core.ui.theme.ColorSecondaryText
-import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
+import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.LARGE
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Handshake
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.LogIn
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 import org.koin.compose.koinInject
 
 @Composable
@@ -47,7 +48,7 @@ fun SplashScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(ColorSurface)
+            .background(ColorBackground)
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -63,7 +64,7 @@ fun SplashScreen(
         Spacer(Modifier.height(16.dp))
         Text(
             text = stringResource(R.string.splash_header),
-            color = ColorPrimaryText,
+            color = onColorBackground,
             fontFamily = momoFont(),
             fontSize = LARGE,
             fontWeight = FontWeight.Bold
@@ -71,7 +72,7 @@ fun SplashScreen(
         Spacer(Modifier.height(22.dp))
         Text(
             text = stringResource(R.string.splash_subtext),
-            color = ColorSecondaryText,
+            color = onColorBackgroundDarker,
             fontFamily = momoFont(),
             fontSize = LARGE,
             fontWeight = FontWeight.Bold,

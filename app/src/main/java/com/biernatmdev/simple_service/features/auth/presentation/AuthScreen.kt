@@ -36,10 +36,8 @@ import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
 import com.biernatmdev.simple_service.core.ui.components.Button
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.components.rememberOvershootScales
-import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
-import com.biernatmdev.simple_service.core.ui.theme.ColorPrimaryText
-import com.biernatmdev.simple_service.core.ui.theme.ColorSecondaryText
-import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
+import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.LARGE
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Approval
@@ -49,6 +47,8 @@ import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Google
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.LogIn
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Sell
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -90,7 +90,7 @@ fun AuthScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(ColorSurface)
+            .background(ColorBackground)
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -107,7 +107,7 @@ fun AuthScreen(
                 modifier = Modifier
                     .scale(scales[0].value)
                     .size(iconSize),
-                tint = ColorPrimary
+                tint = ColorSecondary
             )
             Icon(
                 imageVector = Sell,
@@ -115,7 +115,7 @@ fun AuthScreen(
                 modifier = Modifier
                     .scale(scales[1].value)
                     .size(iconSize),
-                tint = ColorPrimary
+                tint = ColorSecondary
             )
         }
         Row(
@@ -130,7 +130,7 @@ fun AuthScreen(
                 modifier = Modifier
                     .scale(scales[2].value)
                     .size(iconSize),
-                tint = ColorPrimary
+                tint = ColorSecondary
             )
             Icon(
                 painter = painterResource(Approval),
@@ -139,7 +139,7 @@ fun AuthScreen(
                     .offset(y = (-16).dp)
                     .scale(scales[3].value)
                     .size(iconSize),
-                tint = ColorPrimary
+                tint = ColorSecondary
             )
         }
         Spacer(Modifier.height(48.dp))
@@ -155,7 +155,7 @@ fun AuthScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.auth_header),
-                        color = ColorPrimaryText,
+                        color = onColorBackground,
                         fontFamily = momoFont(),
                         fontSize = LARGE,
                         fontWeight = FontWeight.Bold
@@ -163,7 +163,7 @@ fun AuthScreen(
                     Spacer(Modifier.height(22.dp))
                     Text(
                         text = stringResource(R.string.auth_subtext),
-                        color = ColorSecondaryText,
+                        color = onColorBackgroundDarker,
                         fontFamily = momoFont(),
                         fontSize = LARGE,
                         fontWeight = FontWeight.Bold
@@ -180,7 +180,7 @@ fun AuthScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.auth_subtext_loading),
-                        color = ColorPrimaryText,
+                        color = onColorBackground,
                         fontFamily = momoFont(),
                         fontSize = LARGE,
                         fontWeight = FontWeight.Bold
@@ -190,7 +190,7 @@ fun AuthScreen(
                         modifier = Modifier
                             .size(36.dp),
                         strokeWidth = 4.dp,
-                        color = ColorPrimaryText
+                        color = onColorBackground
                     )
                 }*/
 
@@ -203,7 +203,7 @@ fun AuthScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.auth_subtext_loading),
-                        color = ColorPrimaryText,
+                        color = onColorBackground,
                         fontFamily = momoFont(),
                         fontSize = LARGE,
                         fontWeight = FontWeight.Bold
@@ -213,7 +213,7 @@ fun AuthScreen(
                         modifier = Modifier
                             .size(48.dp),
                         strokeWidth = 4.dp,
-                        color = ColorPrimaryText
+                        color = onColorBackground
                     )
                 }*/
 
@@ -230,7 +230,7 @@ fun AuthScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.auth_header_loading),
-                            color = ColorPrimaryText,
+                            color = onColorBackground,
                             fontFamily = momoFont(),
                             fontSize = LARGE,
                             fontWeight = FontWeight.Bold
@@ -238,7 +238,7 @@ fun AuthScreen(
                         Spacer(Modifier.height(22.dp))
                         Text(
                             text = stringResource(R.string.auth_subtext_loading),
-                            color = ColorSecondaryText,
+                            color = onColorBackgroundDarker,
                             fontFamily = momoFont(),
                             fontSize = LARGE,
                             fontWeight = FontWeight.Bold
@@ -249,7 +249,7 @@ fun AuthScreen(
                             .size(64.dp)
                             .align(Alignment.CenterEnd),
                         strokeWidth = 4.dp,
-                        color = ColorPrimaryText
+                        color = onColorBackground
                     )
                 }
             }
@@ -303,7 +303,7 @@ fun AuthScreen(
             },
             icon = IconType.Vector(LogIn),
             textFontSize = EXTRA_MEDIUM,
-            backgroundColor = ColorSecondaryText, //TODO CHANGE NAME OF THE COLOR
+            backgroundColor = onColorBackgroundDarker,
             text = stringResource(R.string.auth_btn_text_guest),
             isAnimated = false
         )
