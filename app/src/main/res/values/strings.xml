@@ -16,4 +16,10 @@
     <string name="bottom_bar_profile">PROFILE</string>
     <string name="top_bar_take">TAKE</string>
     <string name="top_bar_make">MAKE</string>
+
+    <string name="snackbar_profile_update">Profile details updated</string>
+
+    <string name="user_exception_not_signed_in">You are not signed in, please sign in again</string>
+    <string name="user_exception_not_found">We have not found that user</string>
+    <string name="user_exception_access_denied">You have no permission to do that</string>
 </resources>
