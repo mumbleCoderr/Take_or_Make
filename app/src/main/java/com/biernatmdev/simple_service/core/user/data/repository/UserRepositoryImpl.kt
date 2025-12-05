@@ -5,6 +5,7 @@ import com.biernatmdev.simple_service.core.user.data.mapper.toFirestoreMap
 import com.biernatmdev.simple_service.core.user.domain.UserRepository
 import com.biernatmdev.simple_service.core.user.domain.model.PhoneNumber
 import com.biernatmdev.simple_service.core.user.domain.model.User
+import com.biernatmdev.simple_service.core.user.domain.model.UserException
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -34,7 +35,7 @@ class UserRepositoryImpl : UserRepository {
 
     override suspend fun getUserDetails(): Result<User> = runCatching {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
-            ?: throw Exception("User not logged in")
+            ?: throw UserException.NotSignedInException
 
         val document = Firebase.firestore
             .collection("user")
@@ -43,7 +44,7 @@ class UserRepositoryImpl : UserRepository {
             .await()
 
         if (!document.exists()) {
-            throw Exception("User does not exist")
+            throw UserException.NotFoundException
         }
 
         document.toDomainUser()
@@ -51,10 +52,10 @@ class UserRepositoryImpl : UserRepository {
 
     override suspend fun updateUserDetails(user: User): Result<Unit> = runCatching {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
-            ?: throw Exception("User not logged in")
+            ?: throw UserException.NotSignedInException
 
         if (uid != user.id) {
-            throw Exception("Can not update other user's data")
+            throw UserException.AccessDeniedException
         }
 
         val updatedUser = user.toFirestoreMap()
