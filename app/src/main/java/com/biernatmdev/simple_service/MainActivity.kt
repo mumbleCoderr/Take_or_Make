@@ -5,14 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.biernatmdev.simple_service.core.nav.SimpleServiceNavGraph
-import com.biernatmdev.simple_service.core.ui.theme.Simple_ServiceTheme
+import com.biernatmdev.simple_service.core.ui.theme.SimpleServiceTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Simple_ServiceTheme {
+            SimpleServiceTheme {
                 SimpleServiceNavGraph()
             }
         }

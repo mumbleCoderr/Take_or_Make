@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -23,11 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.biernatmdev.simple_service.core.ui.model.IconType
-import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
-import com.biernatmdev.simple_service.core.ui.theme.ColorSecondaryText
-import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
+import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 import com.biernatmdev.simple_service.features.home.domain.HomeMode
 
 @Composable
@@ -42,15 +43,15 @@ fun TopBar(
         selectedTabIndex = selectedIndex,
         modifier = modifier
             .fillMaxWidth()
-            .background(ColorSurface)
+            .background(ColorBackground)
             .clip(RoundedCornerShape(bottomStart = 22.dp, bottomEnd = 22.dp)),
         indicator = {
             TabRowDefaults.SecondaryIndicator(
                 modifier = Modifier.tabIndicatorOffset(selectedIndex),
-                color = ColorPrimary,
+                color = MaterialTheme.colorScheme.primary,
             )
         },
-        containerColor = ColorSurface,
+        containerColor = ColorBackground,
         divider = {}
     ) {
         HomeMode.entries.forEachIndexed { index, mode ->
@@ -66,7 +67,7 @@ fun TopBar(
                             is IconType.Vector -> {
                                 Icon(
                                     imageVector = icon.imageVector,
-                                    tint = ColorSecondaryText,
+                                    tint = onColorBackground,
                                     contentDescription = stringResource(mode.title),
                                     modifier = Modifier.size(32.dp)
                                 )
@@ -74,7 +75,7 @@ fun TopBar(
                             is IconType.Drawable -> {
                                 Icon(
                                     painter = painterResource(id = icon.id),
-                                    tint = ColorSecondaryText,
+                                    tint = onColorBackground,
                                     contentDescription = stringResource(mode.title),
                                     modifier = Modifier.size(32.dp)
                                 )
@@ -83,7 +84,7 @@ fun TopBar(
                         Spacer(Modifier.width(12.dp))
                         Text(
                             text = stringResource(mode.title),
-                            color = ColorSecondaryText,
+                            color = onColorBackground,
                             fontFamily = momoFont(),
                             fontSize = MEDIUM,
                             fontWeight = FontWeight.Normal,

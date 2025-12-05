@@ -12,21 +12,17 @@ val Pink40 = Color(0xFF7D5260)
 
 // ==================== Color Values ====================== //
 
-val Black = Color(0xFF000000)
-val Yellow = Color(0xFFFFE600)
-val DarkGray = Color(0xFF1C272B)
-val LightGray = Color(0xFF47514E)
-val LightCreamy = Color(0xFFD4D4D4)
-val DarkCreamy = Color(0xFF888888)
+// DARK MODE
+val DarkModeBackgroundColor = Color(0xFF222428)
+val DarkModeSecondaryColor = Color(0xFF2F3238)
+val DarkModePrimaryTextColor = Color(0xFFD4D4D4)
+val DarkModeSecondaryTextColor = Color(0xFF888888)
 
+// LIGHT MODE
+val LightModeBackgroundColor = Color(0xFFF8F8FF)
+val LightModeSecondaryColor = Color(0xFFFFFFF0)
+val LightModePrimaryTextColor = Color(0xFF222428)
+val LightModeSecondaryTextColor = Color(0xFF616575)
 
-// ==================== Color Surfaces ===================== //
-val ColorSurface = Black
-val ColorPrimary = Yellow
-val ColorSecondary = LightGray
-val ColorTertiary = DarkGray
-
-// ==================== Color Text ========================== //
-val ColorPrimaryText = LightCreamy
-val ColorSecondaryText = DarkCreamy
-val ColorBtnText = Black
+// PRIMARY
+val PrimaryColor = Color(0xFFFFE600)
