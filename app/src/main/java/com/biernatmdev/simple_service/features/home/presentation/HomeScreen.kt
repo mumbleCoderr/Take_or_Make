@@ -57,7 +57,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(ColorBackground)
-                .padding(padding)
+                .padding(bottom = padding.calculateBottomPadding())
         ) {
             NavHost(
                 modifier = Modifier.weight(1f),
