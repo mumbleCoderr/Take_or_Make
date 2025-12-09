@@ -92,6 +92,11 @@ class ProfileViewModel(
             else -> UiText.DynamicString(exception.message ?: "External server error")
         }
         sendEffect(ProfileEffect.ShowSnackbar(errorMessage))
-        _state.update { it.copy(isLoading = false) }
+        _state.update {
+            it.copy(
+                isLoading = false,
+                error = errorMessage
+            )
+        }
     }
 }

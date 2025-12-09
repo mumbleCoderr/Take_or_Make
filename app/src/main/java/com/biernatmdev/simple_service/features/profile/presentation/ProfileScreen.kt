@@ -88,28 +88,47 @@ fun ProfileScreen(
         viewModel.onEvent(ProfileEvent.LoadData)
     }
 
-    Column(
+    Box(
         modifier = Modifier
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        if (state.isLoading) { //TODO move to @Composable fun
-            CircularProgressIndicator()
-        } else if (state.error != null) {
-            ErrorScreen(state.error!!)
-        } else if (state.user != null) {
-            UserProfilePictureSection(state.user!!)
+        if (state.user != null) {
             Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                UserProfilePictureSection(state.user!!)
+                Column(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
-            ){
-                ProfileOptionList(category = ProfileOptionCategory.GENERAL)
-                Spacer(Modifier.height(24.dp))
-                ProfileOptionList(category = ProfileOptionCategory.ACTIVITY)
+                ) {
+                    ProfileOptionList(category = ProfileOptionCategory.GENERAL)
+                    Spacer(Modifier.height(24.dp))
+                    ProfileOptionList(category = ProfileOptionCategory.ACTIVITY)
+                }
             }
+        }
+
+        if (state.error != null && state.user == null) {
+            ErrorScreen(
+                error = state.error!!,
+                isLoading = state.isLoading,
+                onRetry = { viewModel.onEvent(ProfileEvent.LoadData) }
+            )
+        }
+
+        val showErrorScreenLoader = state.error != null && state.user == null
+        if (state.isLoading && !showErrorScreenLoader) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(100.dp)
+            )
         }
     }
 }

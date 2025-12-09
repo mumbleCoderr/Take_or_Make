@@ -12,7 +12,7 @@ internal fun FirebaseUser.toDomainUser(): User{
         firstName = this.displayName?.split(" ")?.firstOrNull() ?: "Unknown",
         lastName = this.displayName?.split(" ")?.lastOrNull() ?: "Unknown",
         email = this.email ?: "Unknown",
-        profilePicture = this.photoUrl.toString()
+        profilePicture = this.photoUrl?.toString()?.takeIf { it.isNotBlank() }
     )
 }
 internal fun DocumentSnapshot.toDomainUser(): User {
@@ -36,7 +36,7 @@ internal fun DocumentSnapshot.toDomainUser(): User {
         phoneNumber = phoneNumber,
         address = this.getString("address"),
         addressAdditional = this.getString("addressAdditional"),
-        profilePicture = this.getString("profilePicture")
+        profilePicture = this.getString("profilePicture")?.takeIf { it.isNotBlank() }
     )
 }
 

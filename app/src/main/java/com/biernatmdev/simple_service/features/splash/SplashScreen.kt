@@ -22,13 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
-import com.biernatmdev.simple_service.core.ui.components.Button
+import com.biernatmdev.simple_service.core.ui.components.SimpleServiceButton
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.components.rememberOvershootScale
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
-import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.LARGE
+import com.biernatmdev.simple_service.core.ui.theme.LineHeight
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Handshake
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.LogIn
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
@@ -79,10 +79,10 @@ fun SplashScreen(
             fontSize = LARGE,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            lineHeight = 1.2 * LARGE
+            lineHeight = LineHeight.LARGE
         )
         Spacer(Modifier.height(100.dp))
-        Button(
+        SimpleServiceButton(
             onClick = {
                 scope.launch {
                     val isValid = googleUiClient.validateUserSession()

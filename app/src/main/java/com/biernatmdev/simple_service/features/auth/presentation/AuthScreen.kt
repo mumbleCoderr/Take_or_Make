@@ -33,12 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
-import com.biernatmdev.simple_service.core.ui.components.Button
+import com.biernatmdev.simple_service.core.ui.components.SimpleServiceButton
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.components.rememberOvershootScales
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
-import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.LARGE
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Approval
@@ -258,11 +257,11 @@ fun AuthScreen(
         }
         Spacer(Modifier.height(86.dp))
         //TODO("ERROR NO INTERNET CONNECTION")
-        Button(
+        SimpleServiceButton(
             isAnimated = false,
             additionalText = stringResource(R.string.auth_btn_additional_text_google),
             onClick = {
-                if (state.isLoading) return@Button
+                if (state.isLoading) return@SimpleServiceButton
 
                 scope.launch {
                     authViewModel.onAuthEvent(AuthEvent.StartSignin)
@@ -285,9 +284,9 @@ fun AuthScreen(
             text = stringResource(R.string.auth_btn_text_google)
         )
         Spacer(Modifier.height(16.dp))
-        Button(
+        SimpleServiceButton(
             onClick = {
-                if (state.isLoading) return@Button
+                if (state.isLoading) return@SimpleServiceButton
 
                 scope.launch {
                     try {

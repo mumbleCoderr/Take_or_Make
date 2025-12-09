@@ -17,6 +17,8 @@
     <string name="top_bar_take">TAKE</string>
     <string name="top_bar_make">MAKE</string>
 
+    <string name="error_btn_retry">Try again</string>
+
     <string name="profile_screen_header">Profile</string>
 
     <string name="snackbar_profile_update">Profile details updated</string>
@@ -27,7 +29,7 @@
 
     <string name="profile_option_details">Details</string>
     <string name="profile_option_wallet">Wallet</string>
-    <string name="profile_option_pro">Buy Account PRO</string>
+    <string name="profile_option_pro">Account PRO</string>
     <string name="profile_option_statistics">Statistics</string>
     <string name="profile_option_history">History</string>
     <string name="profile_option_reviews">Reviews</string>

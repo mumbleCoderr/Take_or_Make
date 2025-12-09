@@ -1,5 +1,6 @@
 package com.biernatmdev.simple_service.features.home.components
 
+import android.R.attr.lineHeight
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_SMALL
+import com.biernatmdev.simple_service.core.ui.theme.LineHeight
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
@@ -82,7 +84,7 @@ fun BottomBar(
                     fontSize = EXTRA_SMALL,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
-                    lineHeight = 1.2 * EXTRA_SMALL
+                    lineHeight = LineHeight.EXTRA_SMALL
                 )
             }
         }

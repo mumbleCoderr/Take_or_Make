@@ -27,3 +27,18 @@ object FontSize {
     val LARGE = 30.sp
     val EXTRA_LARGE = 40.sp
 }
+
+object LineHeight {
+    val EXTRA_SMALL = 16.sp
+    val SMALL = 16.sp
+
+    val REGULAR = 20.sp
+    val EXTRA_REGULAR = 24.sp
+
+    val MEDIUM = 24.sp
+    val EXTRA_MEDIUM = 28.sp
+
+    val SEMI_LARGE = 32.sp
+    val LARGE = 36.sp
+    val EXTRA_LARGE = 48.sp
+}
