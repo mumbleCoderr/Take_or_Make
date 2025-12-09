@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
@@ -34,10 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -46,26 +43,21 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.request.fallback
-import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.screens.ErrorScreen
-import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
-import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_LARGE
-import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_MEDIUM
-import com.biernatmdev.simple_service.core.ui.theme.FontSize.LARGE
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
-import com.biernatmdev.simple_service.core.ui.theme.FontSize.SMALL
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Forward
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Profile
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.Profile_picture_background
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.Profile_picture_placeholder
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
-import com.biernatmdev.simple_service.core.ui.theme.onColorPrimary
+import com.biernatmdev.simple_service.core.ui.theme.onColorSurface
 import com.biernatmdev.simple_service.core.user.domain.model.User
+import com.biernatmdev.simple_service.features.profile.domain.ProfileOption
+import com.biernatmdev.simple_service.features.profile.domain.ProfileOptionCategory
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -108,18 +100,16 @@ fun ProfileScreen(
             ErrorScreen(state.error!!)
         } else if (state.user != null) {
             UserProfilePictureSection(state.user!!)
-            Spacer(Modifier.height(48.dp))
-            ProfileOptionItem(
-                text = "idz w pizdu",
-                iconAction = IconType.Drawable(Profile),
-                onClick = { },
-            )
-            ProfileOptionItem(
-                text = "idz w pizdu",
-                iconAction = IconType.Drawable(Profile),
-                onClick = { }
-            )
-            UserProfileDetailsSection(state.user!!)
+            Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+            ){
+                ProfileOptionList(category = ProfileOptionCategory.GENERAL)
+                Spacer(Modifier.height(24.dp))
+                ProfileOptionList(category = ProfileOptionCategory.ACTIVITY)
+            }
         }
     }
 }
@@ -131,7 +121,7 @@ fun UserProfilePictureSection(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.38f),
+            .fillMaxHeight(0.4f),
         contentAlignment = Alignment.BottomCenter
     ) {
         Column(
@@ -197,30 +187,43 @@ fun UserProfilePictureSection(
 }
 
 @Composable
-fun ProfileOptionItemList(){
+fun ProfileOptionList(category: ProfileOptionCategory? = null) {
+    val profileOptions = if (category == null) {
+        ProfileOption.entries
+    } else {
+        ProfileOption.entries.filter { it.category == category }
+    }
 
+    profileOptions.forEachIndexed { index, item ->
+        ProfileOption(
+            item = item,
+            isFirst = index == 0,
+            isLast = index == profileOptions.size - 1
+        ) {}
+    }
 }
+
 @Composable
-fun ProfileOptionItem(
+fun ProfileOption(
+    item: ProfileOption,
     roundedCornerShapeValue: Dp = 12.dp,
     backgroundColor: Color = ColorSecondary,
-    text: String,
-    textColor: Color = onColorPrimary,
+    textColor: Color = onColorSurface,
     textFont: FontFamily = momoFont(),
     textFontSize: TextUnit = MEDIUM,
     textFontWeight: FontWeight = FontWeight.Normal,
-    iconAction: IconType,
     iconForward: IconType? = IconType.Vector(Forward),
     iconSize: Dp = 24.dp,
-    iconTint: Color = onColorPrimary,
+    iconTint: Color = onColorSurface,
     spacerValue: Dp = 16.dp,
     isFirst: Boolean = false,
     isLast: Boolean = false,
+    isMaxWidth: Boolean = false,
     onClick: () -> Unit,
 ) {
     Surface(
         modifier = Modifier
-            .fillMaxWidth(0.9f)
+            .fillMaxWidth(if (isMaxWidth) 1f else 0.9f)
             .clickable { onClick() },
         shape = if (isFirst) {
             RoundedCornerShape(
@@ -237,7 +240,6 @@ fun ProfileOptionItem(
         },
         color = backgroundColor,
     ) {
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -249,11 +251,11 @@ fun ProfileOptionItem(
                 horizontalArrangement = Arrangement.spacedBy(spacerValue),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                when (iconAction) {
+                when (item.icon) {
                     is IconType.Vector -> {
                         Icon(
-                            imageVector = iconAction.imageVector,
-                            contentDescription = iconAction.imageVector.name,
+                            imageVector = item.icon.imageVector,
+                            contentDescription = item.title.asString(),
                             tint = iconTint,
                             modifier = Modifier
                                 .size(iconSize)
@@ -262,8 +264,8 @@ fun ProfileOptionItem(
 
                     is IconType.Drawable -> {
                         Icon(
-                            painter = painterResource(iconAction.id),
-                            contentDescription = iconAction.id.toString(),
+                            painter = painterResource(item.icon.id),
+                            contentDescription = item.title.asString(),
                             tint = iconTint,
                             modifier = Modifier
                                 .size(iconSize)
@@ -271,7 +273,7 @@ fun ProfileOptionItem(
                     }
                 }
                 Text(
-                    text = text,
+                    text = item.title.asString(),
                     color = textColor,
                     fontFamily = textFont,
                     fontSize = textFontSize,
@@ -339,51 +341,4 @@ fun UserProfilePictureSection(
     }
 }*/
 
-@Composable
-fun UserProfileDetailsSection(
-    user: User
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(R.string.profile_screen_header),
-            color = onColorBackground,
-            fontFamily = momoFont(),
-            fontSize = MEDIUM,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = stringResource(R.string.profile_screen_header),
-            color = onColorBackground,
-            fontFamily = momoFont(),
-            fontSize = MEDIUM,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = stringResource(R.string.profile_screen_header),
-            color = onColorBackground,
-            fontFamily = momoFont(),
-            fontSize = MEDIUM,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = stringResource(R.string.profile_screen_header),
-            color = onColorBackground,
-            fontFamily = momoFont(),
-            fontSize = MEDIUM,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = stringResource(R.string.profile_screen_header),
-            color = onColorBackground,
-            fontFamily = momoFont(),
-            fontSize = MEDIUM,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
 

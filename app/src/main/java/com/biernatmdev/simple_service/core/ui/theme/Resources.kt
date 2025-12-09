@@ -6,10 +6,17 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.Forward
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Handshake
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Reviews
+import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material.icons.outlined.Campaign
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Construction
@@ -45,7 +52,15 @@ object Resources {
         val Take = R.drawable.take
         val Make = R.drawable.make
 
+        // PROFILE OPTION
         val Forward = Icons.AutoMirrored.Filled.ArrowForwardIos
+        val Details = Icons.Filled.ManageAccounts
+        val Wallet = Icons.Filled.Wallet
+        val Pro = Icons.Filled.AttachMoney
+        val Statistics = R.drawable.finance
+        val History = Icons.Filled.History
+        val Reviews = Icons.Filled.Reviews
+        val Favourites = Icons.Filled.FavoriteBorder
     }
 
     object Image {

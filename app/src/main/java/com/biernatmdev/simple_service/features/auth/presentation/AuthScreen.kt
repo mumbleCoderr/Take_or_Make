@@ -257,7 +257,7 @@ fun AuthScreen(
             }
         }
         Spacer(Modifier.height(86.dp))
-        TODO("ERROR NO INTERNET CONNECTION")
+        //TODO("ERROR NO INTERNET CONNECTION")
         Button(
             isAnimated = false,
             additionalText = stringResource(R.string.auth_btn_additional_text_google),
