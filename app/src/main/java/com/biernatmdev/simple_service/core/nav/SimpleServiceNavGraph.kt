@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.biernatmdev.simple_service.features.auth.presentation.AuthScreen
 import com.biernatmdev.simple_service.features.home.presentation.HomeScreen
+import com.biernatmdev.simple_service.features.profile.presentation.ProfileScreen
 import com.biernatmdev.simple_service.features.splash.SplashScreen
 
 @Composable
@@ -40,7 +41,22 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
             )
         }
         composable<Screen.HomeGraph> {
-            HomeScreen()
+            HomeScreen(
+                navigateToAuth = {
+                    navController.navigate(Screen.AuthScreen) {
+                        popUpTo<Screen.AuthScreen> { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable<Screen.ProfileScreen> {
+            ProfileScreen(
+                navigateToAuth = {
+                    navController.navigate(Screen.AuthScreen) {
+                        popUpTo<Screen.AuthScreen> { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }

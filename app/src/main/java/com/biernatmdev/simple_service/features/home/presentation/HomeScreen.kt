@@ -21,9 +21,12 @@ import com.biernatmdev.simple_service.features.home.domain.HomeSubscreen
 import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
+import com.biernatmdev.simple_service.features.profile.presentation.ProfileScreen
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navigateToAuth: () -> Unit
+) {
     // BOTTOM BAR NAVIGATION
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -66,7 +69,9 @@ fun HomeScreen() {
                 }
                 composable<Screen.CategoryScreen> {}
                 composable<Screen.NotificationScreen> {}
-                composable<Screen.ProfileScreen> {}
+                composable<Screen.ProfileScreen> {
+                    ProfileScreen(navigateToAuth = navigateToAuth)
+                }
             }
         }
     }

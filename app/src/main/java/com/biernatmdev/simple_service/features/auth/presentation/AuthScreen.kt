@@ -37,6 +37,7 @@ import com.biernatmdev.simple_service.core.ui.components.Button
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.components.rememberOvershootScales
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.LARGE
@@ -49,6 +50,7 @@ import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Sell
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
+import com.biernatmdev.simple_service.core.ui.theme.onColorPrimary
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -107,7 +109,7 @@ fun AuthScreen(
                 modifier = Modifier
                     .scale(scales[0].value)
                     .size(iconSize),
-                tint = ColorSecondary
+                tint = ColorPrimary
             )
             Icon(
                 imageVector = Sell,
@@ -115,7 +117,7 @@ fun AuthScreen(
                 modifier = Modifier
                     .scale(scales[1].value)
                     .size(iconSize),
-                tint = ColorSecondary
+                tint = ColorPrimary
             )
         }
         Row(
@@ -130,7 +132,7 @@ fun AuthScreen(
                 modifier = Modifier
                     .scale(scales[2].value)
                     .size(iconSize),
-                tint = ColorSecondary
+                tint = ColorPrimary
             )
             Icon(
                 painter = painterResource(Approval),
@@ -139,7 +141,7 @@ fun AuthScreen(
                     .offset(y = (-16).dp)
                     .scale(scales[3].value)
                     .size(iconSize),
-                tint = ColorSecondary
+                tint = ColorPrimary
             )
         }
         Spacer(Modifier.height(48.dp))
@@ -305,6 +307,8 @@ fun AuthScreen(
             textFontSize = EXTRA_MEDIUM,
             backgroundColor = onColorBackgroundDarker,
             text = stringResource(R.string.auth_btn_text_guest),
+            textColor = onColorPrimary,
+            iconTint = onColorPrimary,
             isAnimated = false
         )
     }

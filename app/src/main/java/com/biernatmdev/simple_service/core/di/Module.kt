@@ -6,6 +6,7 @@ import com.biernatmdev.simple_service.core.user.domain.UserRepository
 import com.biernatmdev.simple_service.core.user.data.repository.UserRepositoryImpl
 import com.biernatmdev.simple_service.features.auth.presentation.AuthViewModel
 import com.biernatmdev.simple_service.features.home.presentation.HomeViewModel
+import com.biernatmdev.simple_service.features.profile.presentation.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
@@ -17,6 +18,7 @@ val appModule = module {
     viewModel { AuthViewModel(get(), auth = get()) }
     //TODO offerrepository
     viewModel { HomeViewModel() }
+    viewModel { ProfileViewModel(get()) }
     single { GoogleUiClient(
         context = androidContext(),
         auth = get(),

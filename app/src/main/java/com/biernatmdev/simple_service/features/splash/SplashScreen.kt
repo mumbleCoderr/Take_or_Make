@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -33,6 +34,7 @@ import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.LogIn
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
@@ -42,7 +44,7 @@ fun SplashScreen(
     navigateToHome: () -> Unit,
 ) {
     val googleUiClient: GoogleUiClient = koinInject()
-
+    val scope = rememberCoroutineScope()
     val scale = rememberOvershootScale()
 
     Column(
@@ -82,11 +84,14 @@ fun SplashScreen(
         Spacer(Modifier.height(100.dp))
         Button(
             onClick = {
-                val user = googleUiClient.currentUser
-                if (user != null) {
-                    navigateToHome()
-                } else {
-                    navigateToAuth()
+                scope.launch {
+                    val isValid = googleUiClient.validateUserSession()
+
+                    if (isValid) {
+                        navigateToHome()
+                    } else {
+                        navigateToAuth()
+                    }
                 }
             },
             icon = IconType.Vector(LogIn),
