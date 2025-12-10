@@ -58,16 +58,4 @@ class GoogleUiClient(
     }
 
     val currentUser get() = auth.currentUser
-
-    suspend fun validateUserSession(): Boolean {
-        val user = auth.currentUser ?: return false
-
-        return try {
-            user.reload().await()
-            true
-        } catch (e: Exception) {
-            signOut()
-            false
-        }
-    }
 }

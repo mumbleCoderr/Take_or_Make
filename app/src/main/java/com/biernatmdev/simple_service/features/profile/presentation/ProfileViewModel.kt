@@ -1,6 +1,5 @@
 package com.biernatmdev.simple_service.features.profile.presentation
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biernatmdev.simple_service.R
@@ -23,28 +22,44 @@ class ProfileViewModel(
     private val _effect = Channel<ProfileEffect>()
     val effect = _effect.receiveAsFlow()
 
+    init {
+        viewModelScope.launch {
+            userRepository.currentUser.collect { user ->
+                _state.update {
+                    it.copy(
+                        user = user,
+                        isLoading = user == null,
+                        error = null
+                    )
+                }
+            }
+        }
+    }
+
     fun onEvent(event: ProfileEvent) {
         when (event) {
-            ProfileEvent.LoadData -> loadData()
-            ProfileEvent.Retry -> loadData()
+            ProfileEvent.ReloadUserDetails -> reloadUserDetails()
             ProfileEvent.SignOut -> signOut()
-            ProfileEvent.ClearError -> { _state.update { it.copy(error = null) } }
             is ProfileEvent.UpdateUserDetails -> updateData(event.user)
         }
     }
 
-    private fun loadData() {
-        if (_state.value.user != null && _state.value.error == null) return
-
+    private fun reloadUserDetails() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
-            userRepository.getUserDetails()
-                .onSuccess { user ->
-                    _state.update { it.copy(isLoading = false, user = user) }
-                }
-                .onFailure { exception ->
-                    handleException(exception)
-                }
+
+            val uid = userRepository.getCurrentUserId()
+            if (uid != null) {
+                userRepository.getUserDetails()
+                    .onSuccess {
+                        userRepository.startObservingUser(uid)
+                    }
+                    .onFailure { exception ->
+                        handleException(exception)
+                    }
+            } else {
+                signOut()
+            }
         }
     }
 

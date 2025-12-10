@@ -23,11 +23,6 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
                     navController.navigate(Screen.AuthScreen) {
                         popUpTo<Screen.SplashScreen> { inclusive = true }
                     }
-                },
-                navigateToHome = {
-                    navController.navigate(Screen.HomeGraph) {
-                        popUpTo<Screen.AuthScreen> { inclusive = true }
-                    }
                 }
             )
         }

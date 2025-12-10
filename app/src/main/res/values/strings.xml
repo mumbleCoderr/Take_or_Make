@@ -27,11 +27,11 @@
     <string name="user_exception_not_found">We have not found that user</string>
     <string name="user_exception_access_denied">You have no permission to do that</string>
 
-    <string name="profile_option_details">Details</string>
+    <string name="profile_option_details">Personal details</string>
     <string name="profile_option_wallet">Wallet</string>
     <string name="profile_option_pro">Account PRO</string>
     <string name="profile_option_statistics">Statistics</string>
-    <string name="profile_option_history">History</string>
+    <string name="profile_option_history">Transaction history</string>
     <string name="profile_option_reviews">Reviews</string>
     <string name="profile_option_favourites">Favourites</string>
 

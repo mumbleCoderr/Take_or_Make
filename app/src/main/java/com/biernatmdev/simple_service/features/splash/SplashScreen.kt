@@ -41,10 +41,7 @@ import org.koin.compose.koinInject
 //@Preview(showBackground = true)
 fun SplashScreen(
     navigateToAuth: () -> Unit,
-    navigateToHome: () -> Unit,
 ) {
-    val googleUiClient: GoogleUiClient = koinInject()
-    val scope = rememberCoroutineScope()
     val scale = rememberOvershootScale()
 
     Column(
@@ -83,17 +80,7 @@ fun SplashScreen(
         )
         Spacer(Modifier.height(100.dp))
         SimpleServiceButton(
-            onClick = {
-                scope.launch {
-                    val isValid = googleUiClient.validateUserSession()
-
-                    if (isValid) {
-                        navigateToHome()
-                    } else {
-                        navigateToAuth()
-                    }
-                }
-            },
+            onClick = { navigateToAuth() },
             icon = IconType.Vector(LogIn),
             text = stringResource(R.string.splash_btn_text),
             isAnimated = false

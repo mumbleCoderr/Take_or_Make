@@ -84,10 +84,6 @@ fun ProfileScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.onEvent(ProfileEvent.LoadData)
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -119,7 +115,7 @@ fun ProfileScreen(
             ErrorScreen(
                 error = state.error!!,
                 isLoading = state.isLoading,
-                onRetry = { viewModel.onEvent(ProfileEvent.LoadData) }
+                onRetry = { viewModel.onEvent(ProfileEvent.ReloadUserDetails) }
             )
         }
 

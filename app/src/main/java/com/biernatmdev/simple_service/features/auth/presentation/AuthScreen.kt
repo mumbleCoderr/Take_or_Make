@@ -264,17 +264,17 @@ fun AuthScreen(
                 if (state.isLoading) return@SimpleServiceButton
 
                 scope.launch {
-                    authViewModel.onAuthEvent(AuthEvent.StartSignin)
+                    authViewModel.onEvent(AuthEvent.StartSignin)
                     try {
                         val authResult = googleUiClient.signInWithGoogle(activity)
                         val user = authResult.user
                         if (user != null) {
-                            authViewModel.onAuthEvent(AuthEvent.SetSigninSuccess(user))
+                            authViewModel.onEvent(AuthEvent.SetSigninSuccess(user))
                         } else {
-                            authViewModel.onAuthEvent(AuthEvent.SetSigninFail("Google sign in failed"))
+                            authViewModel.onEvent(AuthEvent.SetSigninFail("Google sign in failed"))
                         }
                     } catch (e: Exception) {
-                        authViewModel.onAuthEvent(AuthEvent.SetSigninFail(e.message ?: "Error"))
+                        authViewModel.onEvent(AuthEvent.SetSigninFail(e.message ?: "Error"))
                     }
                 }
             },
@@ -290,16 +290,16 @@ fun AuthScreen(
 
                 scope.launch {
                     try {
-                        authViewModel.onAuthEvent(AuthEvent.StartSignin)
+                        authViewModel.onEvent(AuthEvent.StartSignin)
                         val userResult = googleUiClient.signInGuest()
                         val user = userResult.user
                         if (user != null) {
-                            authViewModel.onAuthEvent(AuthEvent.SetSigninSuccess(user))
+                            authViewModel.onEvent(AuthEvent.SetSigninSuccess(user))
                         } else {
-                            authViewModel.onAuthEvent(AuthEvent.SetSigninFail("Guest sign in failed"))
+                            authViewModel.onEvent(AuthEvent.SetSigninFail("Guest sign in failed"))
                         }
                     } catch (e: Exception) {
-                        authViewModel.onAuthEvent(AuthEvent.SetSigninFail(e.message ?: "Error"))
+                        authViewModel.onEvent(AuthEvent.SetSigninFail(e.message ?: "Error"))
                     }
                 }
             },
