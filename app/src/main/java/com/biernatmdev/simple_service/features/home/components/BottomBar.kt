@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,11 +28,13 @@ import androidx.compose.ui.unit.times
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
+import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_SMALL
 import com.biernatmdev.simple_service.core.ui.theme.LineHeight
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
+import com.biernatmdev.simple_service.core.ui.theme.robotoFont
 import com.biernatmdev.simple_service.features.home.domain.HomeSubscreen
 
 @Composable
@@ -44,7 +47,8 @@ fun BottomBar(
         modifier = modifier
             .fillMaxWidth()
             .background(ColorBackground)
-            .padding(vertical = 12.dp)
+            .padding(vertical = 8.dp)
+            .navigationBarsPadding()
             .clip(RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -53,7 +57,10 @@ fun BottomBar(
             val tint by animateColorAsState(
                 targetValue = if (selectedScreen == screenChip) ColorPrimary else onColorBackground
             )
-            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
                 IconButton(
                     onClick = { onScreenSelect(screenChip) }
                 ) {
@@ -63,7 +70,7 @@ fun BottomBar(
                                 imageVector = icon.imageVector,
                                 tint = tint,
                                 contentDescription = stringResource(id = screenChip.title),
-                                modifier = Modifier.size(64.dp)
+                                modifier = Modifier.size(48.dp)
                             )
                         }
 
@@ -72,7 +79,7 @@ fun BottomBar(
                                 painter = painterResource(id = icon.id),
                                 tint = tint,
                                 contentDescription = stringResource(id = screenChip.title),
-                                modifier = Modifier.size(64.dp)
+                                modifier = Modifier.size(48.dp)
                             )
                         }
                     }

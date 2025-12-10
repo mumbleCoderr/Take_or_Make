@@ -38,7 +38,6 @@ fun HomeScreen(
     Scaffold(
         bottomBar = {
             BottomBar(
-                modifier = Modifier.navigationBarsPadding(),
                 selectedScreen = selectedScreenChip,
                 onScreenSelect = { selection ->
                     navController.navigate(selection.screen) {

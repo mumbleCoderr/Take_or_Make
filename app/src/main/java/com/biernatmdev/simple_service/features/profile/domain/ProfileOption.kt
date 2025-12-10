@@ -1,5 +1,6 @@
 package com.biernatmdev.simple_service.features.profile.domain
 
+import androidx.compose.material.icons.automirrored.filled.Login
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.ui.model.IconType
@@ -7,6 +8,7 @@ import com.biernatmdev.simple_service.core.ui.model.UiText
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Details
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Favourites
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.History
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.LogIn
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Pro
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Reviews
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Statistics
@@ -60,5 +62,11 @@ enum class ProfileOption(
         category = ProfileOptionCategory.ACTIVITY,
         screen = Screen.FavouritesScreen
     ),
+    SIGNOUT(
+        icon = IconType.Vector(LogIn),
+        title = UiText.StringResource(R.string.profile_option_logout),
+        category = ProfileOptionCategory.OTHER,
+        screen = Screen.SplashScreen
+    )
 }
 

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,8 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
@@ -45,15 +48,18 @@ import coil3.request.crossfade
 import coil3.request.fallback
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.screens.ErrorScreen
+import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
+import com.biernatmdev.simple_service.core.ui.theme.PrimaryColor
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Forward
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.Profile_picture_background
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.Profile_picture_placeholder
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.onColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.onColorSurface
 import com.biernatmdev.simple_service.core.user.domain.model.User
 import com.biernatmdev.simple_service.features.profile.domain.ProfileOption
@@ -68,6 +74,7 @@ fun ProfileScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbar = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -84,29 +91,38 @@ fun ProfileScreen(
         }
     }
 
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        val headerHeight = this.maxHeight * 0.38f
         if (state.user != null) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.TopCenter),
+                    .align(Alignment.TopCenter)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                UserProfilePictureSection(state.user!!)
+                UserProfilePictureSection(
+                    user = state.user!!,
+                    sectionHeight = headerHeight,
+                )
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .offset(y = (-15).dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     ProfileOptionList(category = ProfileOptionCategory.GENERAL)
                     Spacer(Modifier.height(24.dp))
                     ProfileOptionList(category = ProfileOptionCategory.ACTIVITY)
+                    Spacer(Modifier.height(24.dp))
+                    ProfileOptionList(category = ProfileOptionCategory.OTHER)
+                    Spacer(Modifier.height(16.dp))
                 }
             }
         }
@@ -131,12 +147,13 @@ fun ProfileScreen(
 
 @Composable
 fun UserProfilePictureSection(
-    user: User
+    user: User,
+    sectionHeight: Dp,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.4f),
+            .height(sectionHeight),
         contentAlignment = Alignment.BottomCenter
     ) {
         Column(
@@ -240,18 +257,11 @@ fun ProfileOption(
         modifier = Modifier
             .fillMaxWidth(if (isMaxWidth) 1f else 0.9f)
             .clickable { onClick() },
-        shape = if (isFirst) {
-            RoundedCornerShape(
-                topStart = roundedCornerShapeValue,
-                topEnd = roundedCornerShapeValue
-            )
-        } else if (isLast) {
-            RoundedCornerShape(
-                bottomStart = roundedCornerShapeValue,
-                bottomEnd = roundedCornerShapeValue
-            )
-        } else {
-            RoundedCornerShape(0.dp)
+        shape = when{
+            isFirst && isLast -> RoundedCornerShape(roundedCornerShapeValue)
+            isFirst -> RoundedCornerShape(topStart = roundedCornerShapeValue, topEnd = roundedCornerShapeValue)
+            isLast -> RoundedCornerShape(bottomStart = roundedCornerShapeValue, bottomEnd = roundedCornerShapeValue)
+            else -> RoundedCornerShape(0)
         },
         color = backgroundColor,
     ) {

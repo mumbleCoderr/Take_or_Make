@@ -34,7 +34,9 @@
     <string name="profile_option_history">Transaction history</string>
     <string name="profile_option_reviews">Reviews</string>
     <string name="profile_option_favourites">Favourites</string>
+    <string name="profile_option_logout">Log out</string>
 
     <string name="profile_option_category_general">General</string>
     <string name="profile_option_category_activity">Activity</string>
+    <string name="profile_option_category_other">Other</string>
 </resources>

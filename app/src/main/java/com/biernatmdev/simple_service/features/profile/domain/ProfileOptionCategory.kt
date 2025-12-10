@@ -5,5 +5,6 @@ import com.biernatmdev.simple_service.core.ui.model.UiText
 
 enum class ProfileOptionCategory(val category: UiText){
     GENERAL(category = UiText.StringResource(R.string.profile_option_category_general)),
-    ACTIVITY(category = UiText.StringResource(R.string.profile_option_category_activity))
+    ACTIVITY(category = UiText.StringResource(R.string.profile_option_category_activity)),
+    OTHER(category = UiText.StringResource(R.string.profile_option_category_other)),
 }

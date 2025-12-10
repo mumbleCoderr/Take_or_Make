@@ -23,7 +23,6 @@ fun HomeTabScreen(
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .statusBarsPadding()
     ) {
         TopBar(
             selectedMode = state.mode,

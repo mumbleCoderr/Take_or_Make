@@ -5,7 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.biernatmdev.simple_service.core.nav.SimpleServiceNavGraph
 import com.biernatmdev.simple_service.core.ui.theme.SimpleServiceTheme
 import com.biernatmdev.simple_service.features.main.MainViewModel
@@ -25,8 +27,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SimpleServiceTheme {
-                val startDestination = mainViewModel.state.collectAsState().value.startDestination
-                SimpleServiceNavGraph(startDestination = startDestination)
+                val state by mainViewModel.state.collectAsStateWithLifecycle()
+                if (!state.isLoading) {
+                    SimpleServiceNavGraph(startDestination = state.startDestination)
+                }
             }
         }
     }
