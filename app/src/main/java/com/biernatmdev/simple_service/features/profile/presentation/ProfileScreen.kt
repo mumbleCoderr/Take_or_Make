@@ -117,17 +117,17 @@ fun ProfileScreen(
                 ) {
                     ProfileOptionList(
                         category = ProfileOptionCategory.GENERAL,
-                        onProfileOptionClick = { navigateToProfileSubscreen(it.screen) }
+                        onProfileOptionClick = { viewModel.onEvent(ProfileEvent.OnProfileOptionClick(it)) }
                     )
                     Spacer(Modifier.height(24.dp))
                     ProfileOptionList(
                         category = ProfileOptionCategory.ACTIVITY,
-                        onProfileOptionClick = { navigateToProfileSubscreen(it.screen) }
+                        onProfileOptionClick = {  viewModel.onEvent(ProfileEvent.OnProfileOptionClick(it))}
                     )
                     Spacer(Modifier.height(24.dp))
                     ProfileOptionList(
                         category = ProfileOptionCategory.OTHER,
-                        onProfileOptionClick = { navigateToProfileSubscreen(it.screen) }
+                        onProfileOptionClick = {  viewModel.onEvent(ProfileEvent.OnProfileOptionClick(it)) }
                     )
                     Spacer(Modifier.height(16.dp))
                 }
