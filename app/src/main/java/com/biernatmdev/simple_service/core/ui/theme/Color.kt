@@ -25,4 +25,5 @@ val LightModePrimaryTextColor = Color(0xFF222428)
 val LightModeSecondaryTextColor = Color(0xFF616575)
 
 // PRIMARY
-val PrimaryColor = Color(0xFFFFE600)
+val PrimaryColor = Color(0xFFD9A520)
+// val PrimaryColorYellow = Color(0xFFFFE600)

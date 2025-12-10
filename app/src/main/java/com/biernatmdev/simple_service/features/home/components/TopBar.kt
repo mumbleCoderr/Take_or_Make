@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
@@ -44,6 +46,7 @@ fun TopBar(
         modifier = modifier
             .fillMaxWidth()
             .background(ColorBackground)
+            .statusBarsPadding()
             .clip(RoundedCornerShape(bottomStart = 22.dp, bottomEnd = 22.dp)),
         indicator = {
             TabRowDefaults.SecondaryIndicator(

@@ -22,7 +22,7 @@ class AuthViewModel(
     private val _effect = Channel<AuthEffect>()
     val effect = _effect.receiveAsFlow()
 
-    fun onAuthEvent(event: AuthEvent) {
+    fun onEvent(event: AuthEvent) {
         when (event) {
             AuthEvent.StartSignin -> {
                 _state.update { it.copy(isLoading = true) }
@@ -52,6 +52,7 @@ class AuthViewModel(
 
             if (result.isSuccess) {
                 _effect.send(AuthEffect.NavigateToHome)
+                userRepository.startObservingUser(user.uid)
             } else {
                 val msg = result.exceptionOrNull()?.message ?: "Database error"
                 _state.update { it.copy(error = msg) }
