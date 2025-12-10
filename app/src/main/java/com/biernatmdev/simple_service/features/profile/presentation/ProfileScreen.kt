@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,20 +45,18 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.request.fallback
+import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.screens.ErrorScreen
-import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
-import com.biernatmdev.simple_service.core.ui.theme.PrimaryColor
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Forward
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.Profile_picture_background
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.Profile_picture_placeholder
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
-import com.biernatmdev.simple_service.core.ui.theme.onColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.onColorSurface
 import com.biernatmdev.simple_service.core.user.domain.model.User
 import com.biernatmdev.simple_service.features.profile.domain.ProfileOption
@@ -69,6 +66,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ProfileScreen(
     navigateToAuth: () -> Unit,
+    navigateToProfileSubscreen: (Screen) -> Unit,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -79,14 +77,14 @@ fun ProfileScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is ProfileEffect.NavigateToAuth -> {
-                    navigateToAuth()
-                }
+                is ProfileEffect.NavigateToAuth -> navigateToAuth()
 
                 is ProfileEffect.ShowSnackbar -> {
                     val message = effect.message.asString(context)
                     snackbar.showSnackbar(message)
                 }
+
+                is ProfileEffect.NavigateTo -> navigateToProfileSubscreen(effect.screen)
             }
         }
     }
@@ -117,11 +115,20 @@ fun ProfileScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    ProfileOptionList(category = ProfileOptionCategory.GENERAL)
+                    ProfileOptionList(
+                        category = ProfileOptionCategory.GENERAL,
+                        onProfileOptionClick = { navigateToProfileSubscreen(it.screen) }
+                    )
                     Spacer(Modifier.height(24.dp))
-                    ProfileOptionList(category = ProfileOptionCategory.ACTIVITY)
+                    ProfileOptionList(
+                        category = ProfileOptionCategory.ACTIVITY,
+                        onProfileOptionClick = { navigateToProfileSubscreen(it.screen) }
+                    )
                     Spacer(Modifier.height(24.dp))
-                    ProfileOptionList(category = ProfileOptionCategory.OTHER)
+                    ProfileOptionList(
+                        category = ProfileOptionCategory.OTHER,
+                        onProfileOptionClick = { navigateToProfileSubscreen(it.screen) }
+                    )
                     Spacer(Modifier.height(16.dp))
                 }
             }
@@ -219,7 +226,10 @@ fun UserProfilePictureSection(
 }
 
 @Composable
-fun ProfileOptionList(category: ProfileOptionCategory? = null) {
+fun ProfileOptionList(
+    category: ProfileOptionCategory? = null,
+    onProfileOptionClick: (ProfileOption) -> Unit,
+) {
     val profileOptions = if (category == null) {
         ProfileOption.entries
     } else {
@@ -227,16 +237,17 @@ fun ProfileOptionList(category: ProfileOptionCategory? = null) {
     }
 
     profileOptions.forEachIndexed { index, item ->
-        ProfileOption(
+        ProfileOptionItem(
             item = item,
             isFirst = index == 0,
-            isLast = index == profileOptions.size - 1
-        ) {}
+            isLast = index == profileOptions.size - 1,
+            onClick = { onProfileOptionClick(item) }
+        )
     }
 }
 
 @Composable
-fun ProfileOption(
+fun ProfileOptionItem(
     item: ProfileOption,
     roundedCornerShapeValue: Dp = 12.dp,
     backgroundColor: Color = ColorSecondary,

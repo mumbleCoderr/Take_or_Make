@@ -7,6 +7,7 @@ import com.biernatmdev.simple_service.core.ui.model.UiText
 import com.biernatmdev.simple_service.core.user.domain.UserRepository
 import com.biernatmdev.simple_service.core.user.domain.model.User
 import com.biernatmdev.simple_service.core.user.domain.model.UserException
+import com.biernatmdev.simple_service.features.profile.domain.ProfileOption
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,6 +42,13 @@ class ProfileViewModel(
             ProfileEvent.ReloadUserDetails -> reloadUserDetails()
             ProfileEvent.SignOut -> signOut()
             is ProfileEvent.UpdateUserDetails -> updateData(event.user)
+            is ProfileEvent.OnProfileOptionClick -> handleProfileOptionClick(event.profileOption)
+        }
+    }
+    private fun handleProfileOptionClick(profileOption: ProfileOption){
+        when(profileOption){
+            ProfileOption.SIGNOUT -> signOut()
+            else -> sendEffect(ProfileEffect.NavigateTo(profileOption.screen))
         }
     }
 

@@ -25,7 +25,8 @@ import com.biernatmdev.simple_service.features.profile.presentation.ProfileScree
 
 @Composable
 fun HomeScreen(
-    navigateToAuth: () -> Unit
+    navigateToAuth: () -> Unit,
+    navigateToProfileSubscreen: (Screen) -> Unit
 ) {
     // BOTTOM BAR NAVIGATION
     val navController = rememberNavController()
@@ -69,7 +70,10 @@ fun HomeScreen(
                 composable<Screen.CategoryScreen> {}
                 composable<Screen.NotificationScreen> {}
                 composable<Screen.ProfileScreen> {
-                    ProfileScreen(navigateToAuth = navigateToAuth)
+                    ProfileScreen(
+                        navigateToAuth = navigateToAuth,
+                        navigateToProfileSubscreen = navigateToProfileSubscreen
+                    )
                 }
             }
         }
