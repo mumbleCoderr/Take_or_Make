@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
@@ -79,14 +80,27 @@ fun AuthScreen(
                 AuthEffect.NavigateToHome -> navigateToHome()
                 AuthEffect.LaunchGoogleSignIn -> {
                     scope.launch {
-                        try{
+                        try {
                             val result = googleUiClient.signInWithGoogle(activity)
-                            authViewModel.onEvent(AuthEvent.OnGoogleSignInClickResult(Result.success(result.user)))
-                        }catch (e: Exception){
-                            authViewModel.onEvent(AuthEvent.OnGoogleSignInClickResult(Result.failure(e)))
+                            authViewModel.onEvent(
+                                AuthEvent.OnGoogleSignInClickResult(
+                                    Result.success(
+                                        result.user
+                                    )
+                                )
+                            )
+                        } catch (e: Exception) {
+                            authViewModel.onEvent(
+                                AuthEvent.OnGoogleSignInClickResult(
+                                    Result.failure(
+                                        e
+                                    )
+                                )
+                            )
                         }
                     }
                 }
+
                 is AuthEffect.ShowSnackbar -> {
                     val message = effect.message.asString(context)
                     snackbar.showSnackbar(message)
@@ -184,84 +198,23 @@ fun AuthScreen(
                         )
                     }
                 } else {
-
-                    // OPTION 1
-                    /*Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(R.string.auth_subtext_loading),
-                        color = onColorBackground,
-                        fontFamily = momoFont(),
-                        fontSize = LARGE,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.width(22.dp))
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(36.dp),
-                        strokeWidth = 4.dp,
-                        color = onColorBackground
-                    )
-                }*/
-
-                    // OPTION 2
-                    /*Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.auth_subtext_loading),
-                        color = onColorBackground,
-                        fontFamily = momoFont(),
-                        fontSize = LARGE,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(22.dp))
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(48.dp),
-                        strokeWidth = 4.dp,
-                        color = onColorBackground
-                    )
-                }*/
-
-                    //OPTION 3
-                    Box(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.CenterStart),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.Start
-                        ) {
-                            Text(
-                                text = stringResource(R.string.auth_header_loading),
-                                color = onColorBackground,
-                                fontFamily = momoFont(),
-                                fontSize = LARGE,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(Modifier.height(22.dp))
-                            Text(
-                                text = stringResource(R.string.auth_subtext_loading),
-                                color = onColorBackgroundDarker,
-                                fontFamily = momoFont(),
-                                fontSize = LARGE,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                        Text(
+                            text = stringResource(R.string.auth_subtext_loading),
+                            color = onColorBackground,
+                            fontFamily = momoFont(),
+                            fontSize = LARGE,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.width(22.dp))
                         CircularProgressIndicator(
                             modifier = Modifier
-                                .size(64.dp)
-                                .align(Alignment.CenterEnd),
+                                .size(36.dp),
                             strokeWidth = 4.dp,
                             color = onColorBackground
                         )
