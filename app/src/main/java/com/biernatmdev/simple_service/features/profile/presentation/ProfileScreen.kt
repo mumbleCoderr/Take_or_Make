@@ -47,6 +47,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.request.fallback
 import com.biernatmdev.simple_service.core.nav.Screen
+import com.biernatmdev.simple_service.core.ui.components.SimpleServiceSnackbar
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.screens.ErrorScreen
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
@@ -150,9 +151,13 @@ fun ProfileScreen(
                     .size(100.dp)
             )
         }
+
         SnackbarHost(
             hostState = snackbar,
-            modifier = Modifier.align(Alignment.TopCenter)
+            modifier = Modifier.align(Alignment.TopCenter),
+            snackbar = { data ->
+                SimpleServiceSnackbar(data)
+            }
         )
     }
 }

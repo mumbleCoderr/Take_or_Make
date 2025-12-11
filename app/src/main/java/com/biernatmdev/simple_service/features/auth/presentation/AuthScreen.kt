@@ -248,8 +248,7 @@ fun AuthScreen(
         SnackbarHost(
             hostState = snackbar,
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .statusBarsPadding(),
+                .align(Alignment.TopCenter),
             snackbar = { data ->
                 SimpleServiceSnackbar(data)
             }
