@@ -17,7 +17,7 @@ val appModule = module {
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
     single<UserRepository> { UserRepositoryImpl() }
     viewModel { MainViewModel(get()) }
-    viewModel { AuthViewModel(get(), auth = get()) }
+    viewModel { AuthViewModel(get(), get()) }
     //TODO offerrepository
     viewModel { HomeViewModel() }
     viewModel { ProfileViewModel(get()) }

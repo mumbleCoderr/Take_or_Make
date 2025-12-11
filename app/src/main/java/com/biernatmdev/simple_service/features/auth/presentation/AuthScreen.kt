@@ -16,10 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +40,7 @@ import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.components.rememberOvershootScales
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
+import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.LARGE
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Approval
@@ -62,8 +65,8 @@ fun AuthScreen(
     val context = LocalContext.current
     val activity = context as Activity
     val scope = rememberCoroutineScope()
+    val snackbar = remember { SnackbarHostState() }
 
-    // KOIN INJECTION
     val authViewModel: AuthViewModel = koinViewModel()
     val googleUiClient: GoogleUiClient = koinInject()
 
@@ -73,17 +76,23 @@ fun AuthScreen(
         authViewModel.effect.collect { effect ->
             when (effect) {
                 AuthEffect.NavigateToHome -> navigateToHome()
+                AuthEffect.LaunchGoogleSignIn -> {
+                    scope.launch {
+                        try{
+                            val result = googleUiClient.signInWithGoogle(activity)
+                            authViewModel.onEvent(AuthEvent.OnGoogleSignInClickResult(Result.success(result.user)))
+                        }catch (e: Exception){
+                            authViewModel.onEvent(AuthEvent.OnGoogleSignInClickResult(Result.failure(e)))
+                        }
+                    }
+                }
+                is AuthEffect.ShowSnackbar -> {
+                    val message = effect.message.asString(context)
+                    snackbar.showSnackbar(message)
+                }
             }
         }
     }
-
-    // TODO TOAST ONLY IN CASE OF EXTERNAL ERROR
-    /*LaunchedEffect(state.error) {
-        state.error?.let { msg ->
-            Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
-            authViewModel.onAuthEvent(AuthEvent.ClearError)
-        }
-    }*/
 
     val iconSize = 180.dp
     val scales = rememberOvershootScales(count = 4)
@@ -256,28 +265,10 @@ fun AuthScreen(
             }
         }
         Spacer(Modifier.height(86.dp))
-        //TODO("ERROR NO INTERNET CONNECTION")
         SimpleServiceButton(
             isAnimated = false,
             additionalText = stringResource(R.string.auth_btn_additional_text_google),
-            onClick = {
-                if (state.isLoading) return@SimpleServiceButton
-
-                scope.launch {
-                    authViewModel.onEvent(AuthEvent.StartSignin)
-                    try {
-                        val authResult = googleUiClient.signInWithGoogle(activity)
-                        val user = authResult.user
-                        if (user != null) {
-                            authViewModel.onEvent(AuthEvent.SetSigninSuccess(user))
-                        } else {
-                            authViewModel.onEvent(AuthEvent.SetSigninFail("Google sign in failed"))
-                        }
-                    } catch (e: Exception) {
-                        authViewModel.onEvent(AuthEvent.SetSigninFail(e.message ?: "Error"))
-                    }
-                }
-            },
+            onClick = { authViewModel.onEvent(AuthEvent.OnGoogleSignInClick) },
             icon = IconType.Drawable(Google),
             iconTint = Color.Unspecified,
             textFontSize = EXTRA_MEDIUM,
@@ -285,30 +276,13 @@ fun AuthScreen(
         )
         Spacer(Modifier.height(16.dp))
         SimpleServiceButton(
-            onClick = {
-                if (state.isLoading) return@SimpleServiceButton
-
-                scope.launch {
-                    try {
-                        authViewModel.onEvent(AuthEvent.StartSignin)
-                        val userResult = googleUiClient.signInGuest()
-                        val user = userResult.user
-                        if (user != null) {
-                            authViewModel.onEvent(AuthEvent.SetSigninSuccess(user))
-                        } else {
-                            authViewModel.onEvent(AuthEvent.SetSigninFail("Guest sign in failed"))
-                        }
-                    } catch (e: Exception) {
-                        authViewModel.onEvent(AuthEvent.SetSigninFail(e.message ?: "Error"))
-                    }
-                }
-            },
+            onClick = { authViewModel.onEvent(AuthEvent.OnGuestSignInClick) },
             icon = IconType.Vector(LogIn),
             textFontSize = EXTRA_MEDIUM,
-            backgroundColor = onColorBackgroundDarker,
+            backgroundColor = ColorSecondary,
             text = stringResource(R.string.auth_btn_text_guest),
-            textColor = onColorPrimary,
-            iconTint = onColorPrimary,
+            textColor = onColorBackgroundDarker,
+            iconTint = onColorBackgroundDarker,
             isAnimated = false
         )
     }
