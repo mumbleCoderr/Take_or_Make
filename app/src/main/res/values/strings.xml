@@ -26,6 +26,7 @@
     <string name="user_exception_not_signed_in">You are not signed in, please sign in again</string>
     <string name="user_exception_not_found">We have not found that user</string>
     <string name="user_exception_access_denied">You have no permission to do that</string>
+    <string name="external_exception">External server exception</string>
 
     <string name="profile_option_details">Personal details</string>
     <string name="profile_option_wallet">Wallet</string>
