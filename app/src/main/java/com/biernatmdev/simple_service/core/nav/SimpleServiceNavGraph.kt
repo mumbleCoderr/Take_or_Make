@@ -27,7 +27,6 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
             SplashScreen(
                 navigateToAuth = {
                     navController.navigate(Screen.AuthScreen) {
-                        popUpTo<Screen.SplashScreen> { inclusive = true }
                     }
                 }
             )
@@ -36,7 +35,7 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
             AuthScreen(
                 navigateToHome = {
                     navController.navigate(Screen.HomeGraph) {
-                        popUpTo<Screen.AuthScreen> { inclusive = true }
+                        popUpTo(0) { inclusive = true }
                     }
                 }
             )
@@ -45,13 +44,11 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
             HomeScreen(
                 navigateToAuth = {
                     navController.navigate(Screen.AuthScreen) {
-                        popUpTo<Screen.AuthScreen> { inclusive = true }
+                        popUpTo(0) { inclusive = true }
                     }
                 },
                 navigateToProfileSubscreen = { screen ->
-                    navController.navigate(screen) {
-                        popUpTo<Screen.AuthScreen> { inclusive = true }
-                    }
+                    navController.navigate(screen)
                 }
             )
         }

@@ -29,7 +29,11 @@ class AuthViewModel(
     fun onEvent(event: AuthEvent) {
         when (event) {
             AuthEvent.OnGuestSignInClick -> guestSignIn()
-            AuthEvent.OnGoogleSignInClick -> sendEffect(AuthEffect.LaunchGoogleSignIn)
+            AuthEvent.OnGoogleSignInClick -> {
+                _state.update { it.copy(isLoading = true, error = null) }
+                sendEffect(AuthEffect.LaunchGoogleSignIn)
+            }
+
             is AuthEvent.OnGoogleSignInClickResult -> handleGoogleSignInResult(event.result)
         }
     }
@@ -63,7 +67,7 @@ class AuthViewModel(
         }
     }
 
-    private suspend fun signIn(user: FirebaseUser){
+    private suspend fun signIn(user: FirebaseUser) {
         userRepository.createUser(user)
             .onSuccess {
                 userRepository.startObservingUser(user.uid)
@@ -73,16 +77,19 @@ class AuthViewModel(
                 handleException(exception)
             }
     }
-    private fun sendEffect(effect: AuthEffect){
+
+    private fun sendEffect(effect: AuthEffect) {
         viewModelScope.launch {
             _effect.send(effect)
         }
     }
 
-    private fun handleException(exception: Throwable){
+    private fun handleException(exception: Throwable) {
         val errorMessage: UiText = when (exception) {
             is UserException.NotFoundException -> UiText.StringResource(R.string.user_exception_not_found)
-            else -> {UiText.DynamicString(exception.message ?: "External server error")}
+            else -> {
+                UiText.DynamicString(exception.message ?: "External server error")
+            }
         }
         _state.update {
             it.copy(

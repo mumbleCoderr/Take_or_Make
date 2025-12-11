@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -97,92 +98,95 @@ fun AuthScreen(
     val iconSize = 180.dp
     val scales = rememberOvershootScales(count = 4)
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(ColorBackground)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+                .fillMaxSize()
+                .background(ColorBackground)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                imageVector = Construction,
-                contentDescription = "Construction",
+            Row(
                 modifier = Modifier
-                    .scale(scales[0].value)
-                    .size(iconSize),
-                tint = ColorPrimary
-            )
-            Icon(
-                imageVector = Sell,
-                contentDescription = "Sell",
-                modifier = Modifier
-                    .scale(scales[1].value)
-                    .size(iconSize),
-                tint = ColorPrimary
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Campaign,
-                contentDescription = "Campaign",
-                modifier = Modifier
-                    .scale(scales[2].value)
-                    .size(iconSize),
-                tint = ColorPrimary
-            )
-            Icon(
-                painter = painterResource(Approval),
-                contentDescription = "Approval",
-                modifier = Modifier
-                    .offset(y = (-16).dp)
-                    .scale(scales[3].value)
-                    .size(iconSize),
-                tint = ColorPrimary
-            )
-        }
-        Spacer(Modifier.height(48.dp))
-        AnimatedContent(
-            targetState = state.isLoading
-        ) { isLoading ->
-            if (!isLoading) {
-                Column(
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Construction,
+                    contentDescription = "Construction",
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = stringResource(R.string.auth_header),
-                        color = onColorBackground,
-                        fontFamily = momoFont(),
-                        fontSize = LARGE,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(22.dp))
-                    Text(
-                        text = stringResource(R.string.auth_subtext),
-                        color = onColorBackgroundDarker,
-                        fontFamily = momoFont(),
-                        fontSize = LARGE,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            } else {
+                        .scale(scales[0].value)
+                        .size(iconSize),
+                    tint = ColorPrimary
+                )
+                Icon(
+                    imageVector = Sell,
+                    contentDescription = "Sell",
+                    modifier = Modifier
+                        .scale(scales[1].value)
+                        .size(iconSize),
+                    tint = ColorPrimary
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Campaign,
+                    contentDescription = "Campaign",
+                    modifier = Modifier
+                        .scale(scales[2].value)
+                        .size(iconSize),
+                    tint = ColorPrimary
+                )
+                Icon(
+                    painter = painterResource(Approval),
+                    contentDescription = "Approval",
+                    modifier = Modifier
+                        .offset(y = (-16).dp)
+                        .scale(scales[3].value)
+                        .size(iconSize),
+                    tint = ColorPrimary
+                )
+            }
+            Spacer(Modifier.height(48.dp))
+            AnimatedContent(
+                targetState = state.isLoading
+            ) { isLoading ->
+                if (!isLoading) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(R.string.auth_header),
+                            color = onColorBackground,
+                            fontFamily = momoFont(),
+                            fontSize = LARGE,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(22.dp))
+                        Text(
+                            text = stringResource(R.string.auth_subtext),
+                            color = onColorBackgroundDarker,
+                            fontFamily = momoFont(),
+                            fontSize = LARGE,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                } else {
 
-                // OPTION 1
-                /*Row(
+                    // OPTION 1
+                    /*Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
@@ -204,8 +208,8 @@ fun AuthScreen(
                     )
                 }*/
 
-                // OPTION 2
-                /*Column(
+                    // OPTION 2
+                    /*Column(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -227,63 +231,68 @@ fun AuthScreen(
                     )
                 }*/
 
-                //OPTION 3
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                ) {
-                    Column(
+                    //OPTION 3
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.CenterStart),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.Start
+                            .fillMaxWidth(),
                     ) {
-                        Text(
-                            text = stringResource(R.string.auth_header_loading),
-                            color = onColorBackground,
-                            fontFamily = momoFont(),
-                            fontSize = LARGE,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(Modifier.height(22.dp))
-                        Text(
-                            text = stringResource(R.string.auth_subtext_loading),
-                            color = onColorBackgroundDarker,
-                            fontFamily = momoFont(),
-                            fontSize = LARGE,
-                            fontWeight = FontWeight.Bold
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.CenterStart),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(
+                                text = stringResource(R.string.auth_header_loading),
+                                color = onColorBackground,
+                                fontFamily = momoFont(),
+                                fontSize = LARGE,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(Modifier.height(22.dp))
+                            Text(
+                                text = stringResource(R.string.auth_subtext_loading),
+                                color = onColorBackgroundDarker,
+                                fontFamily = momoFont(),
+                                fontSize = LARGE,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(64.dp)
+                                .align(Alignment.CenterEnd),
+                            strokeWidth = 4.dp,
+                            color = onColorBackground
                         )
                     }
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .align(Alignment.CenterEnd),
-                        strokeWidth = 4.dp,
-                        color = onColorBackground
-                    )
                 }
             }
+            Spacer(Modifier.height(86.dp))
+            SimpleServiceButton(
+                isAnimated = false,
+                additionalText = stringResource(R.string.auth_btn_additional_text_google),
+                onClick = { authViewModel.onEvent(AuthEvent.OnGoogleSignInClick) },
+                icon = IconType.Drawable(Google),
+                iconTint = Color.Unspecified,
+                textFontSize = EXTRA_MEDIUM,
+                text = stringResource(R.string.auth_btn_text_google)
+            )
+            Spacer(Modifier.height(16.dp))
+            SimpleServiceButton(
+                onClick = { authViewModel.onEvent(AuthEvent.OnGuestSignInClick) },
+                icon = IconType.Vector(LogIn),
+                textFontSize = EXTRA_MEDIUM,
+                backgroundColor = ColorSecondary,
+                text = stringResource(R.string.auth_btn_text_guest),
+                textColor = onColorBackgroundDarker,
+                iconTint = onColorBackgroundDarker,
+                isAnimated = false
+            )
         }
-        Spacer(Modifier.height(86.dp))
-        SimpleServiceButton(
-            isAnimated = false,
-            additionalText = stringResource(R.string.auth_btn_additional_text_google),
-            onClick = { authViewModel.onEvent(AuthEvent.OnGoogleSignInClick) },
-            icon = IconType.Drawable(Google),
-            iconTint = Color.Unspecified,
-            textFontSize = EXTRA_MEDIUM,
-            text = stringResource(R.string.auth_btn_text_google)
-        )
-        Spacer(Modifier.height(16.dp))
-        SimpleServiceButton(
-            onClick = { authViewModel.onEvent(AuthEvent.OnGuestSignInClick) },
-            icon = IconType.Vector(LogIn),
-            textFontSize = EXTRA_MEDIUM,
-            backgroundColor = ColorSecondary,
-            text = stringResource(R.string.auth_btn_text_guest),
-            textColor = onColorBackgroundDarker,
-            iconTint = onColorBackgroundDarker,
-            isAnimated = false
+        SnackbarHost(
+            hostState = snackbar,
+            modifier = Modifier.align(Alignment.TopCenter)
         )
     }
 }
