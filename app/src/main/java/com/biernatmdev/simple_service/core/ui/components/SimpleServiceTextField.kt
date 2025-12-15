@@ -46,6 +46,7 @@ import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 
 @Composable
 fun SimpleServiceTextField(
@@ -55,9 +56,10 @@ fun SimpleServiceTextField(
     state: TextFieldState,
     placeholder: String = "",
     icon: IconType? = null,
+    iconTint: Color = onColorBackgroundDarker,
     iconSize: Dp = 22.dp,
     backgroundColor: Color = ColorSecondary,
-    textColor: Color = onColorBackground,
+    textColor: Color = onColorBackgroundDarker,
     textSize: TextUnit = MEDIUM,
     roundedCornerShapeValue: Dp = 22.dp
 ) {
@@ -68,7 +70,7 @@ fun SimpleServiceTextField(
         BasicSecureTextField(
             state = state,
             textStyle = TextStyle(
-                color = textColor,
+                color = onColorBackground,
                 fontFamily = momoFont(),
                 fontSize = textSize,
                 fontWeight = FontWeight.Bold,
@@ -79,7 +81,7 @@ fun SimpleServiceTextField(
             ),
             interactionSource = interactionSource,
             textObfuscationMode = TextObfuscationMode.RevealLastTyped,
-            cursorBrush = SolidColor(textColor),
+            cursorBrush = SolidColor(onColorBackground),
             decorator = { innerTextField ->
                 SimpleServiceTextFieldDecorator(
                     innerTextField = innerTextField,
@@ -87,6 +89,7 @@ fun SimpleServiceTextField(
                     isFocused = isFocused,
                     placeholder = placeholder,
                     icon = icon,
+                    iconTint = iconTint,
                     iconSize = iconSize,
                     backgroundColor = backgroundColor,
                     textColor = textColor,
@@ -99,7 +102,7 @@ fun SimpleServiceTextField(
         BasicTextField(
             state = state,
             textStyle = TextStyle(
-                color = textColor,
+                color = onColorBackground,
                 fontFamily = momoFont(),
                 fontSize = textSize,
                 fontWeight = FontWeight.Bold,
@@ -114,7 +117,7 @@ fun SimpleServiceTextField(
                 imeAction = ImeAction.Done
             ),
             lineLimits = TextFieldLineLimits.SingleLine,
-            cursorBrush = SolidColor(textColor),
+            cursorBrush = SolidColor(onColorBackground),
             decorator = { innerTextField ->
                 SimpleServiceTextFieldDecorator(
                     innerTextField = innerTextField,
@@ -122,6 +125,7 @@ fun SimpleServiceTextField(
                     isFocused = isFocused,
                     placeholder = placeholder,
                     icon = icon,
+                    iconTint = iconTint,
                     iconSize = iconSize,
                     backgroundColor = backgroundColor,
                     textColor = textColor,
@@ -140,6 +144,7 @@ fun SimpleServiceTextFieldDecorator(
     placeholder: String,
     isFocused: Boolean,
     icon: IconType?,
+    iconTint: Color,
     iconSize: Dp,
     backgroundColor: Color,
     textColor: Color,
@@ -173,7 +178,7 @@ fun SimpleServiceTextFieldDecorator(
                         is IconType.Drawable -> {
                             Icon(
                                 painter = painterResource(id = icon.id),
-                                tint = textColor,
+                                tint = iconTint,
                                 contentDescription = "$placeholder icon",
                                 modifier = Modifier.size(iconSize),
                             )
@@ -182,7 +187,7 @@ fun SimpleServiceTextFieldDecorator(
                         is IconType.Vector -> {
                             Icon(
                                 imageVector = icon.imageVector,
-                                tint = textColor,
+                                tint = iconTint,
                                 contentDescription = "$placeholder icon",
                                 modifier = Modifier.size(iconSize),
                             )
