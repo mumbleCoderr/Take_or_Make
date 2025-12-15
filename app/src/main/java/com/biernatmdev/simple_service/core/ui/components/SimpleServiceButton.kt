@@ -2,7 +2,9 @@ package com.biernatmdev.simple_service.core.ui.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,6 +42,7 @@ fun SimpleServiceButton(
     modifier: Modifier = Modifier,
     backgroundColor: Color = ColorPrimary,
     icon: IconType? = null,
+    isIconLeading: Boolean = false,
     iconSize: Dp = 32.dp,
     iconTint: Color = ColorPrimary,
     text: String,
@@ -49,7 +52,7 @@ fun SimpleServiceButton(
     textFont: FontFamily = momoFont(),
     textFontSize: TextUnit = SEMI_LARGE,
     textFontWeight: FontWeight = FontWeight.Normal,
-    spacerWidth: Dp = 0.dp, //TODO FIX/CHANGE
+    spacerWidth: Dp = 16.dp, //TODO FIX/CHANGE
     roundedCornerShapeValue: Dp = 22.dp,
     isAnimated: Boolean,
     onClick: () -> Unit,
@@ -61,6 +64,55 @@ fun SimpleServiceButton(
         }
     }
 
+    val textContent = @Composable {
+        Text(
+            text = buttonText,
+            color = textColor,
+            fontFamily = textFont,
+            fontSize = textFontSize,
+            fontWeight = textFontWeight,
+        )
+    }
+
+    val iconContent = @Composable {
+        AnimatedContent(
+            targetState = loading,
+        ) { loadingState ->
+            if (!loadingState) {
+                if (icon != null) {
+                    when (icon) {
+                        is IconType.Vector -> {
+                            Icon(
+                                imageVector = icon.imageVector,
+                                contentDescription = icon.imageVector.name,
+                                tint = iconTint,
+                                modifier = Modifier
+                                    .size(iconSize)
+                            )
+                        }
+
+                        is IconType.Drawable -> {
+                            Icon(
+                                painter = painterResource(icon.id),
+                                contentDescription = icon.id.toString(),
+                                tint = iconTint,
+                                modifier = Modifier
+                                    .size(iconSize)
+                            )
+                        }
+                    }
+                }
+            } else {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(iconSize),
+                    strokeWidth = 3.dp,
+                    color = onColorPrimary
+                )
+            }
+        }
+    }
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -68,60 +120,26 @@ fun SimpleServiceButton(
         shape = RoundedCornerShape(roundedCornerShapeValue),
         color = backgroundColor,
     ) {
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp, 16.dp, 32.dp, 16.dp),
-            contentAlignment = Alignment.Center
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = buttonText,
-                color = textColor,
-                fontFamily = textFont,
-                fontSize = textFontSize,
-                fontWeight = textFontWeight,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.width(spacerWidth))
-            AnimatedContent(
-                targetState = loading,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-            ) { loadingState ->
-                if (!loadingState) {
-                    if (icon != null) {
-                        when (icon) {
-                            is IconType.Vector -> {
-                                Icon(
-                                    imageVector = icon.imageVector,
-                                    contentDescription = icon.imageVector.name,
-                                    tint = iconTint,
-                                    modifier = Modifier
-                                        .size(iconSize)
-                                )
-                            }
-
-                            is IconType.Drawable -> {
-                                Icon(
-                                    painter = painterResource(icon.id),
-                                    contentDescription = icon.id.toString(),
-                                    tint = iconTint,
-                                    modifier = Modifier
-                                        .size(iconSize)
-                                )
-                            }
-                        }
-                    }
-                } else {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(iconSize)
-                            .align(Alignment.Center),
-                        strokeWidth = 3.dp,
-                        color = onColorPrimary
-                    )
-                }
-            }
+           if(icon != null){
+               if(isIconLeading) {
+                   iconContent()
+                   Spacer(Modifier.width(spacerWidth))
+                   textContent()
+               }else{
+                   textContent()
+                   Spacer(Modifier.width(spacerWidth))
+                   iconContent()
+               }
+           }else{
+               textContent()
+           }
         }
     }
 }
