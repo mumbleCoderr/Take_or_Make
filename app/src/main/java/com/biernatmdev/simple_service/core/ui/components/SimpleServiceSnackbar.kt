@@ -27,7 +27,7 @@ import coil3.request.crossfade
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SMALL
 import com.biernatmdev.simple_service.core.ui.theme.LineHeight
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.Profile_picture_placeholder
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.AppForegroundImage
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 
@@ -51,7 +51,7 @@ fun SimpleServiceSnackbar(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(Profile_picture_placeholder)
+                    .data(AppForegroundImage)
                     .crossfade(true)
                     .build(),
                 contentDescription = "snackbar icon",

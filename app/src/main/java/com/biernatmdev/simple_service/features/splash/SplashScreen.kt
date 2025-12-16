@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -19,23 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.times
 import com.biernatmdev.simple_service.R
-import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceButton
-import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.components.rememberOvershootScale
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.LARGE
 import com.biernatmdev.simple_service.core.ui.theme.LineHeight
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Handshake
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.LogIn
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.HandshakeFilled
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
-import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 
 @Composable
 //@Preview(showBackground = true)
@@ -53,7 +46,7 @@ fun SplashScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            imageVector = Handshake,
+            imageVector = HandshakeFilled,
             contentDescription = "Handshake",
             modifier = Modifier
                 .scale(scale.value)
@@ -81,7 +74,6 @@ fun SplashScreen(
         Spacer(Modifier.height(100.dp))
         SimpleServiceButton(
             onClick = { navigateToAuth() },
-            icon = IconType.Vector(LogIn),
             text = stringResource(R.string.splash_btn_text),
             isAnimated = false
         )

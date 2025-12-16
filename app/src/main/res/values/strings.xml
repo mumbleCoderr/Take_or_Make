@@ -1,33 +1,44 @@
 <resources>
+
+    // APP NAME
     <string name="app_name">Simple Service</string>
+
+    // -- SPLASH SCREEN --
+
+    // SPLASH WELCOME TEXT
     <string name="splash_header">Looking for help?</string>
     <string name="splash_subtext">We\'ve got everything you need!</string>
+
+    // SPLASH BTN
     <string name="splash_btn_text">Let\'s explore</string>
-    <string name="auth_header">You\'re one step away</string>
-    <string name="auth_subtext">Sign in to continue</string>
-    <string name="auth_header_loading">AUTHORIZATION</string>
-    <string name="auth_subtext_loading">PLEASE WAIT...</string>
-    <string name="auth_btn_text_google">Sign in with Google</string>
-    <string name="auth_btn_additional_text_google">Authenticating...</string>
-    <string name="auth_btn_text_guest">Continue as guest</string>
-    <string name="bottom_bar_home">HOME</string>
-    <string name="bottom_bar_category">CATEGORY</string>
-    <string name="bottom_bar_notifications">NOTIFICATIONS</string>
-    <string name="bottom_bar_profile">PROFILE</string>
-    <string name="top_bar_take">TAKE</string>
-    <string name="top_bar_make">MAKE</string>
 
-    <string name="error_btn_retry">Try again</string>
+    // -- HOME SCREEN --
 
-    <string name="profile_screen_header">Profile</string>
+    // HOME BOTTOM NAV
+    <string name="home_bottom_nav_bar_home">HOME</string>
+    <string name="home_bottom_nav_bar_category">CATEGORY</string>
+    <string name="home_bottom_nav_bar_notifications">NOTIFICATIONS</string>
+    <string name="home_bottom_nav_bar_profile">PROFILE</string>
 
-    <string name="snackbar_profile_update">Profile details updated</string>
+    // HOME TOP NAV
+    <string name="home_top_nav_bar_take">TAKE</string>
+    <string name="home_top_nav_bar_make">MAKE</string>
 
+    // EXCEPTIONS
     <string name="user_exception_not_signed_in">You are not signed in, please sign in again</string>
     <string name="user_exception_not_found">We have not found that user</string>
     <string name="user_exception_access_denied">You have no permission to do that</string>
     <string name="external_exception">External server exception</string>
 
+    // ERROR SCREEN
+    <string name="error_btn_retry">Try again</string>
+
+    // SNACKBAR INFO
+    <string name="snackbar_msg_info_profile_update">Profile details updated</string>
+
+    // -- PROFILE SCREEN --
+
+    // PROFILE OPTION NAME
     <string name="profile_option_details">Personal details</string>
     <string name="profile_option_wallet">Wallet</string>
     <string name="profile_option_pro">Account PRO</string>
@@ -37,7 +48,60 @@
     <string name="profile_option_favourites">Favourites</string>
     <string name="profile_option_logout">Log out</string>
 
+    // PROFILE OPTION CATEGORY
     <string name="profile_option_category_general">General</string>
     <string name="profile_option_category_activity">Activity</string>
     <string name="profile_option_category_other">Other</string>
+
+    // -- AUTH SCREEN --
+
+    // AUTH TOP SECTION TITLE
+    <string name="auth_screen_bottom_section_title_sign_in">Sign In</string>
+    <string name="auth_screen_bottom_section_title_sign_up">Sign Up</string>
+    <string name="auth_screen_bottom_section_title_statute">Statute</string>
+
+    // AUTH BTN
+    <string name="auth_screen_bottom_section_btn_google">Google</string>
+    <string name="auth_screen_bottom_section_btn_guest">Guest</string>
+    <string name="auth_screen_bottom_section_btn_back">Back</string>
+
+    // AUTH STATUTE
+    <string name="auth_screen_bottom_section_statute_text">§1. Lorem Ipsum Dolor\n\n
+                        1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n
+                        \n
+                        2. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n
+                        \n
+                        §2. Consectetur Adipiscing\n\n
+                        1. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.\n
+                        \n
+                        2. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.\n
+                        \n
+                        §3. Sed Do Eiusmod\n\n
+                        1. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.\n
+                        \n
+                        2. Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.\n
+                        \n
+                        §4. Tempor Incididunt\n\n
+                        1. Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.\n
+                        \n
+                        2. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</string>
+
+    // AUTH TEXTFIELD PLACEHOLDER
+    <string name="auth_screen_bottom_section_textfield_placeholder_email">E-mail</string>
+    <string name="auth_screen_bottom_section_textfield_placeholder_password">Password</string>
+    <string name="auth_screen_bottom_section_textfield_placeholder_password_confirm">Confirm password</string>
+    <string name="auth_screen_bottom_section_textfield_placeholder_first_name">First name</string>
+    <string name="auth_screen_bottom_section_textfield_placeholder_last_name">Last name</string>
+
+    // AUTH SMALL FONT
+    <string name="auth_screen_bottom_section_password_reset">Forgot password</string>
+
+    <string name="auth_screen_bottom_section_checkbox_text">While creating an account you accept our\u0020</string>
+    <string name="auth_screen_bottom_section_checkbox_text_statute">statute</string>
+
+    <string name="auth_screen_bottom_section_divider">Or sign in with</string>
+
+    <string name="auth_screen_bottom_section_sign_up_tail_text">Already have account?\u0020</string>
+    <string name="auth_screen_bottom_section_sign_in_tail_text">Create account now?\u0020</string>
+
 </resources>
