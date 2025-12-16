@@ -43,8 +43,9 @@ fun SimpleServiceButton(
     backgroundColor: Color = ColorPrimary,
     icon: IconType? = null,
     isIconLeading: Boolean = false,
+    isIconAtEdge: Boolean = false,
     iconSize: Dp = 32.dp,
-    iconTint: Color = ColorPrimary,
+    iconTint: Color = onColorPrimary,
     text: String,
     additionalText: String = "",
     loading: Boolean = false,
@@ -52,7 +53,7 @@ fun SimpleServiceButton(
     textFont: FontFamily = momoFont(),
     textFontSize: TextUnit = SEMI_LARGE,
     textFontWeight: FontWeight = FontWeight.Normal,
-    spacerWidth: Dp = 16.dp, //TODO FIX/CHANGE
+    spacerWidth: Dp = 16.dp,
     roundedCornerShapeValue: Dp = 22.dp,
     isAnimated: Boolean,
     onClick: () -> Unit,
@@ -86,8 +87,7 @@ fun SimpleServiceButton(
                                 imageVector = icon.imageVector,
                                 contentDescription = icon.imageVector.name,
                                 tint = iconTint,
-                                modifier = Modifier
-                                    .size(iconSize)
+                                modifier = Modifier.size(iconSize)
                             )
                         }
 
@@ -96,18 +96,14 @@ fun SimpleServiceButton(
                                 painter = painterResource(icon.id),
                                 contentDescription = icon.id.toString(),
                                 tint = iconTint,
-                                modifier = Modifier
-                                    .size(iconSize)
+                                modifier = Modifier.size(iconSize)
                             )
                         }
                     }
                 }
             } else {
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(iconSize),
-                    strokeWidth = 3.dp,
-                    color = onColorPrimary
+                    modifier = Modifier.size(iconSize), strokeWidth = 3.dp, color = onColorPrimary
                 )
             }
         }
@@ -120,26 +116,44 @@ fun SimpleServiceButton(
         shape = RoundedCornerShape(roundedCornerShapeValue),
         color = backgroundColor,
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-           if(icon != null){
-               if(isIconLeading) {
-                   iconContent()
-                   Spacer(Modifier.width(spacerWidth))
-                   textContent()
-               }else{
-                   textContent()
-                   Spacer(Modifier.width(spacerWidth))
-                   iconContent()
-               }
-           }else{
-               textContent()
-           }
+        if (isIconAtEdge && icon != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Box(
+                    modifier = Modifier.align(
+                        if (isIconLeading) Alignment.CenterStart else Alignment.CenterEnd
+                    )
+                ) { iconContent() }
+                Box(
+                    modifier = Modifier.align(Alignment.Center)
+                ) { textContent() }
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (icon != null) {
+                    if (isIconLeading) {
+                        iconContent()
+                        Spacer(Modifier.width(spacerWidth))
+                        textContent()
+                    } else {
+                        textContent()
+                        Spacer(Modifier.width(spacerWidth))
+                        iconContent()
+                    }
+                } else {
+                    textContent()
+                }
+            }
         }
     }
 }
+
