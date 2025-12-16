@@ -12,23 +12,23 @@ enum class HomeSubscreen(
     val screen: Screen,
 ) {
     HOME(
-        icon = IconType.Vector(Resources.Icon.Home),
-        title = R.string.bottom_bar_home,
+        icon = IconType.Vector(Resources.Icon.HomeFilled),
+        title = R.string.home_bottom_nav_bar_home,
         screen = Screen.HomeScreen,
     ),
     CATEGORY(
-        icon = IconType.Vector(Resources.Icon.Category),
-        title = R.string.bottom_bar_category,
+        icon = IconType.Vector(Resources.Icon.CategoryFilled),
+        title = R.string.home_bottom_nav_bar_category,
         screen = Screen.CategoryScreen,
     ),
     NOTIFICATIONS(
-        icon = IconType.Vector(Resources.Icon.Notification),
-        title = R.string.bottom_bar_notifications,
+        icon = IconType.Vector(Resources.Icon.NotificationFilled),
+        title = R.string.home_bottom_nav_bar_notifications,
         screen = Screen.NotificationScreen,
     ),
     PROFILE(
-        icon = IconType.Drawable(Resources.Icon.Profile),
-        title = R.string.bottom_bar_profile,
+        icon = IconType.Drawable(Resources.Icon.ProfileFilled),
+        title = R.string.home_bottom_nav_bar_profile,
         screen = Screen.ProfileScreen,
     )
 }

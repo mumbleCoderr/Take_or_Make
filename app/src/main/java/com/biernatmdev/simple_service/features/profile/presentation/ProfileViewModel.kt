@@ -92,7 +92,7 @@ class ProfileViewModel(
             userRepository.updateUserDetails(user)
                 .onSuccess {
                     _state.update { it.copy(isLoading = false, user = user) }
-                    sendEffect(ProfileEffect.ShowSnackbar(UiText.StringResource(R.string.snackbar_profile_update)))
+                    sendEffect(ProfileEffect.ShowSnackbar(UiText.StringResource(R.string.snackbar_msg_info_profile_update)))
                 }
                 .onFailure { exception ->
                     handleException(exception)

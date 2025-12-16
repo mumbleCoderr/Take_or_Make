@@ -54,9 +54,9 @@ import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Forward
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.Profile_picture_background
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.Profile_picture_placeholder
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.ForwardFilled
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.AppBackgroundImage
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.AppForegroundImage
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorSurface
@@ -184,7 +184,7 @@ fun UserProfilePictureSection(
 
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(Profile_picture_background)
+                .data(AppBackgroundImage)
                 .crossfade(true)
                 .build(),
             contentScale = ContentScale.Crop,
@@ -213,7 +213,7 @@ fun UserProfilePictureSection(
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(user.profilePicture)
-                    .fallback(Profile_picture_placeholder)
+                    .fallback(AppForegroundImage)
                     .crossfade(true)
                     .build(),
                 contentScale = ContentScale.Crop,
@@ -265,7 +265,7 @@ fun ProfileOptionItem(
     textFont: FontFamily = momoFont(),
     textFontSize: TextUnit = MEDIUM,
     textFontWeight: FontWeight = FontWeight.Normal,
-    iconForward: IconType? = IconType.Vector(Forward),
+    iconForward: IconType? = IconType.Vector(ForwardFilled),
     iconSize: Dp = 24.dp,
     iconTint: Color = onColorSurface,
     spacerValue: Dp = 16.dp,

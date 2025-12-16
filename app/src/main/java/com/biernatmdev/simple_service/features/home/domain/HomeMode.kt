@@ -11,10 +11,10 @@ enum class HomeMode(
 ) {
     TAKE(
         icon = IconType.Drawable(Resources.Icon.Take),
-        title = R.string.top_bar_take
+        title = R.string.home_top_nav_bar_take
     ),
     MAKE(
         icon = IconType.Drawable(Resources.Icon.Make),
-        title = R.string.top_bar_make
+        title = R.string.home_top_nav_bar_make
     )
 }

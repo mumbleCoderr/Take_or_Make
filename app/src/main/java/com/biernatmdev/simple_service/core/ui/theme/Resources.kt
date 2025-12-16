@@ -1,23 +1,46 @@
 package com.biernatmdev.simple_service.core.ui.theme
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
+import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Construction
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Handshake
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.Reviews
+import androidx.compose.material.icons.filled.Sell
 import androidx.compose.material.icons.filled.Wallet
+import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Campaign
+import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Construction
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Handshake
+import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.ManageAccounts
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Replay
+import androidx.compose.material.icons.outlined.Reviews
 import androidx.compose.material.icons.outlined.Sell
+import androidx.compose.material.icons.outlined.Wallet
 import com.biernatmdev.simple_service.R
 
 object Resources {
@@ -25,49 +48,89 @@ object Resources {
     object Icon {
 
         // SPLASH SCREEN
-        val Handshake = Icons.Filled.Handshake
+        val HandshakeFilled = Icons.Filled.Handshake
+        val HandshakeOutlined = Icons.Outlined.Handshake
 
         // AUTH SCREEN
-        val Construction = Icons.Outlined.Construction
-        val Campaign = Icons.Outlined.Campaign
-        val Sell = Icons.Outlined.Sell
-        val Approval = R.drawable.approval
+        val ConstructionOutlined = Icons.Outlined.Construction
+        val ConstructionFilled = Icons.Filled.Construction
+
+        val CampaignOutlined = Icons.Outlined.Campaign
+        val CampaignFilled = Icons.Filled.Campaign
+
+        val SellOutlined = Icons.Outlined.Sell
+        val SellFilled = Icons.Filled.Sell
+
+        val ApprovalOutlined = R.drawable.approval
 
         // BUTTONS
-        val LogIn = Icons.AutoMirrored.Filled.Login
+        val SignInFilled = Icons.AutoMirrored.Filled.Login
+        val SignInOutlined = Icons.AutoMirrored.Outlined.Login
+
+        val RetryFilled = Icons.Filled.Replay
+        val RetryOutlined = Icons.Outlined.Replay
+        val BackFilled = Icons.AutoMirrored.Filled.ArrowBack
+        val BackOutlined = Icons.AutoMirrored.Outlined.ArrowBack
         val Google = R.drawable.google
-        val Retry = Icons.Filled.Replay
 
         // BOTTOM BAR
-        val Home = Icons.Filled.Home
-        val Category = Icons.Filled.Category
-        val Notification = Icons.Filled.Notifications
-        val Profile = R.drawable.profile
+        val HomeFilled = Icons.Filled.Home
+        val HomeOutlined = Icons.Outlined.Home
+
+        val CategoryFilled = Icons.Filled.Category
+        val CategoryOutlined = Icons.Outlined.Category
+        val NotificationFilled = Icons.Filled.Notifications
+        val NotificationOutlined = Icons.Outlined.Notifications
+        val ProfileFilled = R.drawable.profile
 
         // TOP BAR
         val Take = R.drawable.take
         val Make = R.drawable.make
 
+
         // PROFILE OPTION
-        val Forward = Icons.AutoMirrored.Filled.ArrowForwardIos
-        val Details = Icons.Filled.ManageAccounts
-        val Wallet = Icons.Filled.Wallet
-        val Pro = Icons.Filled.AttachMoney
-        val Statistics = R.drawable.finance
-        val History = Icons.Filled.History
-        val Reviews = Icons.Filled.Reviews
-        val Favourites = Icons.Filled.FavoriteBorder
+        val ForwardFilled = Icons.AutoMirrored.Filled.ArrowForwardIos
+        val ForwardOutlined = Icons.AutoMirrored.Outlined.ArrowForwardIos
+
+        val DetailsFilled = Icons.Filled.ManageAccounts
+        val DetailsOutlined = Icons.Outlined.ManageAccounts
+
+        val WalletFilled = Icons.Filled.Wallet
+        val WalletOutlined = Icons.Outlined.Wallet
+
+        val ProFilled = Icons.Filled.AttachMoney
+        val ProOutlined = Icons.Outlined.AttachMoney
+
+        val StatisticsFilled = R.drawable.finance
+
+        val HistoryFilled = Icons.Filled.History
+        val HistoryOutlined = Icons.Outlined.History
+
+        val ReviewsFilled = Icons.Filled.Reviews
+        val ReviewsOutlined = Icons.Outlined.Reviews
+        val FavouritesFilled = Icons.Filled.FavoriteBorder
+        val FavouritesOutlined = Icons.Outlined.FavoriteBorder
+
+
+        // TEXT FIELDS
+        val EmailFilled = Icons.Filled.Email
+        val EmailOutlined = Icons.Outlined.Email
+
+
+        val PasswordFilled = Icons.Filled.Lock
+        val PasswordOutlined = Icons.Outlined.Lock
 
         // OTHER
 
-        val Error = Icons.Filled.ErrorOutline
+        val ErrorFilled = Icons.Filled.ErrorOutline
+        val ErrorOutlined = Icons.Outlined.ErrorOutline
     }
 
     object Image {
         val Logo_v1 = R.drawable.simple_service_logo_v1
         val Logo_v2 = R.drawable.simple_service_logo_v2
         val Logo_v1_dark = R.drawable.simple_service_logo_v1_dark
-        val Profile_picture_placeholder = R.drawable.profile_picture_placeholder
-        val Profile_picture_background = R.drawable.profile_picture_background
+        val AppForegroundImage = R.drawable.profile_picture_placeholder
+        val AppBackgroundImage = R.drawable.profile_picture_background
     }
 }
