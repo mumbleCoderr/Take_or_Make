@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -41,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.ui.model.IconType
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
@@ -179,7 +181,7 @@ fun SimpleServiceTextFieldDecorator(
                             Icon(
                                 painter = painterResource(id = icon.id),
                                 tint = iconTint,
-                                contentDescription = "$placeholder icon",
+                                contentDescription = placeholder,
                                 modifier = Modifier.size(iconSize),
                             )
                         }
@@ -188,7 +190,7 @@ fun SimpleServiceTextFieldDecorator(
                             Icon(
                                 imageVector = icon.imageVector,
                                 tint = iconTint,
-                                contentDescription = "$placeholder icon",
+                                contentDescription = placeholder,
                                 modifier = Modifier.size(iconSize),
                             )
                         }

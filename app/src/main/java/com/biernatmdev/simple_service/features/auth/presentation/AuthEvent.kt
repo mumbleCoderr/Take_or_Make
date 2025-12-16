@@ -6,6 +6,9 @@ import com.google.firebase.auth.FirebaseUser
 sealed interface AuthEvent {
     data object OnGuestSignInClick: AuthEvent
     data object OnGoogleSignInClick: AuthEvent
+    data object OnSwitchSignModeClick: AuthEvent
+    data object OnStatuteClick: AuthEvent
+    data object OnCheckBoxClick: AuthEvent
     data class OnGoogleSignInClickResult(val result: Result<FirebaseUser?>) : AuthEvent
 }
 

@@ -53,7 +53,7 @@ fun ErrorScreen(
             Icon(
                 imageVector = ErrorFilled,
                 modifier = Modifier.size(222.dp),
-                contentDescription = "ERROR",
+                contentDescription = ErrorFilled.name,
                 tint = ColorPrimary
             )
             Spacer(Modifier.height(24.dp))

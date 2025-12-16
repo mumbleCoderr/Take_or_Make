@@ -104,4 +104,7 @@
     <string name="auth_screen_bottom_section_sign_up_tail_text">Already have account?\u0020</string>
     <string name="auth_screen_bottom_section_sign_in_tail_text">Create account now?\u0020</string>
 
+    // OTHER
+    <string name="profile_picture">User profile picture</string>
+
 </resources>
