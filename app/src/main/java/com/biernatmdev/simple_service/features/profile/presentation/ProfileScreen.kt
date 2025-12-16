@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -46,6 +47,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.request.fallback
+import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceSnackbar
 import com.biernatmdev.simple_service.core.ui.model.IconType
@@ -188,7 +190,7 @@ fun UserProfilePictureSection(
                 .crossfade(true)
                 .build(),
             contentScale = ContentScale.Crop,
-            contentDescription = "user profile picture background",
+            contentDescription = null,
         )
         Box(
             modifier = Modifier
@@ -217,7 +219,7 @@ fun UserProfilePictureSection(
                     .crossfade(true)
                     .build(),
                 contentScale = ContentScale.Crop,
-                contentDescription = "user profile picture background",
+                contentDescription = stringResource(R.string.profile_picture),
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(120.dp)

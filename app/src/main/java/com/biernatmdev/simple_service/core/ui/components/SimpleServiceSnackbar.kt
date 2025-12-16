@@ -54,7 +54,7 @@ fun SimpleServiceSnackbar(
                     .data(AppForegroundImage)
                     .crossfade(true)
                     .build(),
-                contentDescription = "snackbar icon",
+                contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(20.dp)

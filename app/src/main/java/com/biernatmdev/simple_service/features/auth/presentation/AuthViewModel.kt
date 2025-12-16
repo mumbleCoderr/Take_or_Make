@@ -1,5 +1,6 @@
 package com.biernatmdev.simple_service.features.auth.presentation
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biernatmdev.simple_service.R
@@ -7,7 +8,7 @@ import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
 import com.biernatmdev.simple_service.core.ui.model.UiText
 import com.biernatmdev.simple_service.core.user.domain.UserRepository
 import com.biernatmdev.simple_service.core.user.domain.model.UserException
-import com.google.firebase.auth.FirebaseAuth
+import com.biernatmdev.simple_service.features.auth.domain.AuthMode
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +27,12 @@ class AuthViewModel(
     private val _effect = Channel<AuthEffect>()
     val effect = _effect.receiveAsFlow()
 
+    val emailState = TextFieldState()
+    val passwordState = TextFieldState()
+    val passwordRepeatState = TextFieldState()
+    val firstNameState = TextFieldState()
+    val lastNameState = TextFieldState()
+
     fun onEvent(event: AuthEvent) {
         when (event) {
             AuthEvent.OnGuestSignInClick -> guestSignIn()
@@ -33,7 +40,17 @@ class AuthViewModel(
                 _state.update { it.copy(isLoading = true, error = null) }
                 sendEffect(AuthEffect.LaunchGoogleSignIn)
             }
-
+            AuthEvent.OnSwitchSignModeClick -> _state.update {
+                it.copy(
+                    authMode = when (it.authMode) {
+                        AuthMode.SIGN_IN -> AuthMode.SIGN_UP
+                        AuthMode.SIGN_UP -> AuthMode.SIGN_IN
+                        else -> AuthMode.SIGN_UP
+                    }
+                )
+            }
+            AuthEvent.OnStatuteClick -> _state.update { it.copy(authMode = AuthMode.STATUTE) }
+            AuthEvent.OnCheckBoxClick -> _state.update { it.copy(isCheckBoxChecked = !it.isCheckBoxChecked) }
             is AuthEvent.OnGoogleSignInClickResult -> handleGoogleSignInResult(event.result)
         }
     }
