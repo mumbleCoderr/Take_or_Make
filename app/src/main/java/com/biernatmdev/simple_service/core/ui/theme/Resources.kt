@@ -7,6 +7,7 @@ import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.outlined.Login
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Category
@@ -22,10 +23,12 @@ import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.MarkEmailRead
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.Reviews
 import androidx.compose.material.icons.filled.Sell
 import androidx.compose.material.icons.filled.Wallet
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Campaign
 import androidx.compose.material.icons.outlined.Category
@@ -41,6 +44,7 @@ import androidx.compose.material.icons.outlined.LockOpen
 import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.MarkEmailRead
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Replay
 import androidx.compose.material.icons.outlined.Reviews
 import androidx.compose.material.icons.outlined.Sell
@@ -83,9 +87,15 @@ object Resources {
 
         val CategoryFilled = Icons.Filled.Category
         val CategoryOutlined = Icons.Outlined.Category
+
         val NotificationFilled = Icons.Filled.Notifications
         val NotificationOutlined = Icons.Outlined.Notifications
-        val ProfileFilled = R.drawable.profile
+
+        val AccountFilled = Icons.Filled.Person
+        val AccountOutlined = Icons.Outlined.Person
+
+        val AccountCircleFilled = Icons.Filled.AccountCircle
+        val AccountCircleOutlined = Icons.Outlined.AccountCircle
 
         // TOP BAR
         val Take = R.drawable.take

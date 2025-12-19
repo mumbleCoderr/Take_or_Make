@@ -28,7 +28,6 @@ fun HomeScreen(
     navigateToAuth: () -> Unit,
     navigateToProfileSubscreen: (Screen) -> Unit
 ) {
-    // BOTTOM BAR NAVIGATION
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

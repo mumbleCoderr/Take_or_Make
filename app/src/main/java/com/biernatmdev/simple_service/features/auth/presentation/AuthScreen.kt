@@ -78,18 +78,16 @@ import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_LARGE
-import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.REGULAR
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
-import com.biernatmdev.simple_service.core.ui.theme.FontSize.SMALL
 import com.biernatmdev.simple_service.core.ui.theme.LineHeight
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.AccountOutlined
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.BackFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.EmailOutlined
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.EmailSentOutlined
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Google
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.SignInFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.PasswordOutlined
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.ProfileFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.AppBackgroundImage
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
@@ -301,12 +299,7 @@ fun AuthScreenBottomSection(
                         AuthMode.SIGN_IN -> stringResource(R.string.auth_screen_bottom_section_title_sign_in)
                         AuthMode.SIGN_UP -> stringResource(R.string.auth_screen_bottom_section_title_sign_up)
                         AuthMode.STATUTE -> stringResource(R.string.auth_screen_bottom_section_title_statute)
-                        AuthMode.PASSWORD_RESET -> /*if (!isResetPasswordLinkSent) {
-                            stringResource(R.string.auth_screen_bottom_section_title_password_reset)
-                        } else {
-                            stringResource(R.string.auth_screen_bottom_section_title_password_reset_success)
-                        }*/
-                            stringResource(R.string.auth_screen_bottom_section_title_password_reset)
+                        AuthMode.PASSWORD_RESET -> stringResource(R.string.auth_screen_bottom_section_title_password_reset)
                     },
                     color = onColorBackground,
                     fontFamily = momoFont(),
@@ -317,7 +310,7 @@ fun AuthScreenBottomSection(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(22.dp))
             AnimatedContent(
                 targetState = authMode,
                 label = "BottomSectionAnimation",
@@ -612,7 +605,7 @@ fun BottomSectionSignUpMode(
             onFocus = { onEvent(AuthEvent.OnFirstNameFocused) },
             errorText = firstNameErrorMsg,
             placeholder = stringResource(R.string.auth_screen_bottom_section_textfield_placeholder_first_name),
-            icon = IconType.Drawable(ProfileFilled)
+            icon = IconType.Vector(AccountOutlined)
         )
         Spacer(Modifier.height(22.dp))
         SimpleServiceTextField(
@@ -620,7 +613,7 @@ fun BottomSectionSignUpMode(
             onFocus = { onEvent(AuthEvent.OnLastNameFocused) },
             errorText = lastNameErrorMsg,
             placeholder = stringResource(R.string.auth_screen_bottom_section_textfield_placeholder_last_name),
-            icon = IconType.Drawable(ProfileFilled)
+            icon = IconType.Vector(AccountOutlined)
         )
         Spacer(Modifier.height(26.dp))
         val text = buildAnnotatedString {
