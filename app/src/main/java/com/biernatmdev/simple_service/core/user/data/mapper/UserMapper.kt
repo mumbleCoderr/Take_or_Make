@@ -49,6 +49,7 @@ internal fun User.toFirestoreMap(): Map<String, Any?> {
     }
 
     return mapOf(
+        "id" to this.id,
         "firstName" to this.firstName,
         "lastName" to this.lastName,
         "email" to this.email,

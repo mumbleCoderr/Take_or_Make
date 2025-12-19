@@ -55,15 +55,24 @@
 
     // -- AUTH SCREEN --
 
+    // SNACKBAR INFO
+    <string name="snackbar_msg_info_auth_no_internet_connection">No internet connection</string>
+    <string name="snackbar_msg_info_auth_access_denied">Access Denied</string>
+    <string name="snackbar_msg_info_auth_user_not_signed_in">User not signed in</string>
+    <string name="snackbar_msg_info_auth_too_many_requests">Too many requests, try again later</string>
+    <string name="snackbar_msg_info_auth_password_reset">If this e-mail exists, we will send you an email with link to reset your password</string>
+
     // AUTH TOP SECTION TITLE
     <string name="auth_screen_bottom_section_title_sign_in">Sign In</string>
     <string name="auth_screen_bottom_section_title_sign_up">Sign Up</string>
     <string name="auth_screen_bottom_section_title_statute">Statute</string>
+    <string name="auth_screen_bottom_section_title_password_reset">Reset \nPassword</string>
 
     // AUTH BTN
     <string name="auth_screen_bottom_section_btn_google">Google</string>
     <string name="auth_screen_bottom_section_btn_guest">Guest</string>
     <string name="auth_screen_bottom_section_btn_back">Back</string>
+    <string name="auth_screen_bottom_section_btn_password_reset">Reset password</string>
 
     // AUTH STATUTE
     <string name="auth_screen_bottom_section_statute_text">§1. Lorem Ipsum Dolor\n\n
@@ -93,6 +102,22 @@
     <string name="auth_screen_bottom_section_textfield_placeholder_first_name">First name</string>
     <string name="auth_screen_bottom_section_textfield_placeholder_last_name">Last name</string>
 
+    // AUTH TEXTFIELD ERROR
+    <string name="auth_screen_bottom_section_textfield_email_blank_error_msg">E-mail can not be empty</string>
+    <string name="auth_screen_bottom_section_textfield_email_incorrect_error_msg">E-mail is incorrect</string>
+    <string name="auth_screen_bottom_section_textfield_email_taken_error_msg">E-mail is already taken</string>
+    <string name="auth_screen_bottom_section_textfield_password_blank_error_msg">Password can not be empty</string>
+    <string name="auth_screen_bottom_section_textfield_password_not_identical_error_msg">Passwords are not identical</string>
+    <string name="auth_screen_bottom_section_textfield_password_too_short_error_msg">Password has to be at leat 6 characters long</string>
+    <string name="auth_screen_bottom_section_textfield_email_password_wrong_error_msg">E-mail or password is incorrect</string>
+    <string name="auth_screen_bottom_section_textfield_firstname_blank_error_msg">First name can not be empty</string>
+    <string name="auth_screen_bottom_section_textfield_firstname_incorrect_error_msg">First name is incorrect</string>
+    <string name="auth_screen_bottom_section_textfield_firstname_too_long_error_msg">First name can not be longer than 50 characters long</string>
+    <string name="auth_screen_bottom_section_textfield_lastname_blank_error_msg">Last name can not be empty</string>
+    <string name="auth_screen_bottom_section_textfield_lastname_incorrect_error_msg">Last name is incorrect</string>
+    <string name="auth_screen_bottom_section_textfield_lastname_too_long_error_msg">Last name can not be longer than 50 characters long</string>
+    <string name="auth_screen_bottom_section_checkbox_not_checked">You have to accept our terms and statute to continue</string>
+
     // AUTH SMALL FONT
     <string name="auth_screen_bottom_section_password_reset">Forgot password</string>
 
@@ -103,6 +128,10 @@
 
     <string name="auth_screen_bottom_section_sign_up_tail_text">Already have account?\u0020</string>
     <string name="auth_screen_bottom_section_sign_in_tail_text">Create account now?\u0020</string>
+
+    <string name="auth_screen_bottom_section_forgot_password_info">Please provide an e-mail to get a link for password restore</string>
+    <string name="auth_screen_bottom_section_forgot_password_header">Link has been sent!</string>
+    <string name="auth_screen_bottom_section_forgot_password_subtext">Check your e-mail box. If you can\'t find it, check SPAM.</string>
 
     // OTHER
     <string name="profile_picture">User profile picture</string>

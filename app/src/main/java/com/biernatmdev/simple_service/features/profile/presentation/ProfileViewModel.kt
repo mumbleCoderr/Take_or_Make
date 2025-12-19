@@ -39,7 +39,7 @@ class ProfileViewModel(
 
     fun onEvent(event: ProfileEvent) {
         when (event) {
-            ProfileEvent.ReloadUserDetails -> reloadUserDetails()
+            ProfileEvent.ReloadUserDetails -> reloadUserDetails() //TODO MOVE TO GLOBAL
             ProfileEvent.SignOut -> signOut()
             is ProfileEvent.UpdateUserDetails -> updateData(event.user)
             is ProfileEvent.OnProfileOptionClick -> handleProfileOptionClick(event.profileOption)
