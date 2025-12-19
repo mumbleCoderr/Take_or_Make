@@ -4,4 +4,5 @@ enum class AuthMode {
     SIGN_IN,
     SIGN_UP,
     STATUTE,
+    PASSWORD_RESET,
 }

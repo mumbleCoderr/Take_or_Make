@@ -18,7 +18,9 @@ import androidx.compose.material.icons.filled.Handshake
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.ManageAccounts
+import androidx.compose.material.icons.filled.MarkEmailRead
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.Reviews
@@ -35,7 +37,9 @@ import androidx.compose.material.icons.outlined.Handshake
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.LockOpen
 import androidx.compose.material.icons.outlined.ManageAccounts
+import androidx.compose.material.icons.outlined.MarkEmailRead
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Replay
 import androidx.compose.material.icons.outlined.Reviews
@@ -124,6 +128,12 @@ object Resources {
 
         val ErrorFilled = Icons.Filled.ErrorOutline
         val ErrorOutlined = Icons.Outlined.ErrorOutline
+
+        val EmailSentFilled = Icons.Filled.MarkEmailRead
+        val EmailSentOutlined = Icons.Outlined.MarkEmailRead
+
+        val LockOpenFilled = Icons.Filled.LockOpen
+        val LockOpenOutlined = Icons.Outlined.LockOpen
     }
 
     object Image {

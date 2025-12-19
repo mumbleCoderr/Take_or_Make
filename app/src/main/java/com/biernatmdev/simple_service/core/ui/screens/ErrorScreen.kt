@@ -69,7 +69,7 @@ fun ErrorScreen(
         }
         SimpleServiceButton(
             onClick = { onRetry() },
-            loading = isLoading,
+            isLoading = isLoading,
             icon = IconType.Vector(RetryOutlined),
             text = stringResource(R.string.error_btn_retry),
             isAnimated = true,

@@ -9,16 +9,17 @@ import com.biernatmdev.simple_service.features.home.presentation.HomeViewModel
 import com.biernatmdev.simple_service.features.main.MainViewModel
 import com.biernatmdev.simple_service.features.profile.presentation.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
     single<FirebaseAuth> { FirebaseAuth.getInstance() }
-    single<UserRepository> { UserRepositoryImpl() }
+    single<FirebaseFirestore> { FirebaseFirestore.getInstance() }
+    single<UserRepository> { UserRepositoryImpl(get(), get()) }
     viewModel { MainViewModel(get()) }
     viewModel { AuthViewModel(get(), get()) }
-    //TODO offerrepository
     viewModel { HomeViewModel() }
     viewModel { ProfileViewModel(get()) }
     single { GoogleUiClient(

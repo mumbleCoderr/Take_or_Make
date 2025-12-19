@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -48,20 +47,20 @@ fun SimpleServiceButton(
     iconTint: Color = onColorPrimary,
     text: String,
     additionalText: String = "",
-    loading: Boolean = false,
+    isAnimated: Boolean,
+    isLoading: Boolean = false,
     textColor: Color = onColorPrimary,
     textFont: FontFamily = momoFont(),
     textFontSize: TextUnit = SEMI_LARGE,
     textFontWeight: FontWeight = FontWeight.Normal,
     spacerWidth: Dp = 16.dp,
     roundedCornerShapeValue: Dp = 22.dp,
-    isAnimated: Boolean,
     onClick: () -> Unit,
 ) {
     var buttonText by remember { mutableStateOf(text) }
     if (isAnimated) {
-        LaunchedEffect(loading) {
-            buttonText = if (loading) additionalText else text
+        LaunchedEffect(isLoading) {
+            buttonText = if (isLoading) additionalText else text
         }
     }
 
@@ -77,7 +76,7 @@ fun SimpleServiceButton(
 
     val iconContent = @Composable {
         AnimatedContent(
-            targetState = loading,
+            targetState = isLoading,
         ) { loadingState ->
             if (!loadingState) {
                 if (icon != null) {
@@ -103,7 +102,9 @@ fun SimpleServiceButton(
                 }
             } else {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(iconSize), strokeWidth = 3.dp, color = onColorPrimary
+                    modifier = Modifier.size(iconSize),
+                    strokeWidth = 3.dp,
+                    color = textColor
                 )
             }
         }
@@ -112,7 +113,7 @@ fun SimpleServiceButton(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .clickable(enabled = !isLoading) { onClick() },
         shape = RoundedCornerShape(roundedCornerShapeValue),
         color = backgroundColor,
     ) {
@@ -139,14 +140,14 @@ fun SimpleServiceButton(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (icon != null) {
+                if (icon != null || isLoading) {
                     if (isIconLeading) {
                         iconContent()
-                        Spacer(Modifier.width(spacerWidth))
+                        if(buttonText.isNotEmpty()) Spacer(Modifier.width(spacerWidth))
                         textContent()
                     } else {
                         textContent()
-                        Spacer(Modifier.width(spacerWidth))
+                        if(buttonText.isNotEmpty()) Spacer(Modifier.width(spacerWidth))
                         iconContent()
                     }
                 } else {
