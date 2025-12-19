@@ -11,7 +11,7 @@ internal fun FirebaseUser.toDomainUser(): User{
         id = this.uid,
         firstName = this.displayName?.split(" ")?.firstOrNull() ?: "Unknown",
         lastName = this.displayName?.split(" ")?.lastOrNull() ?: "Unknown",
-        email = this.email ?: "Unknown",
+        email = this.email ?: "",
         profilePicture = this.photoUrl?.toString()?.takeIf { it.isNotBlank() }
     )
 }
@@ -30,7 +30,7 @@ internal fun DocumentSnapshot.toDomainUser(): User {
         id = this.id,
         firstName = this.getString("firstName") ?: "Unknown",
         lastName = this.getString("lastName") ?: "Unknown",
-        email = this.getString("email") ?: "Unknown",
+        email = this.getString("email") ?: "",
         city = this.getString("city"),
         postalCode = this.getLong("postalCode")?.toInt(),
         phoneNumber = phoneNumber,

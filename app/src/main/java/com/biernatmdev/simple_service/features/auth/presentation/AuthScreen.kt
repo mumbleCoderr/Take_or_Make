@@ -219,7 +219,8 @@ fun AuthScreenContent(
             modifier = Modifier.align(Alignment.TopCenter),
             snackbar = { data ->
                 SimpleServiceSnackbar(data)
-            })
+            }
+        )
     }
 }
 

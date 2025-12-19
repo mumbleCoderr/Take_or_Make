@@ -52,7 +52,7 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
                 }
             )
         }
-        composable<Screen.DetailsScreen> {
+        composable<Screen.UserDetailsScreen> {
             DetailsScreen()
         }
         composable<Screen.WalletScreen> {

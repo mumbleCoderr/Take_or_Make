@@ -26,7 +26,7 @@ Screen {
 
     // PROFILE SUBSCREENS
     @Serializable
-    data object DetailsScreen: Screen()
+    data object UserDetailsScreen: Screen()
     @Serializable
     data object WalletScreen: Screen()
     @Serializable

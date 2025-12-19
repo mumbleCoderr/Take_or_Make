@@ -8,6 +8,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.AddLink
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Category
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.filled.Reviews
 import androidx.compose.material.icons.filled.Sell
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.AddLink
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Campaign
 import androidx.compose.material.icons.outlined.Category
@@ -124,6 +126,9 @@ object Resources {
         val ReviewsOutlined = Icons.Outlined.Reviews
         val FavouritesFilled = Icons.Filled.FavoriteBorder
         val FavouritesOutlined = Icons.Outlined.FavoriteBorder
+
+        val LinkFilled = Icons.Filled.AddLink
+        val LinkOutlined = Icons.Outlined.AddLink
 
 
         // TEXT FIELDS

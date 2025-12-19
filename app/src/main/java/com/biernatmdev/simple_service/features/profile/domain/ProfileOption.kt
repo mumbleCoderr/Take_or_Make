@@ -7,6 +7,7 @@ import com.biernatmdev.simple_service.core.ui.model.UiText
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.DetailsFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.FavouritesFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.HistoryFilled
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.LinkFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.SignInFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.ProFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.ReviewsFilled
@@ -19,11 +20,11 @@ enum class ProfileOption(
     val category: ProfileOptionCategory,
     val screen: Screen,
 ) {
-    DETAILS(
+    USER_DETAILS(
         icon = IconType.Vector(DetailsFilled),
         title = UiText.StringResource(R.string.profile_option_details),
         category = ProfileOptionCategory.GENERAL,
-        screen = Screen.DetailsScreen
+        screen = Screen.UserDetailsScreen
     ),
     WALLET(
         icon = IconType.Vector(WalletFilled),
@@ -60,6 +61,12 @@ enum class ProfileOption(
         title = UiText.StringResource(R.string.profile_option_favourites),
         category = ProfileOptionCategory.ACTIVITY,
         screen = Screen.FavouritesScreen
+    ),
+    LINK_ACCOUNT(
+        icon = IconType.Vector(LinkFilled),
+        title = UiText.StringResource(R.string.profile_option_link_account),
+        category = ProfileOptionCategory.OTHER,
+        screen = Screen.UserDetailsScreen
     ),
     SIGNOUT(
         icon = IconType.Vector(SignInFilled),

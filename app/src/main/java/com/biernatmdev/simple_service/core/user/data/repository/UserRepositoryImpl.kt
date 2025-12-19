@@ -62,7 +62,7 @@ class UserRepositoryImpl(
         _currentUser.value = null
     }
 
-    override suspend fun linkGuestToEmail( //TODO IMPLEMENT IN PROFILE SCREEN
+    override suspend fun linkGuestToEmail(
         email: String,
         password: String,
         firstName: String,
