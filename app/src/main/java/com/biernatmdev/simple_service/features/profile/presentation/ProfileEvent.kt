@@ -8,6 +8,8 @@ import com.biernatmdev.simple_service.features.profile.domain.ProfileOption
 sealed interface ProfileEvent {
     data class OnUpdateUserDetailsClick(val user: User) : ProfileEvent
     data class OnProfileOptionClick(val profileOption: ProfileOption) : ProfileEvent
+    data object TriggerLinkAccountAlert : ProfileEvent
+    data object OnLinkAccountAlertConfirm : ProfileEvent
 }
 
 sealed interface ProfileEffect {

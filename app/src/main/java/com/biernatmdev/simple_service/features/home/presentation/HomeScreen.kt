@@ -70,8 +70,8 @@ fun HomeScreen(
                 composable<Screen.NotificationScreen> {}
                 composable<Screen.ProfileScreen> {
                     ProfileScreen(
+                        navigateToProfileSubscreen = navigateToProfileSubscreen,
                         navigateToAuth = navigateToAuth,
-                        navigateToProfileSubscreen = navigateToProfileSubscreen
                     )
                 }
             }
