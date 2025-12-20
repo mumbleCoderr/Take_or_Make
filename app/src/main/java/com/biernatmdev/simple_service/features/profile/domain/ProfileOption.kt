@@ -68,7 +68,7 @@ enum class ProfileOption(
         category = ProfileOptionCategory.OTHER,
         screen = Screen.UserDetailsScreen
     ),
-    SIGNOUT(
+    SIGN_OUT(
         icon = IconType.Vector(SignInFilled),
         title = UiText.StringResource(R.string.profile_option_logout),
         category = ProfileOptionCategory.OTHER,

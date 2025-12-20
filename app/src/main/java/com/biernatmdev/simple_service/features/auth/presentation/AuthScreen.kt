@@ -441,12 +441,14 @@ fun BottomSectionPasswordResetMode(
                     )
                     Spacer(Modifier.height(48.dp))
                     SimpleServiceButton(
+                        modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.auth_screen_bottom_section_btn_password_reset),
                         isAnimated = false,
                         onClick = { onEvent(AuthEvent.OnResetPasswordClick) }
                     )
                     Spacer(Modifier.height(22.dp))
                     SimpleServiceButton(
+                        modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.auth_screen_bottom_section_btn_back),
                         backgroundColor = ColorSecondary,
                         textColor = onColorBackgroundDarker,
@@ -489,6 +491,7 @@ fun BottomSectionPasswordResetMode(
                     )
                     Spacer(Modifier.height(48.dp))
                     SimpleServiceButton(
+                        modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.auth_screen_bottom_section_btn_back),
                         isIconLeading = true,
                         isIconAtEdge = true,
@@ -523,6 +526,7 @@ fun BottomSectionStatuteMode(
         )
         Spacer(Modifier.height(32.dp))
         SimpleServiceButton(
+            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.auth_screen_bottom_section_btn_back),
             isIconLeading = true,
             isIconAtEdge = true,
@@ -659,6 +663,7 @@ fun BottomSectionSignUpMode(
         )
         Spacer(Modifier.height(32.dp))
         SimpleServiceButton(
+            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.auth_screen_bottom_section_title_sign_up),
             isAnimated = true,
             isLoading = loadingTarget == AuthLoadingTarget.SIGN_UP_EMAIL,
@@ -726,6 +731,7 @@ fun BottomSectionSignInMode(
                 .clickable { onEvent(AuthEvent.OnSwitchAuthMode(AuthMode.PASSWORD_RESET)) })
         Spacer(Modifier.height(32.dp))
         SimpleServiceButton(
+            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.auth_screen_bottom_section_title_sign_in),
             isAnimated = true,
             isLoading = loadingTarget == AuthLoadingTarget.SIGN_IN_EMAIL,

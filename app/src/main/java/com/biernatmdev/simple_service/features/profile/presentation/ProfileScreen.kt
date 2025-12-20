@@ -17,6 +17,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
@@ -48,17 +50,21 @@ import coil3.request.crossfade
 import coil3.request.fallback
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.nav.Screen
+import com.biernatmdev.simple_service.core.ui.components.SimpleServiceDialog
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceSnackbar
 import com.biernatmdev.simple_service.core.ui.model.IconType
+import com.biernatmdev.simple_service.core.ui.model.UiText
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
+import com.biernatmdev.simple_service.core.ui.theme.LineHeight
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.ForwardFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.AppBackgroundImage
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.AppForegroundImage
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 import com.biernatmdev.simple_service.core.ui.theme.onColorSurface
 import com.biernatmdev.simple_service.core.user.domain.model.User
 import com.biernatmdev.simple_service.features.profile.domain.ProfileOption
@@ -78,14 +84,12 @@ fun ProfileScreen(
     LaunchedEffect(Unit) {
         profileViewModel.effect.collect { effect ->
             when (effect) {
-                is ProfileEffect.NavigateToAuth -> navigateToAuth()
-
                 is ProfileEffect.ShowSnackbar -> {
                     val message = effect.message.asString(context)
                     snackbar.showSnackbar(message)
                 }
-
                 is ProfileEffect.NavigateTo -> navigateToProfileSubscreen(effect.screen)
+                is ProfileEffect.NavigateToAuth -> navigateToAuth()
             }
         }
     }
@@ -102,7 +106,16 @@ fun ProfileScreenContent(
     state: ProfileState,
     onEvent: (ProfileEvent) -> Unit,
     snackbar: SnackbarHostState,
-){
+) {
+    if (state.isAlertVisible) {
+        SimpleServiceDialog(
+            onDismiss = { onEvent(ProfileEvent.TriggerLinkAccountAlert) },
+            onConfirm = { onEvent(ProfileEvent.OnLinkAccountAlertConfirm) },
+            title = UiText.DynamicString("Wait a second!"),
+            subtext = UiText.DynamicString("You have to fill required information first"),
+        )
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -125,6 +138,7 @@ fun ProfileScreenContent(
             CircularProgressIndicator(
                 modifier = Modifier
                     .size(100.dp)
+                    .align(Alignment.Center)
             )
         }
 
@@ -137,6 +151,7 @@ fun ProfileScreenContent(
         )
     }
 }
+
 @Composable
 fun UserProfilePictureSection(
     user: User,

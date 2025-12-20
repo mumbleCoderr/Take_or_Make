@@ -1,12 +1,12 @@
 package com.biernatmdev.simple_service.core.ui.components
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -39,6 +39,7 @@ import com.biernatmdev.simple_service.core.ui.theme.onColorPrimary
 @Composable
 fun SimpleServiceButton(
     modifier: Modifier = Modifier,
+    isBordered: Boolean = false,
     backgroundColor: Color = ColorPrimary,
     icon: IconType? = null,
     isIconLeading: Boolean = false,
@@ -49,6 +50,7 @@ fun SimpleServiceButton(
     additionalText: String = "",
     isAnimated: Boolean,
     isLoading: Boolean = false,
+    buttonPadding: Dp = 16.dp,
     textColor: Color = onColorPrimary,
     textFont: FontFamily = momoFont(),
     textFontSize: TextUnit = SEMI_LARGE,
@@ -103,7 +105,7 @@ fun SimpleServiceButton(
             } else {
                 CircularProgressIndicator(
                     modifier = Modifier.size(iconSize),
-                    strokeWidth = 3.dp,
+                    strokeWidth = 4.dp,
                     color = textColor
                 )
             }
@@ -111,17 +113,22 @@ fun SimpleServiceButton(
     }
 
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(enabled = !isLoading) { onClick() },
+        modifier = modifier.clickable(enabled = !isLoading) { onClick() },
         shape = RoundedCornerShape(roundedCornerShapeValue),
+        border = if (isBordered) {
+            BorderStroke(
+                width = 1.dp,
+                color = ColorPrimary,
+            )
+        } else {
+            null
+        },
         color = backgroundColor,
     ) {
         if (isIconAtEdge && icon != null) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(buttonPadding)
             ) {
                 Box(
                     modifier = Modifier.align(
@@ -135,19 +142,18 @@ fun SimpleServiceButton(
         } else {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(buttonPadding),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (icon != null || isLoading) {
                     if (isIconLeading) {
                         iconContent()
-                        if(buttonText.isNotEmpty()) Spacer(Modifier.width(spacerWidth))
+                        if (buttonText.isNotEmpty()) Spacer(Modifier.width(spacerWidth))
                         textContent()
                     } else {
                         textContent()
-                        if(buttonText.isNotEmpty()) Spacer(Modifier.width(spacerWidth))
+                        if (buttonText.isNotEmpty()) Spacer(Modifier.width(spacerWidth))
                         iconContent()
                     }
                 } else {

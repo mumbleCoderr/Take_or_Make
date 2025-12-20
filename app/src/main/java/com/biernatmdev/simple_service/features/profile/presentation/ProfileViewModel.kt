@@ -3,6 +3,7 @@ package com.biernatmdev.simple_service.features.profile.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biernatmdev.simple_service.R
+import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.ui.model.UiText
 import com.biernatmdev.simple_service.core.user.domain.UserRepository
 import com.biernatmdev.simple_service.core.user.domain.model.User
@@ -38,18 +39,29 @@ class ProfileViewModel(
             }
         }
     }
+
     fun onEvent(event: ProfileEvent) {
         when (event) {
             is ProfileEvent.OnUpdateUserDetailsClick -> updateData(event.user)
             is ProfileEvent.OnProfileOptionClick -> handleProfileOptionClick(event.profileOption)
+            ProfileEvent.TriggerLinkAccountAlert -> _state.update { it.copy(isAlertVisible = !it.isAlertVisible) }
+            ProfileEvent.OnLinkAccountAlertConfirm -> handleLinkAccountAlertConfirm()
         }
     }
-    private fun handleProfileOptionClick(profileOption: ProfileOption){
-        when(profileOption){
-            ProfileOption.SIGNOUT -> signOut()
+
+    private fun handleLinkAccountAlertConfirm() {
+        _state.update { it.copy(isAlertVisible = false) }
+        sendEffect(ProfileEffect.NavigateTo(Screen.UserDetailsScreen))
+    }
+
+    private fun handleProfileOptionClick(profileOption: ProfileOption) {
+        when (profileOption) {
+            ProfileOption.SIGN_OUT -> signOut()
+            ProfileOption.LINK_ACCOUNT -> onEvent(ProfileEvent.TriggerLinkAccountAlert)
             else -> sendEffect(ProfileEffect.NavigateTo(profileOption.screen))
         }
     }
+
     private fun signOut() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
@@ -64,7 +76,7 @@ class ProfileViewModel(
         }
     }
 
-    private fun updateData(user: User){
+    private fun updateData(user: User) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
 
@@ -85,7 +97,7 @@ class ProfileViewModel(
         }
     }
 
-    private fun handleException(exception: Throwable){
+    private fun handleException(exception: Throwable) {
         val errorMessage: UiText = when (exception) {
             is UserException.NotSignedInException -> UiText.StringResource(R.string.user_exception_not_signed_in)
             is UserException.NotFoundException -> UiText.StringResource(R.string.user_exception_not_found)
