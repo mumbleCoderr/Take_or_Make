@@ -134,6 +134,11 @@
     <string name="auth_screen_bottom_section_forgot_password_header">Link has been sent!</string>
     <string name="auth_screen_bottom_section_forgot_password_subtext">Check your e-mail box. If you can\'t find it, check SPAM.</string>
 
+
+    // DIALOG
+    <string name="dialog_ok">Accept</string>
+    <string name="dialog_dismiss">Dismiss</string>
+
     // OTHER
     <string name="profile_picture">User profile picture</string>
 
