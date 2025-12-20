@@ -26,9 +26,11 @@ class ProfileViewModel(
     init {
         viewModelScope.launch {
             userRepository.currentUser.collect { user ->
+                val isUserGuest = user != null && user.email.isBlank()
                 _state.update {
                     it.copy(
                         user = user,
+                        isUserGuest = isUserGuest,
                         isLoading = user == null,
                         error = null
                     )
@@ -36,12 +38,9 @@ class ProfileViewModel(
             }
         }
     }
-
     fun onEvent(event: ProfileEvent) {
         when (event) {
-            ProfileEvent.ReloadUserDetails -> reloadUserDetails() //TODO MOVE TO GLOBAL
-            ProfileEvent.SignOut -> signOut()
-            is ProfileEvent.UpdateUserDetails -> updateData(event.user)
+            is ProfileEvent.OnUpdateUserDetailsClick -> updateData(event.user)
             is ProfileEvent.OnProfileOptionClick -> handleProfileOptionClick(event.profileOption)
         }
     }
@@ -51,26 +50,6 @@ class ProfileViewModel(
             else -> sendEffect(ProfileEffect.NavigateTo(profileOption.screen))
         }
     }
-
-    private fun reloadUserDetails() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
-
-            val uid = userRepository.getCurrentUserId()
-            if (uid != null) {
-                userRepository.getUserDetails()
-                    .onSuccess {
-                        userRepository.startObservingUser(uid)
-                    }
-                    .onFailure { exception ->
-                        handleException(exception)
-                    }
-            } else {
-                signOut()
-            }
-        }
-    }
-
     private fun signOut() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }

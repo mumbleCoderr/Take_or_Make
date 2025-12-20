@@ -4,14 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -51,9 +50,8 @@ import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceSnackbar
 import com.biernatmdev.simple_service.core.ui.model.IconType
-import com.biernatmdev.simple_service.core.ui.screens.ErrorScreen
+import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
-import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.ForwardFilled
@@ -71,15 +69,14 @@ import org.koin.androidx.compose.koinViewModel
 fun ProfileScreen(
     navigateToAuth: () -> Unit,
     navigateToProfileSubscreen: (Screen) -> Unit,
-    viewModel: ProfileViewModel = koinViewModel()
+    profileViewModel: ProfileViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by profileViewModel.state.collectAsStateWithLifecycle()
     val snackbar = remember { SnackbarHostState() }
     val context = LocalContext.current
-    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
+        profileViewModel.effect.collect { effect ->
             when (effect) {
                 is ProfileEffect.NavigateToAuth -> navigateToAuth()
 
@@ -93,56 +90,33 @@ fun ProfileScreen(
         }
     }
 
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        val headerHeight = this.maxHeight * 0.38f
-        if (state.user != null) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopCenter)
-                    .verticalScroll(scrollState),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                UserProfilePictureSection(
-                    user = state.user!!,
-                    sectionHeight = headerHeight,
-                )
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(y = (-15).dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    ProfileOptionList(
-                        category = ProfileOptionCategory.GENERAL,
-                        onProfileOptionClick = { viewModel.onEvent(ProfileEvent.OnProfileOptionClick(it)) }
-                    )
-                    Spacer(Modifier.height(24.dp))
-                    ProfileOptionList(
-                        category = ProfileOptionCategory.ACTIVITY,
-                        onProfileOptionClick = {  viewModel.onEvent(ProfileEvent.OnProfileOptionClick(it))}
-                    )
-                    Spacer(Modifier.height(24.dp))
-                    ProfileOptionList(
-                        category = ProfileOptionCategory.OTHER,
-                        onProfileOptionClick = {  viewModel.onEvent(ProfileEvent.OnProfileOptionClick(it)) }
-                    )
-                    Spacer(Modifier.height(16.dp))
-                }
-            }
-        }
+    ProfileScreenContent(
+        state = state,
+        onEvent = profileViewModel::onEvent,
+        snackbar = snackbar,
+    )
+}
 
-        if (state.error != null && state.user == null) {
-            ErrorScreen(
-                error = state.error!!,
-                isLoading = state.isLoading,
-                onRetry = { viewModel.onEvent(ProfileEvent.ReloadUserDetails) }
+@Composable
+fun ProfileScreenContent(
+    state: ProfileState,
+    onEvent: (ProfileEvent) -> Unit,
+    snackbar: SnackbarHostState,
+){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(ColorBackground),
+    ) {
+        if (state.user != null) {
+            UserProfilePictureSection(
+                modifier = Modifier.align(Alignment.TopCenter),
+                user = state.user!!
+            )
+            ProfileOptionSection(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                onEvent = onEvent,
+                isUserGuest = state.isUserGuest,
             )
         }
 
@@ -163,27 +137,16 @@ fun ProfileScreen(
         )
     }
 }
-
 @Composable
 fun UserProfilePictureSection(
     user: User,
-    sectionHeight: Dp,
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .height(sectionHeight),
-        contentAlignment = Alignment.BottomCenter
+            .fillMaxHeight(0.4f),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-
-        }
-
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(AppBackgroundImage)
@@ -198,19 +161,16 @@ fun UserProfilePictureSection(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color.Transparent,
-                            ColorSurface
+                            Color.Transparent, ColorBackground
                         ),
-                        startY = 0f,
-                        endY = Float.POSITIVE_INFINITY
                     )
                 )
         )
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -224,7 +184,7 @@ fun UserProfilePictureSection(
                     .clip(CircleShape)
                     .size(120.dp)
             )
-            Spacer(Modifier.height(25.dp))
+            Spacer(Modifier.height(26.dp))
             Text(
                 text = "${user.firstName} ${user.lastName}",
                 color = onColorBackground,
@@ -232,7 +192,65 @@ fun UserProfilePictureSection(
                 fontSize = SEMI_LARGE,
                 fontWeight = FontWeight.Bold,
             )
-            Spacer(Modifier.height(50.dp))
+        }
+    }
+}
+
+@Composable
+fun ProfileOptionSection(
+    modifier: Modifier = Modifier,
+    onEvent: (ProfileEvent) -> Unit,
+    isUserGuest: Boolean,
+) {
+    val scrollState = rememberScrollState()
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.BottomCenter,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            ProfileOptionList(
+                category = ProfileOptionCategory.GENERAL,
+                isUserGuest = isUserGuest,
+                onProfileOptionClick = {
+                    onEvent(
+                        ProfileEvent.OnProfileOptionClick(
+                            it
+                        )
+                    )
+                }
+            )
+            Spacer(Modifier.height(22.dp))
+            ProfileOptionList(
+                category = ProfileOptionCategory.ACTIVITY,
+                isUserGuest = isUserGuest,
+                onProfileOptionClick = {
+                    onEvent(
+                        ProfileEvent.OnProfileOptionClick(
+                            it
+                        )
+                    )
+                }
+            )
+            Spacer(Modifier.height(22.dp))
+            ProfileOptionList(
+                category = ProfileOptionCategory.OTHER,
+                isUserGuest = isUserGuest,
+                onProfileOptionClick = {
+                    onEvent(
+                        ProfileEvent.OnProfileOptionClick(
+                            it
+                        )
+                    )
+                }
+            )
+            Spacer(Modifier.height(18.dp))
         }
     }
 }
@@ -241,11 +259,18 @@ fun UserProfilePictureSection(
 fun ProfileOptionList(
     category: ProfileOptionCategory? = null,
     onProfileOptionClick: (ProfileOption) -> Unit,
+    isUserGuest: Boolean,
 ) {
-    val profileOptions = if (category == null) {
+    var profileOptions = if (category == null) {
         ProfileOption.entries
     } else {
         ProfileOption.entries.filter { it.category == category }
+    }
+
+    if (!isUserGuest) {
+        profileOptions = profileOptions.filter {
+            it != ProfileOption.LINK_ACCOUNT
+        }
     }
 
     profileOptions.forEachIndexed { index, item ->
@@ -280,10 +305,18 @@ fun ProfileOptionItem(
         modifier = Modifier
             .fillMaxWidth(if (isMaxWidth) 1f else 0.9f)
             .clickable { onClick() },
-        shape = when{
+        shape = when {
             isFirst && isLast -> RoundedCornerShape(roundedCornerShapeValue)
-            isFirst -> RoundedCornerShape(topStart = roundedCornerShapeValue, topEnd = roundedCornerShapeValue)
-            isLast -> RoundedCornerShape(bottomStart = roundedCornerShapeValue, bottomEnd = roundedCornerShapeValue)
+            isFirst -> RoundedCornerShape(
+                topStart = roundedCornerShapeValue,
+                topEnd = roundedCornerShapeValue
+            )
+
+            isLast -> RoundedCornerShape(
+                bottomStart = roundedCornerShapeValue,
+                bottomEnd = roundedCornerShapeValue
+            )
+
             else -> RoundedCornerShape(0)
         },
         color = backgroundColor,

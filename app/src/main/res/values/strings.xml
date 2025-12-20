@@ -46,6 +46,7 @@
     <string name="profile_option_history">Transaction history</string>
     <string name="profile_option_reviews">Reviews</string>
     <string name="profile_option_favourites">Favourites</string>
+    <string name="profile_option_link_account">Link account</string>
     <string name="profile_option_logout">Log out</string>
 
     // PROFILE OPTION CATEGORY
@@ -132,6 +133,11 @@
     <string name="auth_screen_bottom_section_forgot_password_info">Please provide an e-mail to get a link for password restore</string>
     <string name="auth_screen_bottom_section_forgot_password_header">Link has been sent!</string>
     <string name="auth_screen_bottom_section_forgot_password_subtext">Check your e-mail box. If you can\'t find it, check SPAM.</string>
+
+
+    // DIALOG
+    <string name="dialog_ok">Accept</string>
+    <string name="dialog_dismiss">Dismiss</string>
 
     // OTHER
     <string name="profile_picture">User profile picture</string>

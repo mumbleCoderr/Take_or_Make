@@ -2,7 +2,9 @@ package com.biernatmdev.simple_service.features.home.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,44 +41,50 @@ fun BottomBar(
     selectedScreen: HomeSubscreen,
     onScreenSelect: (HomeSubscreen) -> Unit
 ) {
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .background(ColorBackground)
-            .padding(vertical = 8.dp)
+            .clip(RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp))
             .navigationBarsPadding()
-            .clip(RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp)),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        HomeSubscreen.entries.forEach { screenChip ->
-            val isSelected = selectedScreen == screenChip
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            HomeSubscreen.entries.forEach { screenChip ->
+                val isSelected = selectedScreen == screenChip
 
-            val screenIcon = if (isSelected) {
-                screenChip.iconFocused
-            } else {
-                screenChip.iconNotFocused
-            }
-            IconButton(
-                onClick = { onScreenSelect(screenChip) }
-            ) {
-                when (val icon = screenIcon) {
-                    is IconType.Vector -> {
-                        Icon(
-                            imageVector = icon.imageVector,
-                            tint = onColorBackground,
-                            contentDescription = screenChip.title.asString(),
-                            modifier = Modifier.size(32.dp)
-                        )
-                    }
+                val screenIcon = if (isSelected) {
+                    screenChip.iconFocused
+                } else {
+                    screenChip.iconNotFocused
+                }
 
-                    is IconType.Drawable -> {
-                        Icon(
-                            painter = painterResource(id = icon.id),
-                            tint = onColorBackground,
-                            contentDescription = screenChip.title.asString(),
-                            modifier = Modifier.size(32.dp)
-                        )
+                IconButton(
+                    onClick = { onScreenSelect(screenChip) }
+                ) {
+                    when (val icon = screenIcon) {
+                        is IconType.Vector -> {
+                            Icon(
+                                imageVector = icon.imageVector,
+                                tint = onColorBackground,
+                                contentDescription = screenChip.title.asString(),
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+
+                        is IconType.Drawable -> {
+                            Icon(
+                                painter = painterResource(id = icon.id),
+                                tint = onColorBackground,
+                                contentDescription = screenChip.title.asString(),
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
                     }
                 }
             }
