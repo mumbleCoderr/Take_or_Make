@@ -1,12 +1,11 @@
 package com.biernatmdev.simple_service.core.offer.domain.model
 
-import com.biernatmdev.simple_service.core.offer.domain.ItemCondition
-import com.biernatmdev.simple_service.core.offer.domain.OfferCategory
-import com.biernatmdev.simple_service.core.offer.domain.OfferSuperCategory
-import com.biernatmdev.simple_service.core.offer.domain.OfferPriceUnit
-import com.biernatmdev.simple_service.core.offer.domain.OfferStatus
-import com.biernatmdev.simple_service.core.offer.domain.OfferType
-import com.biernatmdev.simple_service.core.offer.domain.TransactionType
+import com.biernatmdev.simple_service.core.offer.domain.enums.ItemCondition
+import com.biernatmdev.simple_service.core.offer.domain.enums.OfferCategory
+import com.biernatmdev.simple_service.core.offer.domain.enums.OfferPriceUnit
+import com.biernatmdev.simple_service.core.offer.domain.enums.OfferStatus
+import com.biernatmdev.simple_service.core.offer.domain.enums.OfferType
+import com.biernatmdev.simple_service.core.offer.domain.enums.TransactionType
 
 data class Offer(
     val id: String = "",

@@ -1,4 +1,4 @@
-package com.biernatmdev.simple_service.core.offer.domain
+package com.biernatmdev.simple_service.core.offer.domain.enums
 
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.ui.models.UiText
