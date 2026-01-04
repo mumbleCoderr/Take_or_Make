@@ -27,6 +27,7 @@ internal fun DocumentSnapshot.toDomainUser(): User {
         address = this.getString("address") ?: "",
         addressAdditional = this.getString("addressAdditional") ?: "",
         profilePicture = this.getString("profilePicture") ?: "",
+        favoriteOfferIds = (this.get("favoriteOfferIds") as? List<String>) ?: emptyList()
     )
 }
 
@@ -41,6 +42,7 @@ internal fun User.toFirestoreMap(): Map<String, Any?> {
         "city" to this.city,
         "postalCode" to this.postalCode,
         "phoneNumber" to this.phoneNumber,
-        "profilePicture" to this.profilePicture
+        "profilePicture" to this.profilePicture,
+        "favoriteOfferIds" to this.favoriteOfferIds,
     )
 }

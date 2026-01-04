@@ -14,6 +14,7 @@ data class User(
     val postalCode: Int? = null,
     val phoneNumber: String = "",
     val profilePicture: String = "",
+    val favoriteOfferIds: List<String> = emptyList(),
 ){
     val isGuest: Boolean
         get() = email.isBlank()

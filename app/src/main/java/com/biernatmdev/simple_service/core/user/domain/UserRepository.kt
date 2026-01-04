@@ -18,4 +18,7 @@ interface UserRepository {
     suspend fun signInWithEmail(email: String, password: String): Result<FirebaseUser>
 
     suspend fun resetPassword(email: String): Result<Unit>
+
+    suspend fun addOfferToFavorites(offerId: String): Result<Unit>
+    suspend fun removeOfferFromFavorites(offerId: String): Result<Unit>
 }

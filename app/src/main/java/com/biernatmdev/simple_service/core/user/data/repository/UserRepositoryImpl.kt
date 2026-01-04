@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
@@ -164,6 +165,22 @@ class UserRepositoryImpl(
                 else -> e
             }
         }
+    }
+
+    override suspend fun addOfferToFavorites(offerId: String): Result<Unit> = runCatching {
+        val uid = auth.currentUser?.uid ?: throw UserException.NotSignedInException
+
+        firestore.collection("user").document(uid)
+            .update("favoriteOfferIds", FieldValue.arrayUnion(offerId))
+            .await()
+    }
+
+    override suspend fun removeOfferFromFavorites(offerId: String): Result<Unit> = runCatching {
+        val uid = auth.currentUser?.uid ?: throw UserException.NotSignedInException
+
+        firestore.collection("user").document(uid)
+            .update("favoriteOfferIds", FieldValue.arrayRemove(offerId))
+            .await()
     }
 
     override suspend fun createUser(user: FirebaseUser): Result<Unit> = runCatching {
