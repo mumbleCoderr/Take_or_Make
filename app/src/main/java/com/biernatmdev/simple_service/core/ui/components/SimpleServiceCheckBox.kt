@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,7 +24,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.biernatmdev.simple_service.core.ui.model.UiText
+import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.REGULAR
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SMALL
 import com.biernatmdev.simple_service.core.ui.theme.LineHeight

@@ -17,8 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
@@ -52,19 +50,17 @@ import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceDialog
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceSnackbar
-import com.biernatmdev.simple_service.core.ui.model.IconType
-import com.biernatmdev.simple_service.core.ui.model.UiText
+import com.biernatmdev.simple_service.core.ui.models.IconType
+import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
-import com.biernatmdev.simple_service.core.ui.theme.LineHeight
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.ForwardFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.AppBackgroundImage
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.AppForegroundImage
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
-import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 import com.biernatmdev.simple_service.core.ui.theme.onColorSurface
 import com.biernatmdev.simple_service.core.user.domain.model.User
 import com.biernatmdev.simple_service.features.profile.domain.ProfileOption
@@ -107,12 +103,20 @@ fun ProfileScreenContent(
     onEvent: (ProfileEvent) -> Unit,
     snackbar: SnackbarHostState,
 ) {
-    if (state.isAlertVisible) {
+    if (state.isLinkAccountAlertVisible) {
         SimpleServiceDialog(
             onDismiss = { onEvent(ProfileEvent.TriggerLinkAccountAlert) },
             onConfirm = { onEvent(ProfileEvent.OnLinkAccountAlertConfirm) },
-            title = UiText.DynamicString("Wait a second!"),
-            subtext = UiText.DynamicString("You have to fill required information first"),
+            title = UiText.StringResource(R.string.profile_screen_dialog_link_acc_title),
+            subtext = UiText.StringResource(R.string.profile_screen_dialog_links_acc_subtext),
+        )
+    }
+    if(state.isSignOutAlertVisible){
+        SimpleServiceDialog(
+            onDismiss = { onEvent(ProfileEvent.TriggerSignOutAlert) },
+            onConfirm = { onEvent(ProfileEvent.OnSignOutAlertConfirm) },
+            title = UiText.StringResource(R.string.profile_screen_dialog_sign_out_title),
+            subtext = UiText.StringResource(R.string.profile_screen_dialog_sign_out_subtext),
         )
     }
 
@@ -124,7 +128,7 @@ fun ProfileScreenContent(
         if (state.user != null) {
             UserProfilePictureSection(
                 modifier = Modifier.align(Alignment.TopCenter),
-                user = state.user!!
+                user = state.user
             )
             ProfileOptionSection(
                 modifier = Modifier.align(Alignment.BottomCenter),
@@ -189,7 +193,7 @@ fun UserProfilePictureSection(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(user.profilePicture)
+                    .data(user.profilePicture.takeIf { it.isNotBlank() })
                     .fallback(AppForegroundImage)
                     .crossfade(true)
                     .build(),
@@ -404,37 +408,4 @@ fun ProfileOptionItem(
         }
     }
 }
-/*@Composable
-fun UserProfilePictureSection(
-    user: User,
-) {
-    Text(
-        text = stringResource(R.string.profile_screen_header),
-        color = onColorBackground,
-        fontFamily = momoFont(),
-        fontSize = EXTRA_LARGE,
-        fontWeight = FontWeight.Bold,
-        textAlign = TextAlign.Start
-    )
-    Spacer(Modifier.height(48.dp))
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(user.profilePicture)
-                .crossfade(true)
-                .fallback(Profile_picture_placeholder)
-                .build(),
-            contentDescription = "user profile picture",
-            modifier = Modifier
-                .clip(CircleShape)
-                .size(200.dp)
-        )
-    }
-}*/
-
 

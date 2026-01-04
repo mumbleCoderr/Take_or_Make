@@ -21,8 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceButton
-import com.biernatmdev.simple_service.core.ui.model.IconType
-import com.biernatmdev.simple_service.core.ui.model.UiText
+import com.biernatmdev.simple_service.core.ui.models.IconType
+import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.LineHeight

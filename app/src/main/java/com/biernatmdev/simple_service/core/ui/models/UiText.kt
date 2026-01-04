@@ -1,4 +1,4 @@
-package com.biernatmdev.simple_service.core.ui.model
+package com.biernatmdev.simple_service.core.ui.models
 
 import android.content.Context
 import androidx.annotation.StringRes

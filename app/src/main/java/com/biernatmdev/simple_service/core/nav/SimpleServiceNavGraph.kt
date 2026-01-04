@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.biernatmdev.simple_service.features.auth.presentation.AuthScreen
-import com.biernatmdev.simple_service.features.details.DetailsScreen
+import com.biernatmdev.simple_service.features.user_details.presentation.UserDetailsScreen
 import com.biernatmdev.simple_service.features.favourites.FavouritesScreen
 import com.biernatmdev.simple_service.features.history.HistoryScreen
 import com.biernatmdev.simple_service.features.home.presentation.HomeScreen
@@ -53,7 +53,11 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
             )
         }
         composable<Screen.UserDetailsScreen> {
-            DetailsScreen()
+            UserDetailsScreen(
+                navigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable<Screen.WalletScreen> {
             WalletScreen()

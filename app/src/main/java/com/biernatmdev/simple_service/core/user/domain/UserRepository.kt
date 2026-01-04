@@ -13,7 +13,6 @@ interface UserRepository {
     val currentUser: StateFlow<User?>
     fun startObservingUser(uid: String)
     fun stopObservingUser()
-
     suspend fun linkGuestToEmail(email: String, password: String, firstName: String, lastName: String): Result<FirebaseUser>
     suspend fun signUpWithEmail(email: String, password: String, firstName: String, lastName: String): Result<FirebaseUser>
     suspend fun signInWithEmail(email: String, password: String): Result<FirebaseUser>

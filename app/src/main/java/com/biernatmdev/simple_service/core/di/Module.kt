@@ -5,6 +5,7 @@ import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
 import com.biernatmdev.simple_service.core.user.domain.UserRepository
 import com.biernatmdev.simple_service.core.user.data.repository.UserRepositoryImpl
 import com.biernatmdev.simple_service.features.auth.presentation.AuthViewModel
+import com.biernatmdev.simple_service.features.user_details.presentation.UserDetailsViewModel
 import com.biernatmdev.simple_service.features.home.presentation.HomeViewModel
 import com.biernatmdev.simple_service.features.main.MainViewModel
 import com.biernatmdev.simple_service.features.profile.presentation.ProfileViewModel
@@ -22,6 +23,7 @@ val appModule = module {
     viewModel { AuthViewModel(get(), get()) }
     viewModel { HomeViewModel() }
     viewModel { ProfileViewModel(get()) }
+    viewModel { UserDetailsViewModel(get()) }
     single { GoogleUiClient(
         context = androidContext(),
         auth = get(),

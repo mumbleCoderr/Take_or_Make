@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -88,6 +89,7 @@ dependencies {
     // Icons
     implementation(libs.androidx.compose.material.icons.extended)
 
+    implementation(libs.firebase.storage.ktx)
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.android.material:material:1.12.0")
 }
