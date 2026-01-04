@@ -32,8 +32,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
-import com.biernatmdev.simple_service.core.ui.model.IconType
+import com.biernatmdev.simple_service.core.ui.models.IconType
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
+import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
+import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 import com.biernatmdev.simple_service.core.ui.theme.onColorPrimary
 
 @Composable
@@ -57,6 +59,7 @@ fun SimpleServiceButton(
     textFontWeight: FontWeight = FontWeight.Normal,
     spacerWidth: Dp = 16.dp,
     roundedCornerShapeValue: Dp = 22.dp,
+    isEnabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     var buttonText by remember { mutableStateOf(text) }
@@ -69,7 +72,7 @@ fun SimpleServiceButton(
     val textContent = @Composable {
         Text(
             text = buttonText,
-            color = textColor,
+            color = if(isEnabled) textColor else onColorBackgroundDarker,
             fontFamily = textFont,
             fontSize = textFontSize,
             fontWeight = textFontWeight,
@@ -87,7 +90,7 @@ fun SimpleServiceButton(
                             Icon(
                                 imageVector = icon.imageVector,
                                 contentDescription = icon.imageVector.name,
-                                tint = iconTint,
+                                tint = if(isEnabled) iconTint else onColorBackgroundDarker,
                                 modifier = Modifier.size(iconSize)
                             )
                         }
@@ -96,7 +99,7 @@ fun SimpleServiceButton(
                             Icon(
                                 painter = painterResource(icon.id),
                                 contentDescription = icon.id.toString(),
-                                tint = iconTint,
+                                tint = if(isEnabled) iconTint else onColorBackgroundDarker,
                                 modifier = Modifier.size(iconSize)
                             )
                         }
@@ -113,17 +116,23 @@ fun SimpleServiceButton(
     }
 
     Surface(
-        modifier = modifier.clickable(enabled = !isLoading) { onClick() },
+        modifier = modifier.clickable(enabled = !isLoading && isEnabled) { onClick() },
         shape = RoundedCornerShape(roundedCornerShapeValue),
         border = if (isBordered) {
             BorderStroke(
                 width = 1.dp,
                 color = ColorPrimary,
             )
-        } else {
+        } else if(!isEnabled){
+            BorderStroke(
+                width = 1.dp,
+                color = onColorBackgroundDarker,
+            )
+        }
+        else {
             null
         },
-        color = backgroundColor,
+        color = if(isEnabled) backgroundColor else ColorSurface,
     ) {
         if (isIconAtEdge && icon != null) {
             Box(

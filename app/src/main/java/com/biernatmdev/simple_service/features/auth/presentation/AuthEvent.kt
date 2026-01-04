@@ -1,6 +1,6 @@
 package com.biernatmdev.simple_service.features.auth.presentation
 
-import com.biernatmdev.simple_service.core.ui.model.UiText
+import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.features.auth.domain.AuthMode
 import com.google.firebase.auth.FirebaseUser
 

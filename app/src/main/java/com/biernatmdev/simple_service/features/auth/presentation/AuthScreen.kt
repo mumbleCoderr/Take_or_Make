@@ -33,7 +33,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -68,12 +67,13 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
+import com.biernatmdev.simple_service.core.ui.components.SimpleServiceDivider
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceButton
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceCheckBox
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceSnackbar
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceTextField
-import com.biernatmdev.simple_service.core.ui.model.IconType
-import com.biernatmdev.simple_service.core.ui.model.UiText
+import com.biernatmdev.simple_service.core.ui.models.IconType
+import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
@@ -82,7 +82,7 @@ import com.biernatmdev.simple_service.core.ui.theme.FontSize.REGULAR
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
 import com.biernatmdev.simple_service.core.ui.theme.LineHeight
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.AccountOutlined
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.BackFilled
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.ArrowBackFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.EmailOutlined
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.EmailSentOutlined
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Google
@@ -455,7 +455,7 @@ fun BottomSectionPasswordResetMode(
                         iconTint = onColorBackgroundDarker,
                         isIconLeading = true,
                         isIconAtEdge = true,
-                        icon = IconType.Vector(BackFilled),
+                        icon = IconType.Vector(ArrowBackFilled),
                         isAnimated = false,
                         onClick = { onEvent(AuthEvent.OnSwitchAuthMode(AuthMode.SIGN_IN)) }
                     )
@@ -495,7 +495,7 @@ fun BottomSectionPasswordResetMode(
                         text = stringResource(R.string.auth_screen_bottom_section_btn_back),
                         isIconLeading = true,
                         isIconAtEdge = true,
-                        icon = IconType.Vector(BackFilled),
+                        icon = IconType.Vector(ArrowBackFilled),
                         isAnimated = false,
                         onClick = { onEvent(AuthEvent.OnSwitchAuthMode(AuthMode.SIGN_IN)) }
                     )
@@ -530,7 +530,7 @@ fun BottomSectionStatuteMode(
             text = stringResource(R.string.auth_screen_bottom_section_btn_back),
             isIconLeading = true,
             isIconAtEdge = true,
-            icon = IconType.Vector(BackFilled),
+            icon = IconType.Vector(ArrowBackFilled),
             isAnimated = false,
             onClick = { onEvent(AuthEvent.OnSwitchAuthMode(AuthMode.SIGN_UP)) })
         Spacer(Modifier.height(32.dp))
@@ -737,7 +737,8 @@ fun BottomSectionSignInMode(
             isLoading = loadingTarget == AuthLoadingTarget.SIGN_IN_EMAIL,
             onClick = { onEvent(AuthEvent.OnEmailSignInClick) })
         Spacer(Modifier.height(64.dp))
-        Divider(
+        SimpleServiceDivider(
+            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.auth_screen_bottom_section_divider),
             color = onColorBackground
         )
@@ -799,30 +800,5 @@ fun BottomSectionSignInMode(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(Modifier.height(22.dp))
-    }
-}
-
-@Composable
-fun Divider(
-    text: String = "", color: Color
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
-    ) {
-        HorizontalDivider(
-            modifier = Modifier.weight(1f), color = color, thickness = 1.dp
-        )
-        Spacer(Modifier.width(16.dp))
-        Text(
-            text = text,
-            color = color,
-            fontFamily = momoFont(),
-            fontSize = REGULAR,
-            fontWeight = FontWeight.Normal,
-        )
-        Spacer(Modifier.width(16.dp))
-        HorizontalDivider(
-            modifier = Modifier.weight(1f), color = color, thickness = 1.dp
-        )
     }
 }

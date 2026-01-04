@@ -1,5 +1,6 @@
 package com.biernatmdev.simple_service.core.user.data.repository
 
+import android.net.Uri
 import com.biernatmdev.simple_service.core.user.data.mapper.toDomainUser
 import com.biernatmdev.simple_service.core.user.data.mapper.toFirestoreMap
 import com.biernatmdev.simple_service.core.user.domain.UserRepository
@@ -77,7 +78,8 @@ class UserRepositoryImpl(
             val updates = mapOf(
                 "firstName" to firstName,
                 "lastName" to lastName,
-                "email" to email
+                "email" to email,
+                "guest" to false,
             )
 
             firestore.collection("user")

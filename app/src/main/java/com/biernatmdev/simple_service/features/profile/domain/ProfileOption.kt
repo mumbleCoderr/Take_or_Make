@@ -2,8 +2,8 @@ package com.biernatmdev.simple_service.features.profile.domain
 
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.nav.Screen
-import com.biernatmdev.simple_service.core.ui.model.IconType
-import com.biernatmdev.simple_service.core.ui.model.UiText
+import com.biernatmdev.simple_service.core.ui.models.IconType
+import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.DetailsFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.FavouritesFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.HistoryFilled

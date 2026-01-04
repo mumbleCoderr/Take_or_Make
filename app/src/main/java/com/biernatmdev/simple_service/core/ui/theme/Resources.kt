@@ -2,14 +2,17 @@ package com.biernatmdev.simple_service.core.ui.theme
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowBackIos
 import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddLink
 import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.BorderColor
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Construction
@@ -79,8 +82,8 @@ object Resources {
 
         val RetryFilled = Icons.Filled.Replay
         val RetryOutlined = Icons.Outlined.Replay
-        val BackFilled = Icons.AutoMirrored.Filled.ArrowBack
-        val BackOutlined = Icons.AutoMirrored.Outlined.ArrowBack
+        val ArrowBackFilled = Icons.AutoMirrored.Filled.ArrowBack
+        val ArrowBackOutlined = Icons.AutoMirrored.Outlined.ArrowBack
         val Google = R.drawable.google
 
         // BOTTOM BAR
@@ -107,6 +110,9 @@ object Resources {
         // PROFILE OPTION
         val ForwardFilled = Icons.AutoMirrored.Filled.ArrowForwardIos
         val ForwardOutlined = Icons.AutoMirrored.Outlined.ArrowForwardIos
+
+        val BackFilled = Icons.AutoMirrored.Filled.ArrowBackIos
+        val BackOutlined = Icons.AutoMirrored.Outlined.ArrowBackIos
 
         val DetailsFilled = Icons.Filled.ManageAccounts
         val DetailsOutlined = Icons.Outlined.ManageAccounts
@@ -149,6 +155,8 @@ object Resources {
 
         val LockOpenFilled = Icons.Filled.LockOpen
         val LockOpenOutlined = Icons.Outlined.LockOpen
+
+        val EditFilled = Icons.Filled.BorderColor
     }
 
     object Image {

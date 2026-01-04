@@ -2,7 +2,7 @@ package com.biernatmdev.simple_service.features.home.domain
 
 import androidx.annotation.StringRes
 import com.biernatmdev.simple_service.R
-import com.biernatmdev.simple_service.core.ui.model.IconType
+import com.biernatmdev.simple_service.core.ui.models.IconType
 import com.biernatmdev.simple_service.core.ui.theme.Resources
 
 enum class HomeMode(

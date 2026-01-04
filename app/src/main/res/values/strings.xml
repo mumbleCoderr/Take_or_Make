@@ -54,6 +54,13 @@
     <string name="profile_option_category_activity">Activity</string>
     <string name="profile_option_category_other">Other</string>
 
+    // PROFILE DIALOG
+    <string name="profile_screen_dialog_link_acc_title">Wait a second!</string>
+    <string name="profile_screen_dialog_links_acc_subtext">You have to fill required information first.</string>
+    <string name="profile_screen_dialog_sign_out_title">Wait a second!</string>
+    <string name="profile_screen_dialog_sign_out_subtext">If you sign out now, you will lose your data.\n\nLink your account first.</string>
+
+
     // -- AUTH SCREEN --
 
     // SNACKBAR INFO
@@ -107,9 +114,11 @@
     <string name="auth_screen_bottom_section_textfield_email_blank_error_msg">E-mail can not be empty</string>
     <string name="auth_screen_bottom_section_textfield_email_incorrect_error_msg">E-mail is incorrect</string>
     <string name="auth_screen_bottom_section_textfield_email_taken_error_msg">E-mail is already taken</string>
+    <string name="auth_screen_bottom_section_textfield_email_too_long_error_msg">E-mail can not be longer than 100 characters long</string>
     <string name="auth_screen_bottom_section_textfield_password_blank_error_msg">Password can not be empty</string>
     <string name="auth_screen_bottom_section_textfield_password_not_identical_error_msg">Passwords are not identical</string>
     <string name="auth_screen_bottom_section_textfield_password_too_short_error_msg">Password has to be at leat 6 characters long</string>
+    <string name="auth_screen_bottom_section_textfield_password_too_long_error_msg">Password can not be longer than 100 characters long</string>
     <string name="auth_screen_bottom_section_textfield_email_password_wrong_error_msg">E-mail or password is incorrect</string>
     <string name="auth_screen_bottom_section_textfield_firstname_blank_error_msg">First name can not be empty</string>
     <string name="auth_screen_bottom_section_textfield_firstname_incorrect_error_msg">First name is incorrect</string>
@@ -134,6 +143,41 @@
     <string name="auth_screen_bottom_section_forgot_password_header">Link has been sent!</string>
     <string name="auth_screen_bottom_section_forgot_password_subtext">Check your e-mail box. If you can\'t find it, check SPAM.</string>
 
+    // -- PROFILE DETAILS --
+
+    // PROFILE DETAILS BUTTON
+    <string name="profile_details_screen_btn_guest">CREATE ACCOUNT</string>
+    <string name="profile_details_screen_btn_signed">CONFIRM CHANGES</string>
+
+    // PROFILE DETAILS SNACKBAR
+    <string name="profile_details_screen_info_account_linked">Account has been successfully created</string>
+    <string name="profile_details_screen_info_account_details_changed">Account details has been successfully changed</string>
+
+    // PROFILE DETAILS FORM OPTIONS TITLE ENUM
+    <string name="profile_details_screen_form_item_title_firstname">First name</string>
+    <string name="profile_details_screen_form_item_title_lastname">Last name</string>
+    <string name="profile_details_screen_form_item_title_email">E-mail</string>
+    <string name="profile_details_screen_form_item_title_address">Address</string>
+    <string name="profile_details_screen_form_item_title_address_additional">Address additional</string>
+    <string name="profile_details_screen_form_item_title_city">City</string>
+    <string name="profile_details_screen_form_item_title_postal_code">Postal code</string>
+    <string name="profile_details_screen_form_item_title_phone">Phone number</string>
+    <string name="profile_details_screen_form_item_title_password">Password</string>
+    <string name="profile_details_screen_form_item_title_password_repeat">Repeat password</string>
+
+    //PROFILE DETAILS TEXTFIELDS ERROR MSG
+    <string name="profile_details_screen_textfield_address_blank_error_msg">Address can not be empty</string>
+    <string name="profile_details_screen_textfield_address_too_long_error_msg">Address can not be longer than 100 characters long</string>
+    <string name="profile_details_screen_textfield_address_additional_too_long_error_msg">Address can not be longer than 50 characters long</string>
+    <string name="profile_details_screen_city_blank_error_msg">City can not be empty</string>
+    <string name="profile_details_screen_city_incorrect_error_msg">City is incorrect</string>
+    <string name="profile_details_screen_city_too_long_error_msg">City can not be longer than 100 characters long</string>
+    <string name="profile_details_screen_postal_code_blank_error_msg">Postal code can not be empty</string>
+    <string name="profile_details_screen_postal_code_incorrect_error_msg">Postal code is incorrect</string>
+    <string name="profile_details_screen_postal_code_too_long_error_msg">Postal code can not be longer than 50 characters long</string>
+    <string name="profile_details_screen_phone_number_blank_error_msg">Phone number can not be empty</string>
+    <string name="profile_details_screen_phone_number_incorrect_error_msg">Phone number is incorrect</string>
+    <string name="profile_details_screen_phone_number_too_long_error_msg">Phone number can not be longer than 50 characters long</string>
 
     // DIALOG
     <string name="dialog_ok">Accept</string>
@@ -141,5 +185,7 @@
 
     // OTHER
     <string name="profile_picture">User profile picture</string>
+    <string name="arrow_back">Back arrow</string>
+    <string name="edit">Edit profile picture</string>
 
 </resources>

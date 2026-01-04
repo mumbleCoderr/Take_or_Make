@@ -1,16 +1,15 @@
 package com.biernatmdev.simple_service.features.auth.presentation
 
-import android.util.Patterns
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
-import com.biernatmdev.simple_service.core.ui.model.UiText
+import com.biernatmdev.simple_service.core.ui.models.UiText
+import com.biernatmdev.simple_service.core.user.data.validation.UserValidator
 import com.biernatmdev.simple_service.core.user.domain.UserRepository
 import com.biernatmdev.simple_service.core.user.domain.model.UserException
 import com.biernatmdev.simple_service.features.auth.domain.AuthLoadingTarget
-import com.biernatmdev.simple_service.features.auth.domain.AuthMode
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +21,7 @@ import kotlinx.coroutines.launch
 class AuthViewModel(
     private val userRepository: UserRepository,
     private val googleUiClient: GoogleUiClient
-) : ViewModel() {
+) : ViewModel() { //TODO TWICE ERROR MSG ASSIGN?
     private val _state = MutableStateFlow(AuthState())
     val state = _state.asStateFlow()
 
@@ -121,19 +120,8 @@ class AuthViewModel(
     }
 
     private fun validatePasswordReset(): Boolean {
-        var isFormCorrect = true
         val email = emailState.text.toString().trim()
-        var emailErrorMsg: UiText? = null
-
-        if (email.isBlank()) {
-            isFormCorrect = false
-            emailErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_email_blank_error_msg)
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            isFormCorrect = false
-            emailErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_email_incorrect_error_msg)
-        }
+        val emailErrorMsg: UiText? = UserValidator.validateEmail(email)
 
         _state.update {
             it.copy(
@@ -141,31 +129,20 @@ class AuthViewModel(
             )
         }
 
-        return isFormCorrect
+        return emailErrorMsg == null
     }
 
     private fun validateSignInForm(): Boolean {
-        var isFormCorrect = true
         val email = emailState.text.toString().trim()
         val password = passwordState.text.toString()
 
-        var emailErrorMsg: UiText? = null
-        var passwordErrorMsg: UiText? = null
+        val emailErrorMsg: UiText? = UserValidator.validateEmail(email)
+        val passwordErrorMsg: UiText? = UserValidator.validatePassword(password)
 
-        if (email.isBlank()) {
-            isFormCorrect = false
-            emailErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_email_blank_error_msg)
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            isFormCorrect = false
-            emailErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_email_incorrect_error_msg)
-        }
-        if (password.isBlank()) {
-            isFormCorrect = false
-            passwordErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_password_blank_error_msg)
-        }
+        val errorMsgList = listOfNotNull(
+            emailErrorMsg,
+            passwordErrorMsg,
+        )
 
         _state.update {
             it.copy(
@@ -174,11 +151,10 @@ class AuthViewModel(
             )
         }
 
-        return isFormCorrect
+        return errorMsgList.isEmpty()
     }
 
     private fun validateSignUpForm(): Boolean {
-        var isFormCorrect = true
         val email = emailState.text.toString().trim()
         val password = passwordState.text.toString()
         val passwordRepeat = passwordRepeatState.text.toString()
@@ -186,73 +162,24 @@ class AuthViewModel(
         val lastName = lastNameState.text.toString().trim()
         val isCheckBoxChecked = _state.value.isCheckBoxChecked
 
-        var emailErrorMsg: UiText? = null
-        var passwordErrorMsg: UiText? = null
-        var passwordRepeatErrorMsg: UiText? = null
-        var firstNameErrorMsg: UiText? = null
-        var lastNameErrorMsg: UiText? = null
-        var checkboxErrorMsg: UiText? = null
+        val emailErrorMsg: UiText? = UserValidator.validateEmail(email)
+        val passwordErrorMsg: UiText? = UserValidator.validatePassword(password)
+        val passwordRepeatErrorMsg: UiText? = UserValidator.validatePasswordRepeat(
+            password = password,
+            passwordRepeat = passwordRepeat,
+        )
+        val firstNameErrorMsg: UiText? = UserValidator.validateFirstName(firstName)
+        val lastNameErrorMsg: UiText? = UserValidator.validateLastName(lastName)
+        val checkboxErrorMsg: UiText? = UserValidator.validateCheckBox(isCheckBoxChecked)
 
-        if (email.isEmpty()) {
-            isFormCorrect = false
-            emailErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_email_blank_error_msg)
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            isFormCorrect = false
-            emailErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_email_incorrect_error_msg)
-        }
-        if (password.isEmpty()) {
-            isFormCorrect = false
-            passwordErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_password_blank_error_msg)
-        } else if (password.length < 6) {
-            isFormCorrect = false
-            passwordErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_password_too_short_error_msg)
-        }
-        if (passwordRepeat.isEmpty()) {
-            isFormCorrect = false
-            passwordRepeatErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_password_blank_error_msg)
-        } else if (password != passwordRepeat) {
-            isFormCorrect = false
-            passwordErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_password_not_identical_error_msg)
-            passwordRepeatErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_password_not_identical_error_msg)
-        }
-        if (firstName.isEmpty()) {
-            isFormCorrect = false
-            firstNameErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_firstname_blank_error_msg)
-        } else if (firstName.any { !it.isLetter() && !it.isWhitespace() }) {
-            isFormCorrect = false
-            firstNameErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_firstname_incorrect_error_msg)
-        } else if (firstName.length > 50) {
-            isFormCorrect = false
-            firstNameErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_firstname_too_long_error_msg)
-        }
-        if (lastName.isEmpty()) {
-            isFormCorrect = false
-            lastNameErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_lastname_blank_error_msg)
-        } else if (lastName.any { !it.isLetter() && !it.isWhitespace() && it != '-' && it != '\'' && it != '.' }) {
-            isFormCorrect = false
-            lastNameErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_lastname_incorrect_error_msg)
-        } else if (lastName.length > 50) {
-            isFormCorrect = false
-            lastNameErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_textfield_lastname_too_long_error_msg)
-        }
-        if (!isCheckBoxChecked) {
-            isFormCorrect = false
-            checkboxErrorMsg =
-                UiText.StringResource(R.string.auth_screen_bottom_section_checkbox_not_checked)
-        }
+        val errorMsgList = listOfNotNull(
+            emailErrorMsg,
+            passwordErrorMsg,
+            passwordRepeatErrorMsg,
+            firstNameErrorMsg,
+            lastNameErrorMsg,
+            checkboxErrorMsg,
+        )
 
         _state.update {
             it.copy(
@@ -265,7 +192,7 @@ class AuthViewModel(
             )
         }
 
-        return isFormCorrect
+        return errorMsgList.isEmpty()
     }
 
     private fun emailSignIn() {
@@ -285,12 +212,11 @@ class AuthViewModel(
         }
     }
 
-    private fun emailSignUp() { //TODO FINISH IT
+    private fun emailSignUp() {
         val email = emailState.text.toString().trim()
         val password = passwordState.text.toString()
         val firstName = firstNameState.text.toString().trim()
         val lastName = lastNameState.text.toString().trim()
-        val termsAccepted = _state.value.isCheckBoxChecked
 
         viewModelScope.launch {
             _state.update { it.copy(loadingTarget = AuthLoadingTarget.SIGN_UP_EMAIL) }

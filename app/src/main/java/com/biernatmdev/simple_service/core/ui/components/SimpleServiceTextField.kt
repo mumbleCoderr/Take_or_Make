@@ -38,8 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -47,9 +47,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.biernatmdev.simple_service.R
-import com.biernatmdev.simple_service.core.ui.model.IconType
-import com.biernatmdev.simple_service.core.ui.model.UiText
+import com.biernatmdev.simple_service.core.ui.models.IconType
+import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SMALL
@@ -59,6 +58,7 @@ import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 
 @Composable
 fun SimpleServiceTextField(
+    modifier: Modifier = Modifier,
     isPassword: Boolean = false,
     isEmail: Boolean = false,
     isPhoneNumber: Boolean = false,
@@ -72,8 +72,10 @@ fun SimpleServiceTextField(
     backgroundColor: Color = ColorSecondary,
     textColor: Color = onColorBackgroundDarker,
     textSize: TextUnit = MEDIUM,
-    roundedCornerShapeValue: Dp = 22.dp
+    roundedCornerShapeValue: Dp = 22.dp,
+    onDone: () -> (Unit) = {} //TODO AUTH SCREEN FOCUS CASNCEL AND REWFACTOR TEXTFIELDS
 ) {
+    val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
     val isError = errorText != null
@@ -84,8 +86,7 @@ fun SimpleServiceTextField(
         }
     }
     Column(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = modifier
     ) {
         if (isPassword) {
             BasicSecureTextField(
@@ -100,6 +101,10 @@ fun SimpleServiceTextField(
                     imeAction = ImeAction.Done,
                     keyboardType = KeyboardType.Password
                 ),
+                onKeyboardAction = {
+                    focusManager.clearFocus()
+                    onDone()
+                },
                 interactionSource = interactionSource,
                 textObfuscationMode = TextObfuscationMode.RevealLastTyped,
                 cursorBrush = SolidColor(onColorBackground),
@@ -138,6 +143,10 @@ fun SimpleServiceTextField(
                     },
                     imeAction = ImeAction.Done
                 ),
+                onKeyboardAction = {
+                    focusManager.clearFocus()
+                    onDone()
+                },
                 lineLimits = TextFieldLineLimits.SingleLine,
                 cursorBrush = SolidColor(onColorBackground),
                 decorator = { innerTextField ->
