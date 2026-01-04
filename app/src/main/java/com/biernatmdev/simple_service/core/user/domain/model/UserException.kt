@@ -6,13 +6,13 @@ sealed class UserException(
 ) : Exception(message, cause) {
     object WrongCredentials : UserException()
     object TooManyRequests : UserException()
-    object NotFoundException : UserException()
+    object NotFound : UserException()
     object EmailAlreadyInUse : UserException()
     object InvalidEmailFormat : UserException()
     object WeakPassword : UserException()
     object NetworkError : UserException()
-    object AccessDeniedException : UserException()
-    object NotSignedInException : UserException()
+    object AccessDenied : UserException()
+    object NotSignedIn : UserException()
     object UnknownException : UserException()
     data class ValidationException(override val message: String) : UserException(message)
 }

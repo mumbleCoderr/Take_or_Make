@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.ui.models.UiText
-import com.biernatmdev.simple_service.core.user.domain.UserRepository
+import com.biernatmdev.simple_service.core.user.domain.repository.UserRepository
 import com.biernatmdev.simple_service.core.user.domain.model.User
 import com.biernatmdev.simple_service.core.user.domain.model.UserException
 import com.biernatmdev.simple_service.features.profile.domain.ProfileOption
@@ -111,9 +111,9 @@ class ProfileViewModel(
 
     private fun handleException(exception: Throwable) {
         val errorMessage: UiText = when (exception) {
-            is UserException.NotSignedInException -> UiText.StringResource(R.string.user_exception_not_signed_in)
-            is UserException.NotFoundException -> UiText.StringResource(R.string.user_exception_not_found)
-            is UserException.AccessDeniedException -> UiText.StringResource(R.string.user_exception_access_denied)
+            is UserException.NotSignedIn -> UiText.StringResource(R.string.user_exception_not_signed_in)
+            is UserException.NotFound -> UiText.StringResource(R.string.user_exception_not_found)
+            is UserException.AccessDenied -> UiText.StringResource(R.string.user_exception_access_denied)
             is UserException.ValidationException -> UiText.DynamicString(exception.message)
             else -> UiText.DynamicString(exception.message ?: "External server error")
         }
