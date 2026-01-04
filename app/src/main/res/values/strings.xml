@@ -36,6 +36,123 @@
     // SNACKBAR INFO
     <string name="snackbar_msg_info_profile_update">Profile details updated</string>
 
+    // TYPE NAME
+    <string name="transaction_type_name_offer">OFFER</string>
+    <string name="transaction_type_name_request">REQUEST</string>
+
+    // TRANSACTION NAME
+    <string name="offer_type_name_product">PRODUCT</string>
+    <string name="offer_type_name_service">SERVICE</string>
+
+    // STATUS NAME
+    <string name="offer_status_name_active">ACTIVE</string>
+    <string name="offer_status_name_inactive">INACTIVE</string>
+
+    // PRICE UNIT NAME
+    <string name="offer_price_unit_name_item">ITEM</string>
+    <string name="offer_price_unit_name_hour">HOUR</string>
+    <string name="offer_price_unit_name_km">KM</string>
+    <string name="offer_price_unit_name_project">PROJECT</string>
+    <string name="offer_price_unit_name_square_meter">SQUARE METER</string>
+
+    // PRODUCT CONDITION NAME
+    <string name="item_condition_name_new">NEW</string>
+    <string name="item_condition_name_used">USED</string>
+    <string name="item_condition_name_damaged">DAMAGED</string>
+    <string name="item_condition_name_not_app">NOT APPLICABLE</string>
+
+    // SUPER CATEGORY NAME
+    <string name="offer_super_category_product_name_electronics">Electronics</string>
+    <string name="offer_super_category_product_name_automotive">Automotive</string>
+    <string name="offer_super_category_product_name_fashion">Fashion</string>
+    <string name="offer_super_category_product_name_home_garden">Home &amp; Garden</string>
+    <string name="offer_super_category_product_name_sport_hobby">Sport &amp; Hobby</string>
+    <string name="offer_super_category_product_name_culture_entertainment">Culture &amp; Entertainment</string>
+    <string name="offer_super_category_product_name_health_beauty">Health &amp; Beauty</string>
+    <string name="offer_super_category_product_name_other_products">Other Products</string>
+    <string name="offer_super_category_service_name_renovation_construction">Renovation &amp; Construction</string>
+    <string name="offer_super_category_service_name_garden_services">Garden Services</string>
+    <string name="offer_super_category_service_name_transport_services">Transport Services</string>
+    <string name="offer_super_category_service_name_auto_services">Auto Services</string>
+    <string name="offer_super_category_service_name_cleaning_services">Cleaning Services</string>
+    <string name="offer_super_category_service_name_education">Education</string>
+    <string name="offer_super_category_service_name_it_design">IT &amp; Design</string>
+    <string name="offer_super_category_service_name_events">Events &amp; Weddings</string>
+    <string name="offer_super_category_service_name_beauty_wellness">Beauty &amp; Wellness</string>
+    <string name="offer_super_category_service_name_care_services">Care Services</string>
+    <string name="offer_super_category_service_name_professional_services">Professional Services</string>
+    <string name="offer_super_category_service_name_other_services">Other Services</string>
+
+    // CATEGORY NAME
+    <string name="offer_category_product_name_smartphones">Smartphones</string>
+    <string name="offer_category_product_name_laptops">Laptops</string>
+    <string name="offer_category_product_name_pc_computers">PC Computers</string>
+    <string name="offer_category_product_name_consoles">Consoles</string>
+    <string name="offer_category_product_name_tv">TV &amp; Video</string>
+    <string name="offer_category_product_name_audio">Audio</string>
+    <string name="offer_category_product_name_cameras">Cameras</string>
+    <string name="offer_category_product_name_pc_parts">PC Parts</string>
+    <string name="offer_category_product_name_cars">Cars</string>
+    <string name="offer_category_product_name_motorcycles">Motorcycles</string>
+    <string name="offer_category_product_name_car_parts">Car Parts</string>
+    <string name="offer_category_product_name_tires">Tires</string>
+    <string name="offer_category_product_name_clothing_women">Women\'s Clothing</string>
+    <string name="offer_category_product_name_clothing_men">Men\'s Clothing</string>
+    <string name="offer_category_product_name_shoes">Shoes</string>
+    <string name="offer_category_product_name_accessories">Accessories</string>
+    <string name="offer_category_product_name_jewelry">Jewelry</string>
+    <string name="offer_category_product_name_furniture">Furniture</string>
+    <string name="offer_category_product_name_decoration">Decoration</string>
+    <string name="offer_category_product_name_tools">Tools</string>
+    <string name="offer_category_product_name_building_materials">Building Materials</string>
+    <string name="offer_category_product_name_bicycles">Bicycles</string>
+    <string name="offer_category_product_name_gym">Gym Equipment</string>
+    <string name="offer_category_product_name_musical_instruments">Instruments</string>
+    <string name="offer_category_product_name_books">Books</string>
+    <string name="offer_category_product_name_games">Video Games</string>
+    <string name="offer_category_product_name_movies">Movies</string>
+    <string name="offer_category_product_name_perfume">Perfume</string>
+    <string name="offer_category_product_name_makeup">Makeup</string>
+    <string name="offer_category_product_name_other">Other</string>
+    <string name="offer_category_service_name_renovation_general">General Renovation</string>
+    <string name="offer_category_service_name_painting">Painting</string>
+    <string name="offer_category_service_name_plumbing">Plumbing</string>
+    <string name="offer_category_service_name_electrician">Electrician</string>
+    <string name="offer_category_service_name_tiling">Tiling</string>
+    <string name="offer_category_service_name_carpentry">Carpentry</string>
+    <string name="offer_category_service_name_gardening">Gardening</string>
+    <string name="offer_category_service_name_paving">Paving</string>
+    <string name="offer_category_service_name_moving">Moving</string>
+    <string name="offer_category_service_name_transport_furniture">Furniture Transport</string>
+    <string name="offer_category_service_name_food_delivery">Food Delivery</string>
+    <string name="offer_category_service_name_mechanic">Mechanic</string>
+    <string name="offer_category_service_name_tire_change">Tire Change</string>
+    <string name="offer_category_service_name_auto_detailing">Detailing</string>
+    <string name="offer_category_service_name_home_cleaning">Home Cleaning</string>
+    <string name="offer_category_service_name_office_cleaning">Office Cleaning</string>
+    <string name="offer_category_service_name_car_wash">Car Wash</string>
+    <string name="offer_category_service_name_tutoring_languages">Language Tutoring</string>
+    <string name="offer_category_service_name_tutoring_math">Math/Science Tutoring</string>
+    <string name="offer_category_service_name_driving_lessons">Driving Lessons</string>
+    <string name="offer_category_service_name_it_support">IT Support</string>
+    <string name="offer_category_service_name_web_dev">Web Development</string>
+    <string name="offer_category_service_name_graphics">Graphic Design</string>
+    <string name="offer_category_service_name_dj_music">DJ &amp; Music</string>
+    <string name="offer_category_service_name_photography">Photography</string>
+    <string name="offer_category_service_name_catering">Catering</string>
+    <string name="offer_category_service_name_hairdresser">Hairdresser</string>
+    <string name="offer_category_service_name_barber">Barber</string>
+    <string name="offer_category_service_name_nails">Nails</string>
+    <string name="offer_category_service_name_babysitting">Babysitting</string>
+    <string name="offer_category_service_name_pet_sitting">Pet Sitting</string>
+    <string name="offer_category_service_name_accounting">Accounting</string>
+    <string name="offer_category_service_name_legal_advice">Legal Advice</string>
+    <string name="offer_category_service_name_insurance">Insurance</string>
+    <string name="offer_category_service_name_translation">Translation</string>
+    <string name="offer_category_service_name_tailoring">Tailoring</string>
+    <string name="offer_category_service_name_shoe_repair">Shoe Repair</string>
+    <string name="offer_category_service_name_other">Other Services</string>
+
     // -- PROFILE SCREEN --
 
     // PROFILE OPTION NAME

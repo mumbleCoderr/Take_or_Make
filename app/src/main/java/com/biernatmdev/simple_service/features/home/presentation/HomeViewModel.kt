@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class HomeViewModel(
-    // private val offerRepository: OfferRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
@@ -16,22 +15,7 @@ class HomeViewModel(
         when (event) {
             is HomeEvent.ChangeMode -> {
                 _state.update { it.copy(mode = event.mode) }
-
-                //TODO fetchuseroffers
-                /*if(event.mode == HomeMode.MAKE){
-                    fetchUserOffers()
-                }else{
-                    fetchOtherOffers(category: Category)
-                }*/
             }
         }
     }
-
-    /*private fun fetchUserOffers() {
-
-    }
-
-    private fun fetchOtherOffers(category: Category) {
-
-    }*/
 }

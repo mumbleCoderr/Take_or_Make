@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.biernatmdev.simple_service.features.home.components.TopBar
 import com.biernatmdev.simple_service.features.home.domain.HomeMode
+import com.biernatmdev.simple_service.features.home.make_module.MakeScreen
+import com.biernatmdev.simple_service.features.home.take_module.TakeScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -43,10 +45,10 @@ fun HomeTabScreen(
             ) {
                 when(mode) {
                     HomeMode.TAKE -> {
-                        Text("TAKE")
+                        TakeScreen()
                     }
                     HomeMode.MAKE -> {
-                        Text("MAKE")
+                        MakeScreen()
                     }
                 }
             }
