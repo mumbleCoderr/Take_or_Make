@@ -3,7 +3,7 @@ package com.biernatmdev.simple_service.features.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.biernatmdev.simple_service.core.nav.Screen
-import com.biernatmdev.simple_service.core.user.domain.UserRepository
+import com.biernatmdev.simple_service.core.user.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

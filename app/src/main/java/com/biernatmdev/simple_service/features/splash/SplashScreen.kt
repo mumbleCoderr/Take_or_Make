@@ -32,7 +32,6 @@ import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 
 @Composable
-//@Preview(showBackground = true)
 fun SplashScreen(
     navigateToAuth: () -> Unit,
 ) {

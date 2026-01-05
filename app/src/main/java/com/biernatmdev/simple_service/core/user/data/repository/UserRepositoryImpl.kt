@@ -1,9 +1,8 @@
 package com.biernatmdev.simple_service.core.user.data.repository
 
-import android.net.Uri
 import com.biernatmdev.simple_service.core.user.data.mapper.toDomainUser
 import com.biernatmdev.simple_service.core.user.data.mapper.toFirestoreMap
-import com.biernatmdev.simple_service.core.user.domain.UserRepository
+import com.biernatmdev.simple_service.core.user.domain.repository.UserRepository
 import com.biernatmdev.simple_service.core.user.domain.model.User
 import com.biernatmdev.simple_service.core.user.domain.model.UserException
 import com.google.firebase.Firebase
@@ -71,7 +70,7 @@ class UserRepositoryImpl(
         lastName: String
     ): Result<FirebaseUser> = runCatching {
         try {
-            val currentUser = auth.currentUser ?: throw UserException.NotSignedInException
+            val currentUser = auth.currentUser ?: throw UserException.NotSignedIn
             val credential = EmailAuthProvider.getCredential(email, password)
             val result = currentUser.linkWithCredential(credential).await()
             val linkedUser = result.user ?: throw UserException.UnknownException
@@ -144,7 +143,7 @@ class UserRepositoryImpl(
                 result.user ?: throw UserException.WrongCredentials
             } catch (e: Exception) {
                 throw when (e) {
-                    is FirebaseAuthInvalidUserException -> UserException.NotFoundException
+                    is FirebaseAuthInvalidUserException -> UserException.NotFound
                     is FirebaseAuthInvalidCredentialsException -> UserException.WrongCredentials
                     is FirebaseNetworkException -> UserException.NetworkError
                     is FirebaseTooManyRequestsException -> UserException.TooManyRequests
@@ -158,7 +157,7 @@ class UserRepositoryImpl(
             auth.sendPasswordResetEmail(email).await()
         } catch (e: Exception) {
             throw when (e) {
-                is FirebaseAuthInvalidUserException -> UserException.NotFoundException
+                is FirebaseAuthInvalidUserException -> UserException.NotFound
                 is FirebaseAuthInvalidCredentialsException -> UserException.InvalidEmailFormat
                 is FirebaseNetworkException -> UserException.NetworkError
                 is FirebaseTooManyRequestsException -> UserException.TooManyRequests
@@ -168,7 +167,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun addOfferToFavorites(offerId: String): Result<Unit> = runCatching {
-        val uid = auth.currentUser?.uid ?: throw UserException.NotSignedInException
+        val uid = auth.currentUser?.uid ?: throw UserException.NotSignedIn
 
         firestore.collection("user").document(uid)
             .update("favoriteOfferIds", FieldValue.arrayUnion(offerId))
@@ -176,7 +175,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun removeOfferFromFavorites(offerId: String): Result<Unit> = runCatching {
-        val uid = auth.currentUser?.uid ?: throw UserException.NotSignedInException
+        val uid = auth.currentUser?.uid ?: throw UserException.NotSignedIn
 
         firestore.collection("user").document(uid)
             .update("favoriteOfferIds", FieldValue.arrayRemove(offerId))
@@ -207,7 +206,7 @@ class UserRepositoryImpl(
         override suspend fun getUserDetails(): Result<User> = runCatching {
             try {
                 val uid = FirebaseAuth.getInstance().currentUser?.uid
-                    ?: throw UserException.NotSignedInException
+                    ?: throw UserException.NotSignedIn
 
                 val document = Firebase.firestore
                     .collection("user")
@@ -216,7 +215,7 @@ class UserRepositoryImpl(
                     .await()
 
                 if (!document.exists()) {
-                    throw UserException.NotFoundException
+                    throw UserException.NotFound
                 }
 
                 document.toDomainUser()
@@ -228,10 +227,10 @@ class UserRepositoryImpl(
         override suspend fun updateUserDetails(user: User): Result<Unit> = runCatching {
             try {
                 val uid = FirebaseAuth.getInstance().currentUser?.uid
-                    ?: throw UserException.NotSignedInException
+                    ?: throw UserException.NotSignedIn
 
                 if (uid != user.id) {
-                    throw UserException.AccessDeniedException
+                    throw UserException.AccessDenied
                 }
 
                 val updatedUser = user.toFirestoreMap()

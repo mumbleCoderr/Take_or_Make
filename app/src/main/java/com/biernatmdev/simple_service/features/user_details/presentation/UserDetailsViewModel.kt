@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.user.data.validation.UserValidator
-import com.biernatmdev.simple_service.core.user.domain.UserRepository
+import com.biernatmdev.simple_service.core.user.domain.repository.UserRepository
 import com.biernatmdev.simple_service.core.user.domain.model.User
 import com.biernatmdev.simple_service.core.user.domain.model.UserException
 import com.biernatmdev.simple_service.features.user_details.domain.UserDetailsFormItem
@@ -293,8 +293,8 @@ class UserDetailsViewModel(
     private fun handleException(exception: Throwable) {
         when (exception) {
             is UserException.NetworkError -> UiText.StringResource(R.string.snackbar_msg_info_auth_no_internet_connection)
-            is UserException.NotSignedInException -> UiText.StringResource(R.string.snackbar_msg_info_auth_user_not_signed_in)
-            is UserException.AccessDeniedException -> UiText.StringResource(R.string.snackbar_msg_info_auth_access_denied)
+            is UserException.NotSignedIn -> UiText.StringResource(R.string.snackbar_msg_info_auth_user_not_signed_in)
+            is UserException.AccessDenied -> UiText.StringResource(R.string.snackbar_msg_info_auth_access_denied)
             else -> UiText.DynamicString(exception.message ?: "External server error")
         }
     }

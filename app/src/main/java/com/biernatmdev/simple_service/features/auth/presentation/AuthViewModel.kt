@@ -7,7 +7,7 @@ import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
 import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.user.data.validation.UserValidator
-import com.biernatmdev.simple_service.core.user.domain.UserRepository
+import com.biernatmdev.simple_service.core.user.domain.repository.UserRepository
 import com.biernatmdev.simple_service.core.user.domain.model.UserException
 import com.biernatmdev.simple_service.features.auth.domain.AuthLoadingTarget
 import com.google.firebase.auth.FirebaseUser
@@ -238,7 +238,7 @@ class AuthViewModel(
                 val result = googleUiClient.signInGuest()
                 val user = result.user
                 if (user != null) signIn(user)
-                else throw UserException.NotFoundException
+                else throw UserException.NotFound
             } catch (e: Exception) {
                 handleException(e)
             }
@@ -316,7 +316,7 @@ class AuthViewModel(
                 }
             }
 
-            is UserException.NotFoundException -> {
+            is UserException.NotFound -> {
                 val errorMsg =
                     UiText.StringResource(R.string.auth_screen_bottom_section_textfield_email_password_wrong_error_msg)
                 _state.update {
@@ -342,8 +342,8 @@ class AuthViewModel(
             else -> {
                 val errorMessage: UiText = when (exception) {
                     is UserException.NetworkError -> UiText.StringResource(R.string.snackbar_msg_info_auth_no_internet_connection)
-                    is UserException.AccessDeniedException -> UiText.StringResource(R.string.snackbar_msg_info_auth_access_denied)
-                    is UserException.NotSignedInException -> UiText.StringResource(R.string.snackbar_msg_info_auth_user_not_signed_in)
+                    is UserException.AccessDenied -> UiText.StringResource(R.string.snackbar_msg_info_auth_access_denied)
+                    is UserException.NotSignedIn -> UiText.StringResource(R.string.snackbar_msg_info_auth_user_not_signed_in)
                     is UserException.TooManyRequests -> UiText.StringResource(R.string.snackbar_msg_info_auth_too_many_requests)
                     else -> UiText.DynamicString(exception.message ?: "External server error")
                 }

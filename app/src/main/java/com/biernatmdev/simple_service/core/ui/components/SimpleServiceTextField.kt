@@ -73,6 +73,8 @@ fun SimpleServiceTextField(
     textColor: Color = onColorBackgroundDarker,
     textSize: TextUnit = MEDIUM,
     roundedCornerShapeValue: Dp = 22.dp,
+    isMultiline: Boolean = false,
+    minLines: Int = 1,
     onDone: () -> (Unit) = {} //TODO AUTH SCREEN FOCUS CASNCEL AND REWFACTOR TEXTFIELDS
 ) {
     val focusManager = LocalFocusManager.current
@@ -134,6 +136,11 @@ fun SimpleServiceTextField(
                     fontSize = textSize,
                     fontWeight = FontWeight.Bold,
                 ),
+                lineLimits = if (isMultiline) {
+                    TextFieldLineLimits.MultiLine(minHeightInLines = minLines, maxHeightInLines = Int.MAX_VALUE)
+                } else {
+                    TextFieldLineLimits.SingleLine
+                },
                 interactionSource = interactionSource,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = when {
@@ -147,7 +154,6 @@ fun SimpleServiceTextField(
                     focusManager.clearFocus()
                     onDone()
                 },
-                lineLimits = TextFieldLineLimits.SingleLine,
                 cursorBrush = SolidColor(onColorBackground),
                 decorator = { innerTextField ->
                     SimpleServiceTextFieldDecorator(
@@ -162,7 +168,9 @@ fun SimpleServiceTextField(
                         backgroundColor = backgroundColor,
                         textColor = textColor,
                         textSize = textSize,
-                        roundedCornerShapeValue = roundedCornerShapeValue
+                        roundedCornerShapeValue = roundedCornerShapeValue,
+                        isMultiline = isMultiline,
+                        minLines = minLines,
                     )
                 }
             )
@@ -200,11 +208,14 @@ fun SimpleServiceTextFieldDecorator(
     textColor: Color,
     textSize: TextUnit,
     roundedCornerShapeValue: Dp,
+    isMultiline: Boolean = false,
+    minLines: Int = 1,
 ) {
 
     val borderWidth = if(isError) 1.dp else 0.dp
     val borderColor = if(isError) Color.Red else Color.Transparent
     val borderShape = RoundedCornerShape(roundedCornerShapeValue)
+    val minHeight = if (isMultiline) (24 * minLines).dp + 32.dp else 56.dp
 
     Row(
         modifier = Modifier
@@ -213,9 +224,10 @@ fun SimpleServiceTextFieldDecorator(
             .clip(borderShape)
             .background(backgroundColor)
             .padding(16.dp)
-            .defaultMinSize(minHeight = iconSize),
+            .defaultMinSize(minHeight = iconSize)
+            .defaultMinSize(minHeight = minHeight),
         horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = if (isMultiline) Alignment.Top else Alignment.CenterVertically
     ) {
 
         val showPlaceholder = state.text.isEmpty() && !isFocused && placeholder.isNotEmpty()
@@ -225,7 +237,7 @@ fun SimpleServiceTextFieldDecorator(
             exit = fadeOut() + shrinkHorizontally()
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = if (isMultiline) Alignment.Top else Alignment.CenterVertically,
                 modifier = Modifier.padding(end = 12.dp)
             ) {
                 if (icon != null) {

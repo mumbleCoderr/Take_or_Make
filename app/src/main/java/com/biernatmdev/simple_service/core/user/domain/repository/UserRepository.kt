@@ -1,4 +1,4 @@
-package com.biernatmdev.simple_service.core.user.domain
+package com.biernatmdev.simple_service.core.user.domain.repository
 
 import com.biernatmdev.simple_service.core.user.domain.model.User
 import com.google.firebase.auth.FirebaseUser
