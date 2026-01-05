@@ -30,11 +30,20 @@
     <string name="user_exception_access_denied">You have no permission to do that</string>
     <string name="external_exception">External server exception</string>
 
+    <string name="offer_exception_network">No internet connection. Please check your settings</string>
+    <string name="offer_exception_access_denied">You do not have permission to perform this action</string>
+    <string name="offer_exception_not_found">Offer not found</string>
+    <string name="offer_exception_user_not_signed_in">You must be signed in to create an offer</string>
+    <string name="offer_exception_unknown">An unknown error occurred. Please try again later</string>
+    <string name="offer_exception_image_processing">Failed to process images. Please try different photos</string>
+
     // ERROR SCREEN
     <string name="error_btn_retry">Try again</string>
 
     // SNACKBAR INFO
     <string name="snackbar_msg_info_profile_update">Profile details updated</string>
+
+    <string name="snackbar_msg_info_offer_created">Your offer has been successfully created!</string>
 
     // TYPE NAME
     <string name="transaction_type_name_offer">OFFER</string>
@@ -71,16 +80,16 @@
     <string name="offer_super_category_product_name_health_beauty">Health &amp; Beauty</string>
     <string name="offer_super_category_product_name_other_products">Other Products</string>
     <string name="offer_super_category_service_name_renovation_construction">Renovation &amp; Construction</string>
-    <string name="offer_super_category_service_name_garden_services">Garden Services</string>
-    <string name="offer_super_category_service_name_transport_services">Transport Services</string>
-    <string name="offer_super_category_service_name_auto_services">Auto Services</string>
-    <string name="offer_super_category_service_name_cleaning_services">Cleaning Services</string>
+    <string name="offer_super_category_service_name_garden_services">Garden</string>
+    <string name="offer_super_category_service_name_transport_services">Transport</string>
+    <string name="offer_super_category_service_name_auto_services">Auto</string>
+    <string name="offer_super_category_service_name_cleaning_services">Cleaning</string>
     <string name="offer_super_category_service_name_education">Education</string>
     <string name="offer_super_category_service_name_it_design">IT &amp; Design</string>
     <string name="offer_super_category_service_name_events">Events &amp; Weddings</string>
     <string name="offer_super_category_service_name_beauty_wellness">Beauty &amp; Wellness</string>
     <string name="offer_super_category_service_name_care_services">Care Services</string>
-    <string name="offer_super_category_service_name_professional_services">Professional Services</string>
+    <string name="offer_super_category_service_name_professional_services">Professional</string>
     <string name="offer_super_category_service_name_other_services">Other Services</string>
 
     // CATEGORY NAME
@@ -113,7 +122,7 @@
     <string name="offer_category_product_name_movies">Movies</string>
     <string name="offer_category_product_name_perfume">Perfume</string>
     <string name="offer_category_product_name_makeup">Makeup</string>
-    <string name="offer_category_product_name_other">Other</string>
+    <string name="offer_category_product_name_other">Other Products</string>
     <string name="offer_category_service_name_renovation_general">General Renovation</string>
     <string name="offer_category_service_name_painting">Painting</string>
     <string name="offer_category_service_name_plumbing">Plumbing</string>
@@ -152,6 +161,64 @@
     <string name="offer_category_service_name_tailoring">Tailoring</string>
     <string name="offer_category_service_name_shoe_repair">Shoe Repair</string>
     <string name="offer_category_service_name_other">Other Services</string>
+
+    // -- MAKE MODULE --
+
+    // MAKE BTN
+    <string name="make_module_btn_text">ADD NEW OFFER</string>
+
+    // -- WIZARD --
+
+    // ERROR MSG
+    <string name="wizard_screen_textfield_title_blank_error_msg">Title can not be empty</string>
+    <string name="wizard_screen_textfield_title_too_long_error_msg">Title can not be longer than 40 characters</string>
+    <string name="wizard_screen_textfield_price_blank_error_msg">Price can not be empty</string>
+    <string name="wizard_screen_textfield_price_incorrect_error_msg">This is not correct price</string>
+    <string name="wizard_screen_textfield_price_too_low_error_msg">Price can not be less or equal 0</string>
+    <string name="wizard_screen_textfield_price_too_high_error_msg">This is unreal price</string>
+
+    <string name="wizard_screen_pick_transaction_type_empty_error_msg">Please pick transaction type first to continue</string>
+    <string name="wizard_screen_pick_offer_type_empty_error_msg">Please pick offer type first to continue</string>
+    <string name="wizard_screen_pick_category_empty_error_msg">Please pick offer category first to continue</string>
+    <string name="wizard_screen_pick_super_category_empty_error_msg">Please pick offer super category first to continue</string>
+
+    <string name="wizard_screen_textfield_description_too_short_error_msg">Description has to be at leat 10 characters long</string>
+    <string name="wizard_screen_textfield_description_too_long_error_msg">Description can not be longer than 1000 characters</string>
+    <string name="wizard_screen_textfield_city_blank_error_msg">City can not be empty</string>
+    <string name="wizard_screen_textfield_city_incorrect_error_msg">City is incorrect</string>
+    <string name="wizard_screen_textfield_city_too_long_error_msg">City can not be longer than 100 characters</string>
+
+    // WIZARD BTN
+    <string name="wizard_screen_btn_label_publish">Publish offer</string>
+    <string name="wizard_screen_btn_label_start">Let\'s start</string>
+    <string name="wizard_screen_btn_label_next">Next step</string>
+
+    // WIZARD TEXTS
+    <string name="wizard_screen_text_step_0_title">Ready to create a listing?</string>
+    <string name="wizard_screen_text_step_0_subtitle">It takes just a few steps to get started.</string>
+
+    <string name="wizard_screen_text_step_1_title">What is your goal?</string>
+    <string name="wizard_screen_text_step_1_subtitle_offer">I want to find something</string>
+    <string name="wizard_screen_text_step_1_subtitle_request">I want to offer something</string>
+
+    <string name="wizard_screen_text_step_2_title">What are you listing?</string>
+    <string name="wizard_screen_text_step_2_subtitle_product">A Product</string>
+    <string name="wizard_screen_text_step_2_subtitle_service">A Service</string>
+
+    <string name="wizard_screen_text_step_3_title">Let\'s start with the basics</string>
+
+    <string name="wizard_screen_text_step_4_title">Select a category</string>
+
+    <string name="wizard_screen_text_step_5_title">Add more details</string>
+    <string name="wizard_screen_text_step_5_subtitle_description">A detailed description attracts more interest.</string>
+    <string name="wizard_screen_text_step_5_subtitle_condition">Item condition:</string>
+    <string name="wizard_screen_text_step_5_subtitle_city">Location of the offer</string>
+
+    <string name="wizard_screen_text_step_6_title">Add photos</string>
+    <string name="wizard_screen_text_step_6_subtitle">Great photos help tell your story and build trust.</string>
+
+    <string name="wizard_screen_text_step_7_title">Review your listing</string>
+    <string name="wizard_screen_text_step_7_subtitle_description">Description:</string>
 
     // -- PROFILE SCREEN --
 
@@ -304,5 +371,12 @@
     <string name="profile_picture">User profile picture</string>
     <string name="arrow_back">Back arrow</string>
     <string name="edit">Edit profile picture</string>
+    <string name="close">Close</string>
+    <string name="offer_photo">Offer photo</string>
+    <string name="remove">Remove</string>
+    <string name="add_more_photos">Add more photos</string>
+    <string name="add_photo">Add photo</string>
+    <string name="full_screen_image">Full screen image</string>
+
 
 </resources>

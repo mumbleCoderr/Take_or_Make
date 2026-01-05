@@ -4,9 +4,9 @@ import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.ui.models.UiText
 
 enum class OfferCategory(
-    val displayName: UiText,
+    override val displayName: UiText,
     val superCategory: OfferSuperCategory
-) {
+) : CategoryDisplayable {
 
     // PRODUCTS
 

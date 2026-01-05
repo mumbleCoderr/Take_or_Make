@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -72,7 +74,7 @@ fun SimpleServiceButton(
     val textContent = @Composable {
         Text(
             text = buttonText,
-            color = if(isEnabled) textColor else onColorBackgroundDarker,
+            color = if (isEnabled) textColor else onColorBackgroundDarker,
             fontFamily = textFont,
             fontSize = textFontSize,
             fontWeight = textFontWeight,
@@ -80,37 +82,25 @@ fun SimpleServiceButton(
     }
 
     val iconContent = @Composable {
-        AnimatedContent(
-            targetState = isLoading,
-        ) { loadingState ->
-            if (!loadingState) {
-                if (icon != null) {
-                    when (icon) {
-                        is IconType.Vector -> {
-                            Icon(
-                                imageVector = icon.imageVector,
-                                contentDescription = icon.imageVector.name,
-                                tint = if(isEnabled) iconTint else onColorBackgroundDarker,
-                                modifier = Modifier.size(iconSize)
-                            )
-                        }
-
-                        is IconType.Drawable -> {
-                            Icon(
-                                painter = painterResource(icon.id),
-                                contentDescription = icon.id.toString(),
-                                tint = if(isEnabled) iconTint else onColorBackgroundDarker,
-                                modifier = Modifier.size(iconSize)
-                            )
-                        }
-                    }
+        if (icon != null) {
+            val modifier = Modifier.size(iconSize)
+            when (icon) {
+                is IconType.Vector -> {
+                    Icon(
+                        imageVector = icon.imageVector,
+                        contentDescription = icon.imageVector.name,
+                        tint = if (isEnabled) iconTint else onColorBackgroundDarker,
+                        modifier = modifier
+                    )
                 }
-            } else {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(iconSize),
-                    strokeWidth = 4.dp,
-                    color = textColor
-                )
+                is IconType.Drawable -> {
+                    Icon(
+                        painter = painterResource(icon.id),
+                        contentDescription = icon.id.toString(),
+                        tint = if (isEnabled) iconTint else onColorBackgroundDarker,
+                        modifier = modifier
+                    )
+                }
             }
         }
     }
@@ -119,55 +109,61 @@ fun SimpleServiceButton(
         modifier = modifier.clickable(enabled = !isLoading && isEnabled) { onClick() },
         shape = RoundedCornerShape(roundedCornerShapeValue),
         border = if (isBordered) {
-            BorderStroke(
-                width = 1.dp,
-                color = ColorPrimary,
-            )
-        } else if(!isEnabled){
-            BorderStroke(
-                width = 1.dp,
-                color = onColorBackgroundDarker,
-            )
-        }
-        else {
+            BorderStroke(1.dp, ColorPrimary)
+        } else if (!isEnabled) {
+            BorderStroke(1.dp, onColorBackgroundDarker)
+        } else {
             null
         },
-        color = if(isEnabled) backgroundColor else ColorSurface,
+        color = if (isEnabled) backgroundColor else ColorSurface,
     ) {
-        if (isIconAtEdge && icon != null) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.padding(buttonPadding)
+        ) {
             Box(
                 modifier = Modifier
-                    .padding(buttonPadding)
+                    .graphicsLayer { alpha = if (isLoading) 0f else 1f }
+                    .then(if (isIconAtEdge) Modifier.fillMaxWidth() else Modifier)
             ) {
-                Box(
-                    modifier = Modifier.align(
-                        if (isIconLeading) Alignment.CenterStart else Alignment.CenterEnd
-                    )
-                ) { iconContent() }
-                Box(
-                    modifier = Modifier.align(Alignment.Center)
-                ) { textContent() }
-            }
-        } else {
-            Row(
-                modifier = Modifier
-                    .padding(buttonPadding),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (icon != null || isLoading) {
-                    if (isIconLeading) {
-                        iconContent()
-                        if (buttonText.isNotEmpty()) Spacer(Modifier.width(spacerWidth))
-                        textContent()
-                    } else {
-                        textContent()
-                        if (buttonText.isNotEmpty()) Spacer(Modifier.width(spacerWidth))
-                        iconContent()
+                if (isIconAtEdge && icon != null) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Box(
+                            modifier = Modifier.align(
+                                if (isIconLeading) Alignment.CenterStart else Alignment.CenterEnd
+                            )
+                        ) { iconContent() }
+                        Box(
+                            modifier = Modifier.align(Alignment.Center)
+                        ) { textContent() }
                     }
                 } else {
-                    textContent()
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
+                        if (isIconLeading && icon != null) {
+                            iconContent()
+                            if (buttonText.isNotEmpty()) Spacer(Modifier.width(spacerWidth))
+                            textContent()
+                        } else {
+                            textContent()
+                            if (icon != null) {
+                                if (buttonText.isNotEmpty()) Spacer(Modifier.width(spacerWidth))
+                                iconContent()
+                            }
+                        }
+                    }
                 }
+            }
+
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(iconSize),
+                    strokeWidth = 3.dp,
+                    color = textColor
+                )
             }
         }
     }

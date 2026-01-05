@@ -1,27 +1,24 @@
 package com.biernatmdev.simple_service.features.home.presentation
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.biernatmdev.simple_service.features.home.components.TopBar
 import com.biernatmdev.simple_service.features.home.domain.HomeMode
-import com.biernatmdev.simple_service.features.home.make_module.MakeScreen
+import com.biernatmdev.simple_service.features.home.make_module.presentation.offer_list.MakeScreen
 import com.biernatmdev.simple_service.features.home.take_module.TakeScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeTabScreen(
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = koinViewModel(),
+    navigateToWizard: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -48,7 +45,9 @@ fun HomeTabScreen(
                         TakeScreen()
                     }
                     HomeMode.MAKE -> {
-                        MakeScreen()
+                        MakeScreen(
+                            navigateToWizard = { navigateToWizard() }
+                        )
                     }
                 }
             }

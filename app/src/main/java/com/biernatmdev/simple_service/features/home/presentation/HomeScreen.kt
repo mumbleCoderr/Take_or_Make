@@ -26,7 +26,8 @@ import com.biernatmdev.simple_service.features.profile.presentation.ProfileScree
 @Composable
 fun HomeScreen(
     navigateToAuth: () -> Unit,
-    navigateToProfileSubscreen: (Screen) -> Unit
+    navigateToWizard: () -> Unit,
+    navigateToProfileSubscreen: (Screen) -> Unit,
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -64,7 +65,9 @@ fun HomeScreen(
                 startDestination = Screen.HomeScreen
             ) {
                 composable<Screen.HomeScreen> {
-                    HomeTabScreen()
+                    HomeTabScreen(
+                        navigateToWizard = { navigateToWizard() }
+                    )
                 }
                 composable<Screen.CategoryScreen> {}
                 composable<Screen.NotificationScreen> {}

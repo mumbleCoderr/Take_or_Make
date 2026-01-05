@@ -14,6 +14,9 @@ Screen {
     @Serializable
     data object HomeGraph: Screen()
 
+    @Serializable
+    data object AddOfferWizardScreen: Screen()
+
     // HOME GRAPH SUBSCREENS
     @Serializable
     data object HomeScreen: Screen()

@@ -8,6 +8,7 @@ import com.biernatmdev.simple_service.features.auth.presentation.AuthScreen
 import com.biernatmdev.simple_service.features.user_details.presentation.UserDetailsScreen
 import com.biernatmdev.simple_service.features.favourites.FavouritesScreen
 import com.biernatmdev.simple_service.features.history.HistoryScreen
+import com.biernatmdev.simple_service.features.home.make_module.presentation.wizard.AddOfferWizardScreen
 import com.biernatmdev.simple_service.features.home.presentation.HomeScreen
 import com.biernatmdev.simple_service.features.pro.ProScreen
 import com.biernatmdev.simple_service.features.reviews.ReviewsScreen
@@ -47,8 +48,18 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
                         popUpTo(0) { inclusive = true }
                     }
                 },
+                navigateToWizard = {
+                    navController.navigate(Screen.AddOfferWizardScreen)
+                },
                 navigateToProfileSubscreen = { screen ->
                     navController.navigate(screen)
+                },
+            )
+        }
+        composable<Screen.AddOfferWizardScreen> {
+            AddOfferWizardScreen(
+                navigateBack = {
+                    navController.popBackStack()
                 }
             )
         }

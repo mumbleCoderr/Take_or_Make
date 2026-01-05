@@ -5,16 +5,16 @@ import java.util.Currency
 import java.util.Locale
 
 object CurrencyUtils {
-    fun getAllCurrencies(): List<String> {
-        return Currency.getAvailableCurrencies()
-            .map { it.currencyCode }
-            .sorted()
-    }
 
-    fun getCommonCurrencies(): List<String> {
-        val common = listOf("PLN", "EUR", "USD", "GBP")
-        val all = getAllCurrencies()
-        return (common + (all - common)).distinct()
+    private val popularCurrencyCodes = listOf(
+        "PLN", "EUR", "USD", "GBP", "CHF",
+        "UAH", "NOK", "CZK", "SEK", "DKK",
+        "CAD", "AUD", "JPY", "CNY", "TRY",
+        "RON", "HUF", "BGN", "ILS", "SAR"
+    )
+
+    fun getPopularCurrencies(): List<String> {
+        return popularCurrencyCodes
     }
 
     fun getSymbol(currencyCode: String): String {

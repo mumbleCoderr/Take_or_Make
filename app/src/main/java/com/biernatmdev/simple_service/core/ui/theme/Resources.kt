@@ -3,6 +3,7 @@ package com.biernatmdev.simple_service.core.ui.theme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -10,18 +11,26 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBackIos
 import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.AddLink
+import androidx.compose.material.icons.filled.AddLocationAlt
+import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.BorderColor
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Construction
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Handshake
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.ManageAccounts
@@ -31,19 +40,26 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.Reviews
 import androidx.compose.material.icons.filled.Sell
+import androidx.compose.material.icons.filled.Title
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.AddCard
 import androidx.compose.material.icons.outlined.AddLink
+import androidx.compose.material.icons.outlined.AddLocationAlt
+import androidx.compose.material.icons.outlined.AddPhotoAlternate
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Campaign
 import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Construction
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Handshake
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.LockOpen
 import androidx.compose.material.icons.outlined.ManageAccounts
@@ -84,6 +100,11 @@ object Resources {
         val RetryOutlined = Icons.Outlined.Replay
         val ArrowBackFilled = Icons.AutoMirrored.Filled.ArrowBack
         val ArrowBackOutlined = Icons.AutoMirrored.Outlined.ArrowBack
+
+        val ArrowFilled = Icons.AutoMirrored.Filled.ArrowForward
+
+        val CheckFilled = Icons.Filled.Check
+        val CheckOutlined = Icons.Outlined.Check
         val Google = R.drawable.google
 
         // BOTTOM BAR
@@ -156,7 +177,29 @@ object Resources {
         val LockOpenFilled = Icons.Filled.LockOpen
         val LockOpenOutlined = Icons.Outlined.LockOpen
 
+        val CloseFilled = Icons.Filled.Close
+
         val EditFilled = Icons.Filled.BorderColor
+
+        val AddFilled = Icons.Filled.AddCard
+        val AddOutlined = Icons.Outlined.AddCard
+
+        // WIZARD
+        val Requesting = R.drawable.observing
+        val Offering = R.drawable.working
+        val Product = R.drawable.clothes
+        val Service = R.drawable.tools
+
+        val Title = Icons.Filled.Title
+
+        val ArrowUp = Icons.Default.KeyboardArrowUp
+        val ArrowDown = Icons.Default.KeyboardArrowDown
+        val LocalisationOutlined = Icons.Outlined.AddLocationAlt
+        val DescriptionOutlined = Icons.Outlined.Description
+        val PhotoAddOutlined = Icons.Outlined.AddPhotoAlternate
+        val Money = R.drawable.money
+        val LocationOutlined = Icons.Outlined.LocationOn
+        val Clean = R.drawable.clean
     }
 
     object Image {
