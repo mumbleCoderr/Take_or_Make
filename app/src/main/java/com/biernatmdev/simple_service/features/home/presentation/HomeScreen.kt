@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.biernatmdev.simple_service.features.home.components.BottomBar
 import com.biernatmdev.simple_service.features.home.domain.HomeSubscreen
 import com.biernatmdev.simple_service.core.nav.Screen
+import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.features.profile.presentation.ProfileScreen
@@ -26,7 +27,7 @@ import com.biernatmdev.simple_service.features.profile.presentation.ProfileScree
 @Composable
 fun HomeScreen(
     navigateToAuth: () -> Unit,
-    navigateToWizard: () -> Unit,
+    navigateToWizard: (Offer?) -> Unit,
     navigateToProfileSubscreen: (Screen) -> Unit,
 ) {
     val navController = rememberNavController()
@@ -66,7 +67,7 @@ fun HomeScreen(
             ) {
                 composable<Screen.HomeScreen> {
                     HomeTabScreen(
-                        navigateToWizard = { navigateToWizard() }
+                        navigateToWizard = { navigateToWizard(it) }
                     )
                 }
                 composable<Screen.CategoryScreen> {}

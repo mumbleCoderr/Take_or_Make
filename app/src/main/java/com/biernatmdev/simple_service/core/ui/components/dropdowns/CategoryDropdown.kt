@@ -1,8 +1,9 @@
 package com.biernatmdev.simple_service.core.ui.components.dropdowns
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,11 +28,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import com.biernatmdev.simple_service.core.offer.domain.enums.OfferPriceUnit
+import com.biernatmdev.simple_service.core.offer.domain.enums.CategoryDisplayable
+import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
+import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSurface
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
-import com.biernatmdev.simple_service.core.ui.theme.LineHeight
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.ArrowDown
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.ArrowUp
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
@@ -39,29 +41,58 @@ import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 
 @Composable
-fun PriceUnitDropdown(
-    selectedUnit: OfferPriceUnit,
+fun CategoryDropdown(
+    items: List<CategoryDisplayable>,
+    selectedItem: CategoryDisplayable?,
     isExpanded: Boolean,
     onDropdownClick: () -> Unit,
-    onUnitSelected: (OfferPriceUnit) -> Unit,
+    onItemSelected: (CategoryDisplayable) -> Unit,
     onDismiss: () -> Unit,
-    withAny: Boolean = false,
+    placeholder: String,
     labelSize: TextUnit = MEDIUM,
     horizontalPadding: Dp = 16.dp,
+    isEnabled: Boolean = true,
+    onDisabledClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val background = if (isEnabled) ColorSecondary else ColorBackground
+    val shape = RoundedCornerShape(16.dp)
+    val borderStroke = if (!isEnabled) {
+        BorderStroke(
+            width = 1.dp,
+            color = onColorBackgroundDarker,
+        )
+    } else {
+        null
+    }
+
+
     Box(modifier = modifier) {
         Row(
             modifier = Modifier
                 .height(56.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(ColorSurface)
-                .clickable { onDropdownClick() }
+                .fillMaxWidth()
+                .then(
+                    if (borderStroke != null) {
+                        Modifier.border(borderStroke, shape)
+                    } else {
+                        Modifier
+                    }
+                )
+                .background(background, shape)
+                .clip(shape)
+                .clickable {
+                    if (isEnabled) {
+                        onDropdownClick()
+                    } else {
+                        onDisabledClick()
+                    }
+                }
                 .padding(horizontal = horizontalPadding),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = selectedUnit.displayName.asString(),
+                text = selectedItem?.displayName?.asString() ?: placeholder,
                 fontFamily = momoFont(),
                 fontWeight = FontWeight.Bold,
                 fontSize = labelSize,
@@ -70,8 +101,7 @@ fun PriceUnitDropdown(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .weight(1f)
+                modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Icon(
@@ -82,29 +112,27 @@ fun PriceUnitDropdown(
             )
         }
 
-        DropdownMenu(
-            expanded = isExpanded,
-            onDismissRequest = onDismiss,
-            modifier = Modifier
-                .background(ColorBackground)
-                .heightIn(max = 300.dp)
-        ) {
-            OfferPriceUnit.entries
-                .filter { unit ->
-                    withAny || unit != OfferPriceUnit.ANY
-                }
-                .forEach { unit ->
+        if(isEnabled) {
+            DropdownMenu(
+                expanded = isExpanded,
+                onDismissRequest = onDismiss,
+                modifier = Modifier
+                    .background(ColorBackground)
+                    .heightIn(max = 300.dp)
+            ) {
+                items.forEach { item ->
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = unit.displayName.asString(),
+                                text = item.displayName.asString(),
                                 fontFamily = momoFont(),
                                 color = onColorBackground
                             )
                         },
-                        onClick = { onUnitSelected(unit) }
+                        onClick = { onItemSelected(item) }
                     )
                 }
+            }
         }
     }
 }

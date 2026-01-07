@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.features.home.components.TopBar
 import com.biernatmdev.simple_service.features.home.domain.HomeMode
 import com.biernatmdev.simple_service.features.home.make_module.presentation.offer_list.MakeScreen
@@ -18,7 +19,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeTabScreen(
     viewModel: HomeViewModel = koinViewModel(),
-    navigateToWizard: () -> Unit,
+    navigateToWizard: (Offer?) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -46,7 +47,7 @@ fun HomeTabScreen(
                     }
                     HomeMode.MAKE -> {
                         MakeScreen(
-                            navigateToWizard = { navigateToWizard() }
+                            navigateToWizard = { navigateToWizard(it) }
                         )
                     }
                 }

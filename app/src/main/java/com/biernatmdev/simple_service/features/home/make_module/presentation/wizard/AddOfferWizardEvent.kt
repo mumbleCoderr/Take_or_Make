@@ -7,6 +7,7 @@ import com.biernatmdev.simple_service.core.offer.domain.enums.OfferPriceUnit
 import com.biernatmdev.simple_service.core.offer.domain.enums.OfferSuperCategory
 import com.biernatmdev.simple_service.core.offer.domain.enums.OfferType
 import com.biernatmdev.simple_service.core.offer.domain.enums.TransactionType
+import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.features.home.make_module.domain.AddOfferWizardStep
 
@@ -33,10 +34,13 @@ sealed interface AddOfferWizardEvent {
     data object OnDescriptionFocused : AddOfferWizardEvent
     data object OnCityFocused : AddOfferWizardEvent
     data class OnPhotosSelected(val photos: List<Uri>) : AddOfferWizardEvent
-    data class OnPhotoRemoved(val photo: Uri) : AddOfferWizardEvent
+    data class OnPhotoRemoved(val photo: Any) : AddOfferWizardEvent
     data class OnGoToStep(val step: AddOfferWizardStep) : AddOfferWizardEvent
     data object OnTitleFocused : AddOfferWizardEvent
     data object OnPriceFocused : AddOfferWizardEvent
+    data object OnExitDialogDismiss : AddOfferWizardEvent
+    data object OnExitDialogConfirm : AddOfferWizardEvent
+    data class InitWithOffer(val offer: Offer) : AddOfferWizardEvent
 }
 
 sealed interface AddOfferWizardEffect {

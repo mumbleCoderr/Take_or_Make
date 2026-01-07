@@ -63,14 +63,19 @@
     <string name="offer_price_unit_name_km">KM</string>
     <string name="offer_price_unit_name_project">PROJECT</string>
     <string name="offer_price_unit_name_square_meter">SQUARE METER</string>
+    <string name="offer_price_unit_name_any">ANY</string>
 
     // PRODUCT CONDITION NAME
+    <string name="item_condition_name_any">ANY</string>
     <string name="item_condition_name_new">NEW</string>
     <string name="item_condition_name_used">USED</string>
     <string name="item_condition_name_damaged">DAMAGED</string>
     <string name="item_condition_name_not_app">NOT APPLICABLE</string>
 
+    <string name="item_condition_name">Item Condition</string>
+
     // SUPER CATEGORY NAME
+    <string name="offer_super_category_product_name_any">ANY</string>
     <string name="offer_super_category_product_name_electronics">Electronics</string>
     <string name="offer_super_category_product_name_automotive">Automotive</string>
     <string name="offer_super_category_product_name_fashion">Fashion</string>
@@ -165,7 +170,20 @@
     // -- MAKE MODULE --
 
     // MAKE BTN
-    <string name="make_module_btn_text">ADD NEW OFFER</string>
+    <string name="make_module_btn_text_add">Add new offer</string>
+
+    // MAKE DIALOG
+    <string name="make_module_dialog_title">Quit creating offer?</string>
+    <string name="make_module_dialog_subtext">If you quit, you will lose data that you have provided</string>
+
+    <string name="make_module_dialog_delete_title">Delete an offer?</string>
+    <string name="make_module_dialog_delete_subtext">This operation is not irreversible</string>
+
+    <string name="make_module_snackbar_msg_filter_supercategory">Please select offer type first</string>
+    <string name="make_module_snackbar_msg_filter_subcategory">Please select super category first</string>
+    <string name="make_module_snackbar_msg_filter_city">City filter is applicable only for services</string>
+    <string name="make_module_snackbar_msg_filter_item_condition">Item condition filter is applicable only for products</string>
+    <string name="make_module_snackbar_msg_delete_offer">Offer deleted successfully</string>
 
     // -- WIZARD --
 
@@ -192,6 +210,7 @@
     <string name="wizard_screen_btn_label_publish">Publish offer</string>
     <string name="wizard_screen_btn_label_start">Let\'s start</string>
     <string name="wizard_screen_btn_label_next">Next step</string>
+    <string name="wizard_screen_btn_label_confirm_changes">Confirm changes</string>
 
     // WIZARD TEXTS
     <string name="wizard_screen_text_step_0_title">Ready to create a listing?</string>
@@ -377,6 +396,11 @@
     <string name="add_more_photos">Add more photos</string>
     <string name="add_photo">Add photo</string>
     <string name="full_screen_image">Full screen image</string>
+    <string name="offering">Offering</string>
+    <string name="requesting">Requesting</string>
+    <string name="product">Product</string>
+    <string name="service">Service</string>
+    <string name="price">Price</string>
 
 
 </resources>

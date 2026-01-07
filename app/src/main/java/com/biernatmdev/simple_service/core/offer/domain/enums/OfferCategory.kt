@@ -1,12 +1,17 @@
 package com.biernatmdev.simple_service.core.offer.domain.enums
 
+import android.os.Parcelable
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.ui.models.UiText
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 enum class OfferCategory(
     override val displayName: UiText,
-    val superCategory: OfferSuperCategory
-) : CategoryDisplayable {
+    val superCategory: OfferSuperCategory?
+) : CategoryDisplayable, Parcelable {
+
+    ANY(UiText.StringResource(R.string.offer_super_category_product_name_any), null),
 
     // PRODUCTS
 
@@ -122,12 +127,12 @@ enum class OfferCategory(
     // --- Super: OTHER_SERVICES ---
     OTHER_SERVICE_ITEM(UiText.StringResource(R.string.offer_category_service_name_other), OfferSuperCategory.OTHER_SERVICES);
 
-    val type: OfferType
-        get() = superCategory.offerType
+    val type: OfferType?
+        get() = superCategory?.offerType
 
     companion object {
         fun getSubcategories(parent: OfferSuperCategory): List<OfferCategory> {
-            return entries.filter { it.superCategory == parent }
+            return entries.filter { it == ANY || it.superCategory == parent }
         }
 
         fun fromString(name: String): OfferCategory {

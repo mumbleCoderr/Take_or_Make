@@ -32,7 +32,11 @@ data class AddOfferWizardState(
     val isItemConditionDropdownExpanded: Boolean = false,
     val descriptionError: UiText? = null,
     val cityError: UiText? = null,
-    val selectedPhotos: List<Uri> = emptyList(),
+    val selectedPhotos: List<Any> = emptyList(),
     val isLoading: Boolean = false,
     val generalError: UiText? = null,
+    val isExitDialogVisible: Boolean = false,
+    val isEditMode: Boolean = false,
+    val editingOfferId: String? = null,
+    val editingOfferAuthorId: String = "",
 )

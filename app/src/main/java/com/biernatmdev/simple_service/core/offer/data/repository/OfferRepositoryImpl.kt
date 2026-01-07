@@ -1,5 +1,6 @@
 package com.biernatmdev.simple_service.core.offer.data.repository
 
+import com.biernatmdev.simple_service.core.offer.data.mapper.toDomainOffer
 import com.biernatmdev.simple_service.core.offer.data.mapper.toFirestoreMap
 import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.core.offer.domain.model.OfferException
@@ -9,6 +10,7 @@ import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
 class OfferRepositoryImpl(
@@ -69,4 +71,48 @@ class OfferRepositoryImpl(
             }
         }
     }
+
+    override suspend fun deleteOffer(offerId: String): Result<Unit> = runCatching {
+        try {
+            val currentUser = auth.currentUser ?: throw UserException.NotSignedIn
+
+            collection.document(offerId)
+                .delete()
+                .await()
+
+            Unit
+        } catch (e: Exception) {
+            throw when (e) {
+                is FirebaseNetworkException -> OfferException.NetworkError
+                is FirebaseFirestoreException -> {
+                    when (e.code) {
+                        FirebaseFirestoreException.Code.PERMISSION_DENIED -> OfferException.AccessDenied
+                        FirebaseFirestoreException.Code.NOT_FOUND -> OfferException.NotFound
+                        else -> OfferException.UnknownException
+                    }
+                }
+                else -> e
+            }
+        }
+    }
+
+    override suspend fun getOffersByAuthorId(authorId: String): Result<List<Offer>> = runCatching {
+        try {
+            val snapshot = collection
+                .whereEqualTo("authorId", authorId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get()
+                .await()
+
+            snapshot.documents.map { doc -> doc.toDomainOffer() }
+
+        } catch (e: Exception) {
+            throw when (e) {
+                is FirebaseNetworkException -> OfferException.NetworkError
+                is FirebaseFirestoreException -> OfferException.NetworkError
+                else -> e
+            }
+        }
+    }
+
 }

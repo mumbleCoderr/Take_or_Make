@@ -29,7 +29,7 @@ val appModule = module {
     viewModel { HomeViewModel() }
     viewModel { ProfileViewModel(get()) }
     viewModel { UserDetailsViewModel(get()) }
-    viewModel { MakeViewModel() }
+    viewModel { MakeViewModel(get(), get()) }
     viewModel { AddOfferWizardViewModel(get(), get()) }
     single { GoogleUiClient(
         context = androidContext(),

@@ -4,14 +4,13 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.serialization)
     id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.google.gms.google.services)
 }
 
 android {
     namespace = "com.biernatmdev.simple_service"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.biernatmdev.simple_service"
