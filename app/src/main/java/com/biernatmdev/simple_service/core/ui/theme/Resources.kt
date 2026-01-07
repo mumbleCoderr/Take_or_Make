@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Construction
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.ErrorOutline
@@ -52,6 +53,7 @@ import androidx.compose.material.icons.outlined.Campaign
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Construction
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.ErrorOutline
@@ -68,6 +70,7 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Replay
 import androidx.compose.material.icons.outlined.Reviews
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material.icons.outlined.Wallet
 import com.biernatmdev.simple_service.R
@@ -166,6 +169,8 @@ object Resources {
         val PasswordFilled = Icons.Filled.Lock
         val PasswordOutlined = Icons.Outlined.Lock
 
+        val SearchOutlined = Icons.Outlined.Search
+
         // OTHER
 
         val ErrorFilled = Icons.Filled.ErrorOutline
@@ -200,6 +205,7 @@ object Resources {
         val Money = R.drawable.money
         val LocationOutlined = Icons.Outlined.LocationOn
         val Clean = R.drawable.clean
+        val DeleteFilled = Icons.Filled.Delete
     }
 
     object Image {

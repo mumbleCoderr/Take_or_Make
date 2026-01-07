@@ -7,10 +7,11 @@ import java.util.Locale
 object CurrencyUtils {
 
     private val popularCurrencyCodes = listOf(
+        "ANY",
         "PLN", "EUR", "USD", "GBP", "CHF",
         "UAH", "NOK", "CZK", "SEK", "DKK",
         "CAD", "AUD", "JPY", "CNY", "TRY",
-        "RON", "HUF", "BGN", "ILS", "SAR"
+        "RON", "HUF", "BGN", "ILS", "SAR",
     )
 
     fun getPopularCurrencies(): List<String> {

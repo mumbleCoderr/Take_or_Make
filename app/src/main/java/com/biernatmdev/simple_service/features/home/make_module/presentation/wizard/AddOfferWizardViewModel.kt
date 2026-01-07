@@ -1,6 +1,7 @@
 package com.biernatmdev.simple_service.features.home.make_module.presentation.wizard
 
 import android.app.Application
+import android.net.Uri
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.TextField
 import androidx.lifecycle.ViewModel
@@ -67,7 +68,11 @@ class AddOfferWizardViewModel(
                 }
             }
             AddOfferWizardEvent.OnCreateOfferClick -> {
-                createOffer()
+                if (_state.value.isEditMode) {
+                    updateOffer()
+                } else {
+                    createOffer()
+                }
             }
             AddOfferWizardEvent.OnPreviousStepClick -> {
                 val prevIndex = currentStepIndex - 1
@@ -76,11 +81,11 @@ class AddOfferWizardViewModel(
                         wizardStep = AddOfferWizardStep.getByIndex(prevIndex)
                     )
                 } else {
-                    sendEffect(AddOfferWizardEffect.NavigateBack)
+                    _state.update { it.copy(isExitDialogVisible = true) }
                 }
             }
             AddOfferWizardEvent.OnCloseClick -> {
-                sendEffect(AddOfferWizardEffect.NavigateBack)
+                _state.update { it.copy(isExitDialogVisible = true) }
             }
             AddOfferWizardEvent.OnPriceFocused -> {
                 _state.update { it.copy(priceError = null) }
@@ -221,6 +226,44 @@ class AddOfferWizardViewModel(
                     it.copy(wizardStep = event.step)
                 }
             }
+
+            AddOfferWizardEvent.OnExitDialogConfirm -> {
+                _state.update { it.copy(isExitDialogVisible = false) }
+                sendEffect(AddOfferWizardEffect.NavigateBack)
+            }
+            AddOfferWizardEvent.OnExitDialogDismiss -> {
+                _state.update { it.copy(isExitDialogVisible = false) }
+            }
+
+            is AddOfferWizardEvent.InitWithOffer -> {
+                val offer = event.offer
+
+                titleState.edit { replace(0, length, offer.title) }
+                priceState.edit { replace(0, length, offer.price.toString()) }
+                descriptionState.edit { replace(0, length, offer.description) }
+                cityState.edit { replace(0, length, offer.city) }
+
+
+                _state.update {
+                    it.copy(
+                        isEditMode = true,
+                        editingOfferId = offer.id,
+                        editingOfferAuthorId = offer.authorId,
+
+                        wizardStep = AddOfferWizardStep.SUMMARY_STEP,
+
+                        selectedTransactionType = offer.transactionType,
+                        selectedOfferType = offer.offerType,
+                        selectedCategory = offer.subcategory,
+                        selectedSuperCategory = offer.superCategory,
+                        selectedCurrency = offer.currency,
+                        selectedPriceUnit = offer.priceUnit,
+                        selectedItemCondition = offer.itemCondition,
+
+                        selectedPhotos = offer.images,
+                    )
+                }
+            }
         }
     }
 
@@ -230,16 +273,24 @@ class AddOfferWizardViewModel(
         }
     }
 
+    private suspend fun prepareImagesForUpload(): List<String> {
+        return withContext(Dispatchers.IO) {
+            state.value.selectedPhotos.mapNotNull { photoItem ->
+                when (photoItem) {
+                    is String -> photoItem
+                    is Uri -> ImageUtils.uriToBase64(application, photoItem)
+                    else -> null
+                }
+            }
+        }
+    }
+
     private fun createOffer() {
         _state.update { it.copy(isLoading = true, generalError = null) }
 
         viewModelScope.launch {
-            val photosBase64 = try {
-                withContext(Dispatchers.IO) {
-                    state.value.selectedPhotos.mapNotNull { uri ->
-                        ImageUtils.uriToBase64(application, uri)
-                    }
-                }
+            val finalPhotosBase64 = try {
+                prepareImagesForUpload()
             } catch (e: Exception) {
                 handleException(RuntimeException("ImageProcessingError", e))
                 return@launch
@@ -257,7 +308,8 @@ class AddOfferWizardViewModel(
 
                 transactionType = state.value.selectedTransactionType!!,
                 offerType = state.value.selectedOfferType!!,
-                category = state.value.selectedCategory!!,
+                subcategory = state.value.selectedCategory!!,
+                superCategory = state.value.selectedSuperCategory!!,
 
                 currency = state.value.selectedCurrency,
                 priceUnit = state.value.selectedPriceUnit,
@@ -265,14 +317,60 @@ class AddOfferWizardViewModel(
                 city = cityState.text.toString().trim(),
                 itemCondition = state.value.selectedItemCondition,
 
-                images = photosBase64,
+                images = finalPhotosBase64
             )
 
             repository.createOffer(newOffer)
                 .onSuccess {
                     _state.update { it.copy(isLoading = false) }
                     sendEffect(AddOfferWizardEffect.CreateOffer)
-                    sendEffect(AddOfferWizardEffect.ShowSnackbar(UiText.StringResource(R.string.snackbar_msg_info_offer_created)))
+                }
+                .onFailure { exception ->
+                    handleException(exception)
+                }
+        }
+    }
+
+
+    private fun updateOffer() {
+        _state.update { it.copy(isLoading = true, generalError = null) }
+
+        viewModelScope.launch {
+            val finalPhotosBase64 = try {
+                prepareImagesForUpload()
+            } catch (e: Exception) {
+                handleException(RuntimeException("ImageProcessingError", e))
+                return@launch
+            }
+
+            val updatedOffer = Offer(
+                id = _state.value.editingOfferId ?: "",
+                authorId = _state.value.editingOfferAuthorId,
+                createdAt = 0L,
+                status = OfferStatus.ACTIVE,
+
+                title = titleState.text.toString().trim(),
+                price = priceState.text.toString().replace(',', '.').toDoubleOrNull() ?: 0.0,
+                description = descriptionState.text.toString().trim(),
+
+                transactionType = state.value.selectedTransactionType!!,
+                offerType = state.value.selectedOfferType!!,
+                subcategory = state.value.selectedCategory!!,
+                superCategory = state.value.selectedSuperCategory!!,
+
+                currency = state.value.selectedCurrency,
+                priceUnit = state.value.selectedPriceUnit,
+
+                city = cityState.text.toString().trim(),
+                itemCondition = state.value.selectedItemCondition,
+
+                images = finalPhotosBase64
+            )
+
+            repository.updateOffer(updatedOffer)
+                .onSuccess {
+                    _state.update { it.copy(isLoading = false) }
+                    sendEffect(AddOfferWizardEffect.CreateOffer)
                 }
                 .onFailure { exception ->
                     handleException(exception)

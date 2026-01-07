@@ -9,13 +9,16 @@ import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -49,6 +52,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.biernatmdev.simple_service.core.ui.models.IconType
 import com.biernatmdev.simple_service.core.ui.models.UiText
+import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SMALL
@@ -72,9 +76,14 @@ fun SimpleServiceTextField(
     backgroundColor: Color = ColorSecondary,
     textColor: Color = onColorBackgroundDarker,
     textSize: TextUnit = MEDIUM,
+    fillMaxHeight: Boolean = false,
     roundedCornerShapeValue: Dp = 22.dp,
     isMultiline: Boolean = false,
     minLines: Int = 1,
+    verticalPadding: Dp = 16.dp,
+    horizontalPadding: Dp = 16.dp,
+    isEnabled: Boolean = true,
+    onDisabledClick: () -> Unit = {},
     onDone: () -> (Unit) = {} //TODO AUTH SCREEN FOCUS CASNCEL AND REWFACTOR TEXTFIELDS
 ) {
     val focusManager = LocalFocusManager.current
@@ -87,108 +96,142 @@ fun SimpleServiceTextField(
             onFocus()
         }
     }
-    Column(
-            modifier = modifier
+
+    Box(
+        modifier = modifier.clickable(
+            enabled = !isEnabled,
+            onClick = { onDisabledClick() },
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null
+        )
     ) {
-        if (isPassword) {
-            BasicSecureTextField(
-                state = state,
-                textStyle = TextStyle(
-                    color = onColorBackground,
-                    fontFamily = momoFont(),
-                    fontSize = textSize,
-                    fontWeight = FontWeight.Bold,
-                ),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Password
-                ),
-                onKeyboardAction = {
-                    focusManager.clearFocus()
-                    onDone()
-                },
-                interactionSource = interactionSource,
-                textObfuscationMode = TextObfuscationMode.RevealLastTyped,
-                cursorBrush = SolidColor(onColorBackground),
-                decorator = { innerTextField ->
-                    SimpleServiceTextFieldDecorator(
-                        innerTextField = innerTextField,
-                        state = state,
-                        isFocused = isFocused,
-                        isError = isError,
-                        placeholder = placeholder,
-                        icon = icon,
-                        iconTint = iconTint,
-                        iconSize = iconSize,
-                        backgroundColor = backgroundColor,
-                        textColor = textColor,
-                        textSize = textSize,
-                        roundedCornerShapeValue = roundedCornerShapeValue
-                    )
-                }
-            )
-        } else {
-            BasicTextField(
-                state = state,
-                textStyle = TextStyle(
-                    color = onColorBackground,
-                    fontFamily = momoFont(),
-                    fontSize = textSize,
-                    fontWeight = FontWeight.Bold,
-                ),
-                lineLimits = if (isMultiline) {
-                    TextFieldLineLimits.MultiLine(minHeightInLines = minLines, maxHeightInLines = Int.MAX_VALUE)
-                } else {
-                    TextFieldLineLimits.SingleLine
-                },
-                interactionSource = interactionSource,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = when {
-                        isEmail -> KeyboardType.Email
-                        isPhoneNumber -> KeyboardType.Phone
-                        else -> KeyboardType.Text
-                    },
-                    imeAction = ImeAction.Done
-                ),
-                onKeyboardAction = {
-                    focusManager.clearFocus()
-                    onDone()
-                },
-                cursorBrush = SolidColor(onColorBackground),
-                decorator = { innerTextField ->
-                    SimpleServiceTextFieldDecorator(
-                        innerTextField = innerTextField,
-                        state = state,
-                        isFocused = isFocused,
-                        isError = isError,
-                        placeholder = placeholder,
-                        icon = icon,
-                        iconTint = iconTint,
-                        iconSize = iconSize,
-                        backgroundColor = backgroundColor,
-                        textColor = textColor,
-                        textSize = textSize,
-                        roundedCornerShapeValue = roundedCornerShapeValue,
-                        isMultiline = isMultiline,
-                        minLines = minLines,
-                    )
-                }
-            )
-        }
-        AnimatedVisibility(
-            visible = isError,
-            enter = fadeIn() + expandVertically(),
-            exit = fadeOut() + shrinkVertically()
+        Column(
+            modifier = modifier
         ) {
-            Text(
-                text = errorText?.asString() ?: "",
-                color = Color.Red,
-                style = TextStyle(
-                    fontFamily = momoFont(),
-                    fontSize = SMALL,
-                    fontWeight = FontWeight.Normal
-                ),
-                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            if (isPassword) {
+                BasicSecureTextField(
+                    state = state,
+                    enabled = isEnabled,
+                    textStyle = TextStyle(
+                        color = onColorBackground,
+                        fontFamily = momoFont(),
+                        fontSize = textSize,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password
+                    ),
+                    onKeyboardAction = {
+                        focusManager.clearFocus()
+                        onDone()
+                    },
+                    interactionSource = interactionSource,
+                    textObfuscationMode = TextObfuscationMode.RevealLastTyped,
+                    cursorBrush = SolidColor(onColorBackground),
+                    decorator = { innerTextField ->
+                        SimpleServiceTextFieldDecorator(
+                            innerTextField = innerTextField,
+                            isEnabled = isEnabled,
+                            state = state,
+                            isFocused = isFocused,
+                            isError = isError,
+                            placeholder = placeholder,
+                            icon = icon,
+                            iconTint = iconTint,
+                            iconSize = iconSize,
+                            backgroundColor = backgroundColor,
+                            textColor = textColor,
+                            fillMaxHeight = fillMaxHeight,
+                            textSize = textSize,
+                            roundedCornerShapeValue = roundedCornerShapeValue,
+                            verticalPadding = verticalPadding,
+                            horizontalPadding = horizontalPadding,
+                        )
+                    }
+                )
+            } else {
+                BasicTextField(
+                    state = state,
+                    enabled = isEnabled,
+                    textStyle = TextStyle(
+                        color = onColorBackground,
+                        fontFamily = momoFont(),
+                        fontSize = textSize,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    lineLimits = if (isMultiline) {
+                        TextFieldLineLimits.MultiLine(
+                            minHeightInLines = minLines,
+                            maxHeightInLines = Int.MAX_VALUE
+                        )
+                    } else {
+                        TextFieldLineLimits.SingleLine
+                    },
+                    interactionSource = interactionSource,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = when {
+                            isEmail -> KeyboardType.Email
+                            isPhoneNumber -> KeyboardType.Phone
+                            else -> KeyboardType.Text
+                        },
+                        imeAction = ImeAction.Done
+                    ),
+                    onKeyboardAction = {
+                        focusManager.clearFocus()
+                        onDone()
+                    },
+                    cursorBrush = SolidColor(onColorBackground),
+                    decorator = { innerTextField ->
+                        SimpleServiceTextFieldDecorator(
+                            innerTextField = innerTextField,
+                            state = state,
+                            isEnabled = isEnabled,
+                            isFocused = isFocused,
+                            isError = isError,
+                            placeholder = placeholder,
+                            icon = icon,
+                            iconTint = iconTint,
+                            iconSize = iconSize,
+                            backgroundColor = backgroundColor,
+                            textColor = textColor,
+                            fillMaxHeight = fillMaxHeight,
+                            textSize = textSize,
+                            roundedCornerShapeValue = roundedCornerShapeValue,
+                            isMultiline = isMultiline,
+                            minLines = minLines,
+                            verticalPadding = verticalPadding,
+                            horizontalPadding = horizontalPadding,
+                        )
+                    }
+                )
+            }
+            AnimatedVisibility(
+                visible = isError,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                Text(
+                    text = errorText?.asString() ?: "",
+                    color = Color.Red,
+                    style = TextStyle(
+                        fontFamily = momoFont(),
+                        fontSize = SMALL,
+                        fontWeight = FontWeight.Normal
+                    ),
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                )
+            }
+        }
+        if (!isEnabled) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onDisabledClick
+                    )
             )
         }
     }
@@ -198,6 +241,7 @@ fun SimpleServiceTextField(
 fun SimpleServiceTextFieldDecorator(
     innerTextField: @Composable () -> Unit,
     state: TextFieldState,
+    isEnabled: Boolean,
     isError: Boolean,
     placeholder: String,
     isFocused: Boolean,
@@ -205,25 +249,33 @@ fun SimpleServiceTextFieldDecorator(
     iconTint: Color,
     iconSize: Dp,
     backgroundColor: Color,
+    fillMaxHeight: Boolean,
     textColor: Color,
     textSize: TextUnit,
     roundedCornerShapeValue: Dp,
     isMultiline: Boolean = false,
     minLines: Int = 1,
+    verticalPadding: Dp,
+    horizontalPadding: Dp,
 ) {
-
-    val borderWidth = if(isError) 1.dp else 0.dp
-    val borderColor = if(isError) Color.Red else Color.Transparent
+    val currentBackgroundColor = if (isEnabled) backgroundColor else ColorBackground
+    val borderWidth = if (isError || !isEnabled) 1.dp else 0.dp
+    val borderColor = when {
+        isError -> Color.Red
+        !isEnabled -> onColorBackgroundDarker
+        else -> Color.Transparent
+    }
     val borderShape = RoundedCornerShape(roundedCornerShapeValue)
     val minHeight = if (isMultiline) (24 * minLines).dp + 32.dp else 56.dp
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .then(if (fillMaxHeight) Modifier.fillMaxHeight() else Modifier)
             .border(borderWidth, borderColor, borderShape)
             .clip(borderShape)
-            .background(backgroundColor)
-            .padding(16.dp)
+            .background(currentBackgroundColor)
+            .padding(vertical = verticalPadding, horizontal = horizontalPadding)
             .defaultMinSize(minHeight = iconSize)
             .defaultMinSize(minHeight = minHeight),
         horizontalArrangement = Arrangement.Start,

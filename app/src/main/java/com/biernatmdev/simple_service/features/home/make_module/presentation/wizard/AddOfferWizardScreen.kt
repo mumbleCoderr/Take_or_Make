@@ -74,12 +74,14 @@ import com.biernatmdev.simple_service.core.offer.domain.enums.OfferPriceUnit
 import com.biernatmdev.simple_service.core.offer.domain.enums.OfferSuperCategory
 import com.biernatmdev.simple_service.core.offer.domain.enums.OfferType
 import com.biernatmdev.simple_service.core.offer.domain.enums.TransactionType
+import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.core.ui.components.FullScreenImageViewer
 import com.biernatmdev.simple_service.core.ui.components.PhotoCarousel
 import com.biernatmdev.simple_service.core.ui.components.dropdowns.CurrencyDropdown
 import com.biernatmdev.simple_service.core.ui.components.dropdowns.ItemConditionDropdown
 import com.biernatmdev.simple_service.core.ui.components.dropdowns.PriceUnitDropdown
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceButton
+import com.biernatmdev.simple_service.core.ui.components.SimpleServiceDialog
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceSnackbar
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceTextField
 import com.biernatmdev.simple_service.core.ui.components.rememberOvershootScale
@@ -124,6 +126,7 @@ import org.koin.androidx.compose.koinViewModel
 fun AddOfferWizardScreen(
     viewModel: AddOfferWizardViewModel = koinViewModel(),
     navigateBack: () -> Unit,
+    offerToEdit: Offer? = null,
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
@@ -133,11 +136,21 @@ fun AddOfferWizardScreen(
         viewModel.onEvent(AddOfferWizardEvent.OnPreviousStepClick)
     }
 
+    LaunchedEffect(Unit) {
+        if (offerToEdit != null) {
+            viewModel.onEvent(AddOfferWizardEvent.InitWithOffer(offerToEdit))
+        }
+    }
+
     LaunchedEffect(true) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                AddOfferWizardEffect.NavigateBack -> navigateBack()
-                AddOfferWizardEffect.CreateOffer -> navigateBack()
+                AddOfferWizardEffect.NavigateBack -> {
+                    navigateBack()
+                }
+                AddOfferWizardEffect.CreateOffer -> {
+                    navigateBack()
+                }
                 is AddOfferWizardEffect.ShowSnackbar -> {
                     val message = effect.message.asString(context)
                     snackbar.showSnackbar(message)
@@ -167,6 +180,15 @@ fun AddOfferWizardScreenContent(
     cityState: TextFieldState,
     snackbar: SnackbarHostState,
 ) {
+    if (state.isExitDialogVisible) {
+        SimpleServiceDialog(
+            title = UiText.StringResource(R.string.make_module_dialog_title),
+            subtext = UiText.StringResource(R.string.make_module_dialog_subtext),
+            onConfirm = { onEvent(AddOfferWizardEvent.OnExitDialogConfirm) },
+            onDismiss = { onEvent(AddOfferWizardEvent.OnExitDialogDismiss) }
+        )
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -211,7 +233,7 @@ fun AddOfferWizardScreenContent(
             cityErrorMsg = state.cityError,
             selectedItemCondition = state.selectedItemCondition,
             isItemConditionDropdownExpanded = state.isItemConditionDropdownExpanded,
-            selectedPhotos = state.selectedPhotos,
+            selectedPhotos = state.selectedPhotos as List<Uri>,
         )
 
         WizardBottomSection(
@@ -398,6 +420,7 @@ fun WizardBottomSection(
     modifier: Modifier = Modifier,
     currentStep: AddOfferWizardStep,
     isLoading: Boolean,
+    isEditMode: Boolean = false,
     onEvent: (AddOfferWizardEvent) -> Unit,
 ) {
     Box(
@@ -417,7 +440,13 @@ fun WizardBottomSection(
 
             if (currentStep.isLastStep) {
                 SimpleServiceButton(
-                    text = UiText.StringResource(R.string.wizard_screen_btn_label_publish).asString(),
+                    text = if (isEditMode) {
+                        UiText.StringResource(R.string.wizard_screen_btn_label_confirm_changes)
+                            .asString()
+                    }
+                    else {
+                        UiText.StringResource(R.string.wizard_screen_btn_label_publish).asString()
+                    },
                     isAnimated = true,
                     isLoading = isLoading,
                     isIconLeading = false,
@@ -775,31 +804,28 @@ fun BasicInfoStepContent(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.Top
         ) {
-            Box(modifier = Modifier.weight(1f)) {
-                SimpleServiceTextField(
-                    isPhoneNumber = true,
-                    state = priceState,
-                    onFocus = { onEvent(AddOfferWizardEvent.OnPriceFocused) },
-                    errorText = priceErrorMsg,
-                    placeholder = "Price",
-                )
-            }
-
-            Spacer(Modifier.width(12.dp))
-
+            SimpleServiceTextField(
+                modifier = Modifier.weight(3f),
+                isPhoneNumber = true,
+                state = priceState,
+                onFocus = { onEvent(AddOfferWizardEvent.OnPriceFocused) },
+                errorText = priceErrorMsg,
+                placeholder = UiText.StringResource(R.string.price).asString(),
+                fillMaxHeight = false
+            )
             CurrencyDropdown(
+                modifier = Modifier.weight(3f),
                 selectedCurrency = selectedCurrency,
                 isExpanded = isCurrencyDropdownExpanded,
                 onDropdownClick = { onEvent(AddOfferWizardEvent.OnCurrencyDropdownClick) },
                 onCurrencySelected = { onEvent(AddOfferWizardEvent.OnCurrencySelected(it)) },
                 onDismiss = { onEvent(AddOfferWizardEvent.OnCurrencyDropdownDismiss) }
             )
-
-            Spacer(Modifier.width(12.dp))
-
             PriceUnitDropdown(
+                modifier = Modifier.weight(4f),
                 selectedUnit = selectedPriceUnit,
                 isExpanded = isPriceUnitDropdownExpanded,
                 onDropdownClick = { onEvent(AddOfferWizardEvent.OnPriceUnitDropdownClick) },
@@ -1019,7 +1045,7 @@ fun PhotoStepContent(
         Spacer(Modifier.height(60.dp))
         PhotoCarousel(
             photos = selectedPhotos,
-            onRemoveClick = { photo -> onEvent(AddOfferWizardEvent.OnPhotoRemoved(photo as Uri)) },
+            onRemoveClick = { photo -> onEvent(AddOfferWizardEvent.OnPhotoRemoved(photo)) },
             onAddPhotoClick = { launchGallery() },
             onImageClick = { photo -> fullscreenImage = photo as Uri },
         )
@@ -1080,7 +1106,7 @@ fun SummaryStepContent(
         Spacer(Modifier.height(36.dp))
         PhotoCarousel(
             photos = selectedPhotos,
-            onRemoveClick = { photo -> onEvent(AddOfferWizardEvent.OnPhotoRemoved(photo as Uri)) },
+            onRemoveClick = { photo -> onEvent(AddOfferWizardEvent.OnPhotoRemoved(photo)) },
             onAddPhotoClick = { launchGallery() },
             onImageClick = { photo -> fullscreenImage = photo as Uri },
             modifier = Modifier.height(300.dp),
@@ -1366,13 +1392,15 @@ fun ExpandableCategoryPicker(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     maxItemsInEachRow = Int.MAX_VALUE
                 ) {
-                    entries.forEach { category ->
-                        CategoryChip(
-                            category = category,
-                            isSelected = category == selectedChip,
-                            onChipClick = { onChipClick(category) },
-                        )
-                    }
+                    entries
+                        .filter { (it as? Enum<*>)?.name != "ANY" }
+                        .forEach { category ->
+                            CategoryChip(
+                                category = category,
+                                isSelected = category == selectedChip,
+                                onChipClick = { onChipClick(category) },
+                            )
+                        }
                 }
             }
         }

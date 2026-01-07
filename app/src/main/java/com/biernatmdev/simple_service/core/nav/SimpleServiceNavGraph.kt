@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.features.auth.presentation.AuthScreen
 import com.biernatmdev.simple_service.features.user_details.presentation.UserDetailsScreen
 import com.biernatmdev.simple_service.features.favourites.FavouritesScreen
@@ -48,7 +49,14 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
                         popUpTo(0) { inclusive = true }
                     }
                 },
-                navigateToWizard = {
+                navigateToWizard = { offerToEdit ->
+                    if (offerToEdit != null) {
+                        navController.currentBackStackEntry?.savedStateHandle?.set("offer_to_edit", offerToEdit)
+                    }
+                    else {
+                        navController.currentBackStackEntry?.savedStateHandle?.remove<Offer>("offer_to_edit")
+                    }
+
                     navController.navigate(Screen.AddOfferWizardScreen)
                 },
                 navigateToProfileSubscreen = { screen ->
@@ -56,11 +64,16 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
                 },
             )
         }
-        composable<Screen.AddOfferWizardScreen> {
+        composable<Screen.AddOfferWizardScreen> { backStackEntry ->
+            val offerToEdit = navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.get<Offer>("offer_to_edit")
+
             AddOfferWizardScreen(
                 navigateBack = {
                     navController.popBackStack()
-                }
+                },
+                offerToEdit = offerToEdit
             )
         }
         composable<Screen.UserDetailsScreen> {

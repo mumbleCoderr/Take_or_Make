@@ -1,12 +1,17 @@
 package com.biernatmdev.simple_service.core.offer.domain.enums
 
+import android.os.Parcelable
 import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.ui.models.UiText
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 enum class OfferSuperCategory(
     override val displayName: UiText,
-    val offerType: OfferType,
-) : CategoryDisplayable {
+    val offerType: OfferType?,
+) : CategoryDisplayable, Parcelable {
+
+    ANY(UiText.StringResource(R.string.offer_super_category_product_name_any), null),
 
     // PRODUCTS
     ELECTRONICS(UiText.StringResource(R.string.offer_super_category_product_name_electronics), OfferType.PRODUCT),
@@ -34,7 +39,7 @@ enum class OfferSuperCategory(
 
     companion object {
         fun getParentsByType(type: OfferType): List<OfferSuperCategory> {
-            return entries.filter { it.offerType == type }
+            return entries.filter { it == ANY || it.offerType == type }
         }
     }
 }
