@@ -3,9 +3,7 @@ package com.biernatmdev.simple_service.features.home.presentation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,7 +19,6 @@ import com.biernatmdev.simple_service.features.home.domain.HomeSubscreen
 import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
-import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.features.profile.presentation.ProfileScreen
 
 @Composable
@@ -29,6 +26,7 @@ fun HomeScreen(
     navigateToAuth: () -> Unit,
     navigateToWizard: (Offer?) -> Unit,
     navigateToProfileSubscreen: (Screen) -> Unit,
+    navigateToOfferDetails: (Offer) -> Unit,
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -67,10 +65,11 @@ fun HomeScreen(
             ) {
                 composable<Screen.HomeScreen> {
                     HomeTabScreen(
-                        navigateToWizard = { navigateToWizard(it) }
+                        navigateToWizard = { navigateToWizard(it) },
+                        navigateToOfferDetails = { navigateToOfferDetails(it) }
                     )
                 }
-                composable<Screen.CategoryScreen> {}
+                composable<Screen.FavouritesScreen> {}
                 composable<Screen.NotificationScreen> {}
                 composable<Screen.ProfileScreen> {
                     ProfileScreen(

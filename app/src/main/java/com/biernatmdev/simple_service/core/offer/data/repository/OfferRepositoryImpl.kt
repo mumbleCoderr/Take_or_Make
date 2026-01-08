@@ -8,6 +8,7 @@ import com.biernatmdev.simple_service.core.offer.domain.repository.OfferReposito
 import com.biernatmdev.simple_service.core.user.domain.model.UserException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
@@ -17,7 +18,7 @@ class OfferRepositoryImpl(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth
 ) : OfferRepository {
-
+    private val userCollection = firestore.collection("user")
     private val collection = firestore.collection("offers")
 
     override suspend fun createOffer(offer: Offer): Result<Unit> = runCatching {
@@ -96,15 +97,22 @@ class OfferRepositoryImpl(
         }
     }
 
-    override suspend fun getOffersByAuthorId(authorId: String): Result<List<Offer>> = runCatching {
+    override suspend fun getOffersByAuthorId(authorId: String, lastCreatedAt: Long?): Result<List<Offer>> = runCatching {
         try {
-            val snapshot = collection
+            val favoriteIds = getFavoriteIds()
+
+            var query = collection
                 .whereEqualTo("authorId", authorId)
                 .orderBy("createdAt", Query.Direction.DESCENDING)
-                .get()
-                .await()
+                .limit(20)
 
-            snapshot.documents.map { doc -> doc.toDomainOffer() }
+            if (lastCreatedAt != null) {
+                query = query.startAfter(lastCreatedAt)
+            }
+
+            val snapshot = query.get().await()
+
+            snapshot.documents.map { doc -> doc.toDomainOffer(favoriteIds) }
 
         } catch (e: Exception) {
             throw when (e) {
@@ -115,4 +123,50 @@ class OfferRepositoryImpl(
         }
     }
 
+    override suspend fun getAllOffers(lastCreatedAt: Long?): Result<List<Offer>> = runCatching {
+        try {
+            val favoriteIds = getFavoriteIds()
+
+            var query = collection
+                .whereEqualTo("status", "ACTIVE")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(20)
+
+            if (lastCreatedAt != null) {
+                query = query.startAfter(lastCreatedAt)
+            }
+
+            val snapshot = query.get().await()
+            snapshot.documents.map { doc -> doc.toDomainOffer(favoriteIds) }
+
+        } catch (e: Exception) {
+            throw when (e) {
+                is FirebaseNetworkException -> OfferException.NetworkError
+                is FirebaseFirestoreException -> OfferException.NetworkError
+                else -> e
+            }
+        }
+    }
+
+    override suspend fun toggleFavorite(offerId: String, isNowFavorite: Boolean): Result<Unit> = runCatching {
+        val currentUser = auth.currentUser ?: throw UserException.NotSignedIn
+        val userDocRef = userCollection.document(currentUser.uid)
+
+        if (isNowFavorite) {
+            userDocRef.update("favoriteOfferIds", FieldValue.arrayUnion(offerId)).await()
+        } else {
+            userDocRef.update("favoriteOfferIds", FieldValue.arrayRemove(offerId)).await()
+        }
+        Unit
+    }
+
+    private suspend fun getFavoriteIds(): List<String> {
+        val currentUser = auth.currentUser ?: return emptyList()
+        return try {
+            val snapshot = userCollection.document(currentUser.uid).get().await()
+            (snapshot.get("favoriteOfferIds") as? List<String>) ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
 }

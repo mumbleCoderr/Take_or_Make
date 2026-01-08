@@ -16,7 +16,7 @@
 
     // HOME BOTTOM NAV
     <string name="home_bottom_nav_bar_home">HOME</string>
-    <string name="home_bottom_nav_bar_category">CATEGORY</string>
+    <string name="home_bottom_nav_bar_favourites">FAVOURITES</string>
     <string name="home_bottom_nav_bar_notifications">NOTIFICATIONS</string>
     <string name="home_bottom_nav_bar_profile">PROFILE</string>
 

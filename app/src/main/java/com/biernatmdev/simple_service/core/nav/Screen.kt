@@ -13,15 +13,18 @@ Screen {
     data object AuthScreen: Screen()
     @Serializable
     data object HomeGraph: Screen()
-
     @Serializable
     data object AddOfferWizardScreen: Screen()
+    @Serializable
+    data object OfferDetailsScreen: Screen()
+    @Serializable
+    data object SuccessScreen: Screen()
 
     // HOME GRAPH SUBSCREENS
     @Serializable
     data object HomeScreen: Screen()
     @Serializable
-    data object CategoryScreen: Screen()
+    data object FavouritesScreen: Screen()
     @Serializable
     data object NotificationScreen: Screen()
     @Serializable
@@ -40,6 +43,5 @@ Screen {
     data object HistoryScreen: Screen()
     @Serializable
     data object ReviewsScreen: Screen()
-    @Serializable
-    data object FavouritesScreen: Screen()
+
 }

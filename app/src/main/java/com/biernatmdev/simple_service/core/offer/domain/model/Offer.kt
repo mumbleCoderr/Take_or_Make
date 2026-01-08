@@ -27,5 +27,6 @@ data class Offer(
     val currency: String = "",
     val images: List<String> = emptyList(),
     val city: String = "",
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val isFavourite: Boolean = false,
 ) : Parcelable

@@ -26,9 +26,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -45,13 +46,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -70,6 +69,7 @@ import com.biernatmdev.simple_service.core.offer.domain.enums.OfferSuperCategory
 import com.biernatmdev.simple_service.core.offer.domain.enums.OfferType
 import com.biernatmdev.simple_service.core.offer.domain.enums.TransactionType
 import com.biernatmdev.simple_service.core.offer.domain.model.Offer
+import com.biernatmdev.simple_service.core.ui.components.OfferCard
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceButton
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceDialog
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceSnackbar
@@ -82,9 +82,7 @@ import com.biernatmdev.simple_service.core.ui.models.IconType
 import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.ColorSecondary
-import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.EXTRA_SMALL
-import com.biernatmdev.simple_service.core.ui.theme.FontSize.LARGE
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.MEDIUM
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.REGULAR
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
@@ -95,6 +93,7 @@ import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.CheckFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.CloseFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.DeleteFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.EditFilled
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Empty
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.LocalisationOutlined
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Offering
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.Product
@@ -105,12 +104,13 @@ import com.biernatmdev.simple_service.core.ui.theme.Resources.Image.AppForegroun
 import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
+import com.biernatmdev.simple_service.core.ui.components.filter.FilterEvent
+import com.biernatmdev.simple_service.core.ui.components.filter.FilterState
 import com.biernatmdev.simple_service.features.home.make_module.presentation.offer_list.MakeEffect.*
-import com.biernatmdev.simple_service.features.profile.presentation.ProfileEvent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MakeScreen(
+fun MakeScreen( // TODO INACTIVE OFFERS BELOW DIVIDER WITH ALFA 0.5 && BUTTON FOR DISABLE OFFER SO API CALLS AND CHA NGE IT IN FB
     makeViewModel: MakeViewModel = koinViewModel(),
     navigateToWizard: (Offer?) -> Unit,
 ) {
@@ -121,12 +121,12 @@ fun MakeScreen(
     LaunchedEffect(Unit) {
         makeViewModel.effect.collect { effect ->
             when (effect) {
-                is MakeEffect.ShowSnackbar -> {
+                is ShowSnackbar -> {
                     val message = effect.message.asString(context)
                     snackbar.showSnackbar(message)
                 }
 
-                is MakeEffect.NavigateToWizard -> {
+                is NavigateToWizard -> {
                     navigateToWizard(effect.offer)
                 }
             }
@@ -160,6 +160,19 @@ fun MakeScreenContent(
     navigateToWizard: (Offer?) -> Unit,
     snackbar: SnackbarHostState,
 ) {
+    val isAnyFilterActive =
+        state.filterState.selectedTransactionType != null ||
+                state.filterState.selectedOfferType != null ||
+                state.filterState.selectedCurrency != "ANY" ||
+                state.filterState.selectedPriceUnit != OfferPriceUnit.ANY ||
+                state.filterState.selectedSuperCategory != null ||
+                state.filterState.selectedSubcategory != null ||
+                state.filterState.selectedItemCondition != null ||
+                selectedPriceFrom.text.isNotEmpty() ||
+                selectedPriceTo.text.isNotEmpty() ||
+                cityState.text.isNotEmpty() ||
+                searchbarState.text.isNotEmpty()
+
     val focusManager = LocalFocusManager.current
 
     if (state.isDeleteDialogVisible) {
@@ -189,11 +202,6 @@ fun MakeScreenContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            /*if (state.offers.isEmpty() && !state.isLoading && state.error == null) {
-                item {
-                    Text("No offers yet. Add one!", modifier = Modifier.padding(16.dp))
-                }
-            }*/
             item {
                 Column(
                     modifier = Modifier
@@ -223,90 +231,55 @@ fun MakeScreenContent(
                 }
             }
             item {
-                MainFilterDropdown(
-                    animationDuration = 600,
-
-                    isMainFilterExpanded = state.isFilterDropdownExpanded,
-                    onDropdownClick = { onEvent(MakeEvent.OnMainFilterDropdownClick) },
-
-                    onSearchbarButtonClick = { onEvent(MakeEvent.OnSearchbarButtonClick) },
+                SearchBarFilter(
                     searchbarState = searchbarState,
+                    onSearchbarButtonClick = { onEvent(MakeEvent.Filter(FilterEvent.OnSearchbarButtonClick)) }
+                )
+                Spacer(Modifier.height(16.dp))
+                MainFilterDropdown(
+                    filterState = state.filterState,
 
-                    selectedTransactionType = state.selectedTransactionType,
-                    onTransactionTypeFilterDropdownClick = { onEvent(MakeEvent.OnTransactionTypeFilterDropdownClick) },
-                    onTransactionTypeFilterClick = { onEvent(MakeEvent.OnTransactionTypeClick(it)) },
-                    isTransactionTypeFilterDropdownExpanded = state.isTransactionTypeFilterDropdownExpanded,
+                    onFilterEvent = { filterEvent ->
+                        onEvent(MakeEvent.Filter(filterEvent))
+                    },
 
-                    selectedOfferType = state.selectedOfferType,
-                    onOfferTypeFilterDropdownClick = { onEvent(MakeEvent.OnOfferTypeFilterDropdownClick) },
-                    onOfferTypeFilterClick = { onEvent(MakeEvent.OnOfferTypeClick(it)) },
-                    isOfferTypeFilterDropdownExpanded = state.isOfferTypeFilterDropdownExpanded,
-
-                    onPriceFilterDropdownClick = { onEvent(MakeEvent.OnPriceFilterDropdownClick) },
-                    isPriceFilterExpanded = state.isPriceDropdownExpanded,
-
-                    selectedPriceFrom = selectedPriceFrom,
-                    selectedPriceTo = selectedPriceTo,
-
-                    selectedPriceCurrency = state.selectedCurrency,
-                    isCurrencyDropdownExpanded = state.isCurrencyDropdownExpanded,
-                    onCurrencyDropdownClick = { onEvent(MakeEvent.OnPriceCurrencyFilterDropdownClick) },
-                    onCurrencySelected = { onEvent(MakeEvent.OnPriceCurrencyClick(it)) },
-                    onCurrencyDropdownDismiss = { onEvent(MakeEvent.OnPriceCurrencyFilterDropdownDismiss) },
-
-                    selectedPriceUnit = state.selectedPriceUnit,
-                    isPriceUnitDropdownExpanded = state.isPriceUnitDropdownExpanded,
-                    onPriceUnitDropdownClick = { onEvent(MakeEvent.OnPriceUnitFilterDropdownClick) },
-                    onPriceUnitSelected = { onEvent(MakeEvent.OnPriceUnitClick(it)) },
-                    onPriceUnitDropdownDismiss = { onEvent(MakeEvent.OnPriceUnitFilterDropdownDismiss) },
-
-                    isCategoryFilterDropdownExpanded = state.isCategoryDropdownExpanded,
-                    onCategoryFilterDropdownClick = { onEvent(MakeEvent.OnCategoryFilterDropdownClick) },
-
-                    selectedSuperCategory = state.selectedSuperCategory,
-                    isSuperCategoryFilterDropdownExpanded = state.isSuperCategoryDropdownExpanded,
-                    onSuperCategoryFilterDropdownClick = { onEvent(MakeEvent.OnSuperCategoryFilterDropdownClick) },
-                    onSuperCategoryFilterClick = { onEvent(MakeEvent.OnSuperCategoryClick(it)) },
-                    onSuperCategoryFilterDropdownDismiss = { onEvent(MakeEvent.OnSuperCategoryFilterDropdownDismiss) },
-                    onDisabledSuperCategoryClick = { onEvent(MakeEvent.OnDisabledSuperCategoryClick) },
-
-                    selectedSubcategory = state.selectedSubcategory,
-                    isSubcategoryFilterDropdownExpanded = state.isSubcategoryDropdownExpanded,
-                    onSubcategoryFilterDropdownClick = { onEvent(MakeEvent.OnSubcategoryFilterDropdownClick) },
-                    onSubcategoryFilterClick = { onEvent(MakeEvent.OnSubcategoryClick(it)) },
-                    onSubcategoryFilterDropdownDismiss = { onEvent(MakeEvent.OnSubcategoryFilterDropdownDismiss) },
-                    onDisabledSubcategoryClick = { onEvent(MakeEvent.OnDisabledSubcategoryClick) },
-
+                    priceFromState = selectedPriceFrom,
+                    priceToState = selectedPriceTo,
                     cityState = cityState,
-                    onDisabledCityClick = { onEvent(MakeEvent.OnDisabledCityClick) },
 
-                    selectedItemCondition = state.selectedItemCondition,
-                    isItemConditionFilterDropdownExpanded = state.isItemConditionFilterDropdownExpanded,
-                    onItemConditionFilterDropdownClick = { onEvent(MakeEvent.OnItemConditionFilterDropdownClick) },
-                    onItemConditionFilterClick = { onEvent(MakeEvent.OnItemConditionFilterClick(it)) },
-                    onItemConditionFilterDropdownDismiss = { onEvent(MakeEvent.OnItemConditionFilterDropdownDismiss) },
-                    onDisabledItemConditionClick = { onEvent(MakeEvent.OnDisabledItemConditionClick) },
-
-                    onApplyFiltersButtonClick = { onEvent(MakeEvent.OnApplyFiltersButtonClick) },
-                    onClearFiltersButtonClick = { onEvent(MakeEvent.OnClearFiltersButtonClick) },
+                    animationDuration = 600,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(16.dp))
             }
-            items(state.displayingOffers) { offer ->
+            item{
+                EmptyListComponent(
+                    isOfferListEmpty = state.displayingOffers.isEmpty(),
+                    isActiveFilter = isAnyFilterActive,
+                    isLoading = state.isLoading,
+                )
+            }
+            itemsIndexed(state.displayingOffers) { index, offer ->
+                if (index >= state.displayingOffers.lastIndex && !state.isLoading) {
+                    LaunchedEffect(Unit) {
+                        onEvent(MakeEvent.OnLoadNextPage)
+                    }
+                }
                 OfferCard(
                     modifier = Modifier
                         .fillMaxWidth(),
+                    offer = offer,
                     isPhotoLeading = state.offers.indexOf(offer) % 2 == 0,
-                    title = offer.title,
-                    photo = offer.images.firstOrNull(),
-                    price = "${offer.price ?: "-"} ${offer.currency} / ${offer.priceUnit.displayName.asString()}",
-                    transactionType = offer.transactionType,
-                    offerType = offer.offerType,
-                    status = offer.status,
                     onOfferCardClick = { onEvent(MakeEvent.OnOfferCardClick(offer)) }
                 )
                 Spacer(Modifier.height(32.dp))
+            }
+            if (state.isLoading && state.displayingOffers.isNotEmpty()) {
+                item {
+                    Box(Modifier.fillMaxWidth().padding(bottom = 16.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = ColorPrimary, modifier = Modifier.size(32.dp))
+                    }
+                }
             }
             item {
                 Spacer(Modifier.height(32.dp))
@@ -373,131 +346,45 @@ fun MakeScreenContent(
 }
 
 @Composable
-fun OfferCard(
-    modifier: Modifier = Modifier,
-    isPhotoLeading: Boolean,
-    title: String,
-    photo: String?,
-    price: String,
-    transactionType: TransactionType,
-    offerType: OfferType,
-    status: OfferStatus = OfferStatus.ACTIVE,
-    onOfferCardClick: () -> Unit,
+fun EmptyListComponent(
+    isOfferListEmpty: Boolean,
+    isActiveFilter: Boolean,
+    isLoading: Boolean,
 ) {
-    @Composable
-    fun imageSection(modifier: Modifier) {
-        Box(modifier = modifier) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(photo)
-                    .fallback(AppForegroundImage)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = UiText.StringResource(R.string.offer_photo).asString(),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-    }
-
-    @Composable
-    fun detailsSection(modifier: Modifier) {
+    if (isOfferListEmpty && !isLoading) {
         Column(
-            modifier = modifier
-                .padding(12.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = title,
-                fontSize = REGULAR,
-                lineHeight = LineHeight.REGULAR,
+                text = "Nothing here!",
+                fontSize = SEMI_LARGE,
+                lineHeight = LineHeight.SEMI_LARGE,
                 color = onColorBackground,
                 fontWeight = FontWeight.Bold,
                 fontFamily = momoFont(),
-                maxLines = 2,
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = if (transactionType == TransactionType.OFFER) painterResource(Offering) else painterResource(
-                        Requesting
-                    ),
-                    tint = Color.Unspecified,
-                    contentDescription = if (transactionType == TransactionType.OFFER) stringResource(
-                        R.string.offering
-                    ) else stringResource(R.string.requesting),
-                    modifier = Modifier.size(32.dp)
-                )
-                Spacer(Modifier.width(16.dp))
-                Icon(
-                    painter = if (offerType == OfferType.PRODUCT) painterResource(Product) else painterResource(
-                        Service
-                    ),
-                    tint = Color.Unspecified,
-                    contentDescription = if (offerType == OfferType.PRODUCT) stringResource(R.string.product) else stringResource(
-                        R.string.service
-                    ),
-                    modifier = Modifier.size(32.dp)
-                )
-            }
+            Spacer(Modifier.height(16.dp))
+            Icon(
+                painter = painterResource(Empty),
+                tint = ColorPrimary,
+                contentDescription = null,
+                modifier = Modifier.size(120.dp)
+            )
+            Spacer(Modifier.height(16.dp))
             Text(
-                text = price,
-                fontSize = REGULAR,
-                lineHeight = LineHeight.REGULAR,
+                text = if (isActiveFilter) "Adjust or remove filters" else "Add an offer by clicking below",
+                fontSize = SEMI_LARGE,
+                lineHeight = LineHeight.SEMI_LARGE,
                 color = onColorBackgroundDarker,
                 fontWeight = FontWeight.Bold,
                 fontFamily = momoFont(),
             )
         }
     }
-
-    Surface(
-        color = ColorSecondary,
-        shape = RoundedCornerShape(22.dp),
-        modifier = modifier
-            .height(140.dp)
-            .clickable{ onOfferCardClick() },
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                val imageSectionModifier = Modifier
-                    .fillMaxHeight()
-                    .weight(0.4f)
-                val detailsSectionModifier = Modifier
-                    .fillMaxHeight()
-                    .weight(0.6f)
-
-                if (isPhotoLeading) {
-                    imageSection(imageSectionModifier)
-                    detailsSection(detailsSectionModifier)
-                } else {
-                    detailsSection(detailsSectionModifier)
-                    imageSection(imageSectionModifier)
-                }
-            }
-            if (status == OfferStatus.INACTIVE) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.5f))
-                )
-            }
-        }
-    }
 }
-
 @Composable
 fun OfferCardPopUp(
     modifier: Modifier = Modifier,
@@ -636,70 +523,14 @@ fun DropdownExpandAnimation(
 
 @Composable
 fun MainFilterDropdown(
-    animationDuration: Int,
-    isMainFilterExpanded: Boolean,
-    onDropdownClick: () -> Unit,
+    filterState: FilterState,
+    onFilterEvent: (FilterEvent) -> Unit,
 
-    onSearchbarButtonClick: () -> Unit,
-    searchbarState: TextFieldState,
-
-    selectedTransactionType: TransactionType?,
-    onTransactionTypeFilterDropdownClick: () -> Unit,
-    onTransactionTypeFilterClick: (TransactionType?) -> Unit,
-    isTransactionTypeFilterDropdownExpanded: Boolean,
-
-    selectedOfferType: OfferType?,
-    onOfferTypeFilterDropdownClick: () -> Unit,
-    onOfferTypeFilterClick: (OfferType?) -> Unit,
-    isOfferTypeFilterDropdownExpanded: Boolean,
-
-    onPriceFilterDropdownClick: () -> Unit,
-    isPriceFilterExpanded: Boolean,
-
-    selectedPriceFrom: TextFieldState,
-    selectedPriceTo: TextFieldState,
-
-    selectedPriceCurrency: String,
-    isCurrencyDropdownExpanded: Boolean,
-    onCurrencyDropdownClick: () -> Unit,
-    onCurrencySelected: (String) -> Unit,
-    onCurrencyDropdownDismiss: () -> Unit,
-
-    selectedPriceUnit: OfferPriceUnit,
-    isPriceUnitDropdownExpanded: Boolean,
-    onPriceUnitDropdownClick: () -> Unit,
-    onPriceUnitSelected: (OfferPriceUnit) -> Unit,
-    onPriceUnitDropdownDismiss: () -> Unit,
-
-    isCategoryFilterDropdownExpanded: Boolean,
-    onCategoryFilterDropdownClick: () -> Unit,
-
-    selectedSuperCategory: OfferSuperCategory?,
-    isSuperCategoryFilterDropdownExpanded: Boolean,
-    onSuperCategoryFilterDropdownClick: () -> Unit,
-    onSuperCategoryFilterClick: (OfferSuperCategory) -> Unit,
-    onSuperCategoryFilterDropdownDismiss: () -> Unit,
-    onDisabledSuperCategoryClick: () -> Unit,
-
-    selectedSubcategory: OfferCategory?,
-    isSubcategoryFilterDropdownExpanded: Boolean,
-    onSubcategoryFilterDropdownClick: () -> Unit,
-    onSubcategoryFilterClick: (OfferCategory) -> Unit,
-    onSubcategoryFilterDropdownDismiss: () -> Unit,
-    onDisabledSubcategoryClick: () -> Unit,
-
+    priceFromState: TextFieldState,
+    priceToState: TextFieldState,
     cityState: TextFieldState,
-    onDisabledCityClick: () -> Unit,
 
-    selectedItemCondition: ItemCondition?,
-    isItemConditionFilterDropdownExpanded: Boolean,
-    onItemConditionFilterDropdownClick: () -> Unit,
-    onItemConditionFilterClick: (ItemCondition) -> Unit,
-    onItemConditionFilterDropdownDismiss: () -> Unit,
-    onDisabledItemConditionClick: () -> Unit,
-
-    onApplyFiltersButtonClick: () -> Unit,
-    onClearFiltersButtonClick: () -> Unit,
+    animationDuration: Int = 600,
 
     modifier: Modifier = Modifier,
 ) {
@@ -709,95 +540,90 @@ fun MainFilterDropdown(
     ) {
         FilterDropdown(
             label = "Filters",
-            isExpanded = isMainFilterExpanded,
+            isExpanded = filterState.isFilterDropdownExpanded,
             contentColor = onColorBackground,
-            onDropdownClick = { onDropdownClick() },
+            onDropdownClick = { onFilterEvent(FilterEvent.OnMainFilterDropdownClick) },
         )
         Spacer(Modifier.height(16.dp))
         DropdownExpandAnimation(
             animationDuration = animationDuration,
-            isExpanded = isMainFilterExpanded,
+            isExpanded = filterState.isFilterDropdownExpanded,
         ) {
-            SearchBarFilter(
-                searchbarState = searchbarState,
-                onSearchbarButtonClick = { onSearchbarButtonClick() }
-            )
-            Spacer(Modifier.height(16.dp))
             TransactionAndOfferTypeFilter(
                 animationDuration = animationDuration,
 
-                selectedTransactionType = selectedTransactionType,
-                onTransactionTypeFilterDropdownClick = { onTransactionTypeFilterDropdownClick() },
-                onTransactionTypeFilterClick = { onTransactionTypeFilterClick(it) },
-                isTransactionTypeFilterDropdownExpanded = isTransactionTypeFilterDropdownExpanded,
+                selectedTransactionType = filterState.selectedTransactionType,
+                onTransactionTypeFilterDropdownClick = { onFilterEvent(FilterEvent.OnTransactionTypeFilterDropdownClick) },
+                onTransactionTypeFilterClick = { onFilterEvent(FilterEvent.OnTransactionTypeClick(it)) },
+                isTransactionTypeFilterDropdownExpanded = filterState.isTransactionTypeFilterDropdownExpanded,
 
-                selectedOfferType = selectedOfferType,
-                onOfferTypeFilterDropdownClick = { onOfferTypeFilterDropdownClick() },
-                onOfferTypeFilterClick = { onOfferTypeFilterClick(it) },
-                isOfferTypeFilterDropdownExpanded = isOfferTypeFilterDropdownExpanded,
+                selectedOfferType = filterState.selectedOfferType,
+                onOfferTypeFilterDropdownClick = { onFilterEvent(FilterEvent.OnOfferTypeFilterDropdownClick) },
+                onOfferTypeFilterClick = { onFilterEvent(FilterEvent.OnOfferTypeClick(it)) },
+                isOfferTypeFilterDropdownExpanded = filterState.isOfferTypeFilterDropdownExpanded,
             )
             Spacer(Modifier.height(16.dp))
             CategoryFilter(
                 animationDuration = animationDuration,
-                isCategoryFilterDropdownExpanded = isCategoryFilterDropdownExpanded,
-                onCategoryFilterDropdownClick = onCategoryFilterDropdownClick,
+                isCategoryFilterDropdownExpanded = filterState.isCategoryDropdownExpanded,
+                onCategoryFilterDropdownClick = { onFilterEvent(FilterEvent.OnCategoryFilterDropdownClick) },
 
-                selectedSuperCategory = selectedSuperCategory,
-                isSuperCategoryFilterDropdownExpanded = isSuperCategoryFilterDropdownExpanded,
-                onSuperCategoryFilterDropdownClick = { onSuperCategoryFilterDropdownClick() },
-                onSuperCategoryFilterClick = { onSuperCategoryFilterClick(it) },
-                onSuperCategoryFilterDropdownDismiss = { onSuperCategoryFilterDropdownDismiss() },
-                onDisabledSuperCategoryClick = { onDisabledSuperCategoryClick() },
+                selectedSuperCategory = filterState.selectedSuperCategory,
+                isSuperCategoryFilterDropdownExpanded = filterState.isSuperCategoryDropdownExpanded,
+                onSuperCategoryFilterDropdownClick = { onFilterEvent(FilterEvent.OnSuperCategoryFilterDropdownClick) },
+                onSuperCategoryFilterClick = { onFilterEvent(FilterEvent.OnSuperCategoryClick(it)) },
+                onSuperCategoryFilterDropdownDismiss = { onFilterEvent(FilterEvent.OnSuperCategoryFilterDropdownDismiss) },
+                onDisabledSuperCategoryClick = { onFilterEvent(FilterEvent.OnDisabledSuperCategoryClick) },
 
-                selectedSubcategory = selectedSubcategory,
-                isSubcategoryFilterDropdownExpanded = isSubcategoryFilterDropdownExpanded,
-                onSubcategoryFilterDropdownClick = { onSubcategoryFilterDropdownClick() },
-                onSubcategoryFilterClick = { onSubcategoryFilterClick(it) },
-                onSubcategoryFilterDropdownDismiss = { onSubcategoryFilterDropdownDismiss() },
-                onDisabledSubcategoryClick = { onDisabledSubcategoryClick() },
+                selectedSubcategory = filterState.selectedSubcategory,
+                isSubcategoryFilterDropdownExpanded = filterState.isSubcategoryDropdownExpanded,
+                onSubcategoryFilterDropdownClick = { onFilterEvent(FilterEvent.OnSubcategoryFilterDropdownClick) },
+                onSubcategoryFilterClick = { onFilterEvent(FilterEvent.OnSubcategoryClick(it)) },
+                onSubcategoryFilterDropdownDismiss = { onFilterEvent(FilterEvent.OnSubcategoryFilterDropdownDismiss) },
+                onDisabledSubcategoryClick = { onFilterEvent(FilterEvent.OnDisabledSubcategoryClick) },
 
-                selectedOfferType = selectedOfferType,
+                selectedOfferType = filterState.selectedOfferType,
             )
             Spacer(Modifier.height(16.dp))
             PriceFilter(
                 animationDuration = animationDuration,
 
-                onPriceFilterDropdownClick = { onPriceFilterDropdownClick() },
-                isPriceFilterExpanded = isPriceFilterExpanded,
+                onPriceFilterDropdownClick = { onFilterEvent(FilterEvent.OnPriceFilterDropdownClick) },
+                isPriceFilterExpanded = filterState.isPriceDropdownExpanded,
 
-                selectedPriceFrom = selectedPriceFrom,
-                selectedPriceTo = selectedPriceTo,
+                selectedPriceFrom = priceFromState,
+                selectedPriceTo = priceToState,
 
-                selectedPriceCurrency = selectedPriceCurrency,
-                isCurrencyDropdownExpanded = isCurrencyDropdownExpanded,
-                onCurrencyDropdownClick = { onCurrencyDropdownClick() },
-                onCurrencySelected = { onCurrencySelected(it) },
-                onCurrencyDropdownDismiss = { onCurrencyDropdownDismiss() },
+                selectedPriceCurrency = filterState.selectedCurrency,
+                isCurrencyDropdownExpanded = filterState.isCurrencyDropdownExpanded,
+                onCurrencyDropdownClick = { onFilterEvent(FilterEvent.OnPriceCurrencyFilterDropdownClick) },
+                onCurrencySelected = { onFilterEvent(FilterEvent.OnPriceCurrencyClick(it)) },
+                onCurrencyDropdownDismiss = { onFilterEvent(FilterEvent.OnPriceCurrencyFilterDropdownDismiss) },
 
-                selectedPriceUnit = selectedPriceUnit,
-                isPriceUnitDropdownExpanded = isPriceUnitDropdownExpanded,
-                onPriceUnitDropdownClick = { onPriceUnitDropdownClick() },
-                onPriceUnitSelected = { onPriceUnitSelected(it) },
-                onPriceUnitDropdownDismiss = { onPriceUnitDropdownDismiss() }
+                selectedPriceUnit = filterState.selectedPriceUnit,
+                isPriceUnitDropdownExpanded = filterState.isPriceUnitDropdownExpanded,
+                onPriceUnitDropdownClick = { onFilterEvent(FilterEvent.OnPriceUnitFilterDropdownClick) },
+                onPriceUnitSelected = { onFilterEvent(FilterEvent.OnPriceUnitClick(it)) },
+                onPriceUnitDropdownDismiss = { onFilterEvent(FilterEvent.OnPriceUnitFilterDropdownDismiss) }
             )
             Spacer(Modifier.height(16.dp))
             CityAndItemCondition(
-                selectedOfferType = selectedOfferType,
+                selectedOfferType = filterState.selectedOfferType,
 
                 cityState = cityState,
-                onDisabledCityClick = { onDisabledCityClick() },
+                onDisabledCityClick = { onFilterEvent(FilterEvent.OnDisabledCityClick) },
 
-                selectedItemCondition = selectedItemCondition,
-                isItemConditionFilterDropdownExpanded = isItemConditionFilterDropdownExpanded,
-                onItemConditionFilterDropdownClick = { onItemConditionFilterDropdownClick() },
-                onItemConditionFilterClick = { onItemConditionFilterClick(it) },
-                onItemConditionFilterDropdownDismiss = { onItemConditionFilterDropdownDismiss() },
-                onDisabledItemConditionClick = { onDisabledItemConditionClick() },
+                selectedItemCondition = filterState.selectedItemCondition,
+                isItemConditionFilterDropdownExpanded = filterState.isItemConditionFilterDropdownExpanded,
+                onItemConditionFilterDropdownClick = { onFilterEvent(FilterEvent.OnItemConditionFilterDropdownClick) },
+                onItemConditionFilterClick = { onFilterEvent(FilterEvent.OnItemConditionFilterClick(it)) },
+                onItemConditionFilterDropdownDismiss = { onFilterEvent(FilterEvent.OnItemConditionFilterDropdownDismiss) },
+                onDisabledItemConditionClick = { onFilterEvent(FilterEvent.OnDisabledItemConditionClick) },
             )
             Spacer(Modifier.height(16.dp))
             FilterButtonsSection(
-                onApplyFiltersButtonClick = { onApplyFiltersButtonClick() },
-                onClearFiltersButtonClick = { onClearFiltersButtonClick() }
+                onApplyFiltersButtonClick = { onFilterEvent(FilterEvent.OnApplyFiltersButtonClick) },
+                onClearFiltersButtonClick = { onFilterEvent(FilterEvent.OnClearFiltersButtonClick) }
             )
             Spacer(Modifier.height(120.dp))
         }

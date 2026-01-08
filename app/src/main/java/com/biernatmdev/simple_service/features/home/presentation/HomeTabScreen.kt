@@ -20,6 +20,7 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeTabScreen(
     viewModel: HomeViewModel = koinViewModel(),
     navigateToWizard: (Offer?) -> Unit,
+    navigateToOfferDetails: (Offer) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -43,7 +44,9 @@ fun HomeTabScreen(
             ) {
                 when(mode) {
                     HomeMode.TAKE -> {
-                        TakeScreen()
+                        TakeScreen(
+                            navigateToOfferDetails = { navigateToOfferDetails(it) }
+                        )
                     }
                     HomeMode.MAKE -> {
                         MakeScreen(

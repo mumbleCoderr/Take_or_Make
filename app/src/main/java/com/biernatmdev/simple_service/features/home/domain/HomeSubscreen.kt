@@ -6,8 +6,8 @@ import com.biernatmdev.simple_service.core.ui.models.IconType
 import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.AccountFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.AccountOutlined
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.CategoryFilled
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.CategoryOutlined
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.FavouriteFilled
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.FavouriteOutlined
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.HomeFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.HomeOutlined
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.NotificationFilled
@@ -25,11 +25,11 @@ enum class HomeSubscreen(
         title = UiText.StringResource(R.string.home_bottom_nav_bar_home),
         screen = Screen.HomeScreen,
     ),
-    CATEGORY(
-        iconFocused = IconType.Vector(CategoryFilled),
-        iconNotFocused = IconType.Vector(CategoryOutlined),
-        title = UiText.StringResource(R.string.home_bottom_nav_bar_category),
-        screen = Screen.CategoryScreen,
+    FAVOURITES(
+        iconFocused = IconType.Vector(FavouriteFilled),
+        iconNotFocused = IconType.Vector(FavouriteOutlined),
+        title = UiText.StringResource(R.string.home_bottom_nav_bar_favourites),
+        screen = Screen.FavouritesScreen,
     ),
     NOTIFICATIONS(
         iconFocused = IconType.Vector(NotificationFilled),
