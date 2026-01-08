@@ -5,7 +5,7 @@ import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.ui.models.IconType
 import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.DetailsFilled
-import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.FavouritesFilled
+import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.FavouriteOutlined
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.HistoryFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.LinkFilled
 import com.biernatmdev.simple_service.core.ui.theme.Resources.Icon.SignInFilled
@@ -55,12 +55,6 @@ enum class ProfileOption(
         title = UiText.StringResource(R.string.profile_option_reviews),
         category = ProfileOptionCategory.ACTIVITY,
         screen = Screen.ReviewsScreen
-    ),
-    FAVOURITES(
-        icon = IconType.Vector(FavouritesFilled),
-        title = UiText.StringResource(R.string.profile_option_favourites),
-        category = ProfileOptionCategory.ACTIVITY,
-        screen = Screen.FavouritesScreen
     ),
     LINK_ACCOUNT(
         icon = IconType.Vector(LinkFilled),

@@ -41,7 +41,7 @@ import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 
 @Composable
-fun CategoryDropdown(
+fun CategoryDropdown( // TODO MAKE 1 GENERIC DROPDOWN
     items: List<CategoryDisplayable>,
     selectedItem: CategoryDisplayable?,
     isExpanded: Boolean,

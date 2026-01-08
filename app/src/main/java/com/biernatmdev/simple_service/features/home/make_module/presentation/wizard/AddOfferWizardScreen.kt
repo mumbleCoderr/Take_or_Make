@@ -148,9 +148,11 @@ fun AddOfferWizardScreen(
                 AddOfferWizardEffect.NavigateBack -> {
                     navigateBack()
                 }
+
                 AddOfferWizardEffect.CreateOffer -> {
                     navigateBack()
                 }
+
                 is AddOfferWizardEffect.ShowSnackbar -> {
                     val message = effect.message.asString(context)
                     snackbar.showSnackbar(message)
@@ -372,6 +374,7 @@ fun WizardMainSection(
                 selectedItemCondition = selectedItemCondition,
                 selectedPhotos = selectedPhotos,
                 onEvent = onEvent,
+                isReadOnly = false,
             )
         }
     }
@@ -381,7 +384,7 @@ fun WizardMainSection(
 fun WizardTopNavBar(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onCloseClick: () -> Unit
+    onCloseClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -400,7 +403,6 @@ fun WizardTopNavBar(
                     .size(32.dp)
             )
         }
-
         IconButton(
             onClick = { onCloseClick() },
         ) {
@@ -443,8 +445,7 @@ fun WizardBottomSection(
                     text = if (isEditMode) {
                         UiText.StringResource(R.string.wizard_screen_btn_label_confirm_changes)
                             .asString()
-                    }
-                    else {
+                    } else {
                         UiText.StringResource(R.string.wizard_screen_btn_label_publish).asString()
                     },
                     isAnimated = true,
@@ -604,7 +605,8 @@ fun TransactionTypeStepContent(
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = UiText.StringResource(R.string.wizard_screen_text_step_1_subtitle_offer).asString(),
+                text = UiText.StringResource(R.string.wizard_screen_text_step_1_subtitle_offer)
+                    .asString(),
                 color = when {
                     selectedTransactionType == TransactionType.REQUEST -> ColorPrimary
                     transactionTypeErrorMsg != null -> Color.Red
@@ -637,7 +639,8 @@ fun TransactionTypeStepContent(
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = UiText.StringResource(R.string.wizard_screen_text_step_1_subtitle_request).asString(),
+                text = UiText.StringResource(R.string.wizard_screen_text_step_1_subtitle_request)
+                    .asString(),
                 color = when {
                     selectedTransactionType == TransactionType.OFFER -> ColorPrimary
                     transactionTypeErrorMsg != null -> Color.Red
@@ -711,7 +714,8 @@ fun OfferTypeStepContent(
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = UiText.StringResource(R.string.wizard_screen_text_step_2_subtitle_product).asString(),
+                text = UiText.StringResource(R.string.wizard_screen_text_step_2_subtitle_product)
+                    .asString(),
                 color = when {
                     selectedOfferType == OfferType.PRODUCT -> ColorPrimary
                     offerTypeErrorMsg != null -> Color.Red
@@ -744,7 +748,8 @@ fun OfferTypeStepContent(
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = UiText.StringResource(R.string.wizard_screen_text_step_2_subtitle_service).asString(),
+                text = UiText.StringResource(R.string.wizard_screen_text_step_2_subtitle_service)
+                    .asString(),
                 color = when {
                     selectedOfferType == OfferType.SERVICE -> ColorPrimary
                     offerTypeErrorMsg != null -> Color.Red
@@ -933,7 +938,8 @@ fun DetailsStepContent(
         )
         Spacer(Modifier.height(58.dp))
         Text(
-            text = UiText.StringResource(R.string.wizard_screen_text_step_5_subtitle_description).asString(),
+            text = UiText.StringResource(R.string.wizard_screen_text_step_5_subtitle_description)
+                .asString(),
             color = onColorBackgroundDarker,
             fontFamily = momoFont(),
             fontSize = EXTRA_MEDIUM,
@@ -959,7 +965,8 @@ fun DetailsStepContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = UiText.StringResource(R.string.wizard_screen_text_step_5_subtitle_condition).asString(),
+                    text = UiText.StringResource(R.string.wizard_screen_text_step_5_subtitle_condition)
+                        .asString(),
                     color = onColorBackgroundDarker,
                     fontFamily = momoFont(),
                     fontSize = EXTRA_MEDIUM,
@@ -977,7 +984,8 @@ fun DetailsStepContent(
             Spacer(Modifier.height(16.dp))
         } else {
             Text(
-                text = UiText.StringResource(R.string.wizard_screen_text_step_5_subtitle_city).asString(),
+                text = UiText.StringResource(R.string.wizard_screen_text_step_5_subtitle_city)
+                    .asString(),
                 color = onColorBackgroundDarker,
                 fontFamily = momoFont(),
                 fontSize = EXTRA_MEDIUM,
@@ -1059,7 +1067,8 @@ fun PhotoStepContent(
 
 @Composable
 fun SummaryStepContent(
-    onEvent: (AddOfferWizardEvent) -> Unit,
+    modifier: Modifier = Modifier,
+    onEvent: (AddOfferWizardEvent) -> Unit = {},
     selectedTransactionType: TransactionType?,
     selectedOfferType: OfferType?,
     titleState: TextFieldState,
@@ -1072,6 +1081,7 @@ fun SummaryStepContent(
     cityState: TextFieldState,
     selectedItemCondition: ItemCondition,
     selectedPhotos: List<Uri>,
+    isReadOnly: Boolean,
 ) {
     var fullscreenImage by rememberSaveable { mutableStateOf<Uri?>(null) }
 
@@ -1083,31 +1093,43 @@ fun SummaryStepContent(
     )
 
     val launchGallery = {
-        photoPickerLauncher.launch(
-            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-        )
+        if (!isReadOnly) {
+            photoPickerLauncher.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        }
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = UiText.StringResource(R.string.wizard_screen_text_step_7_title).asString(),
-            color = onColorBackground,
-            fontFamily = momoFont(),
-            fontSize = LARGE,
-            fontWeight = FontWeight.Bold,
-            lineHeight = LineHeight.LARGE,
-        )
-        Spacer(Modifier.height(36.dp))
+        if (!isReadOnly) {
+            Text(
+                text = UiText.StringResource(R.string.wizard_screen_text_step_7_title).asString(),
+                color = onColorBackground,
+                fontFamily = momoFont(),
+                fontSize = LARGE,
+                fontWeight = FontWeight.Bold,
+                lineHeight = LineHeight.LARGE,
+            )
+            Spacer(Modifier.height(36.dp))
+        }
         PhotoCarousel(
             photos = selectedPhotos,
-            onRemoveClick = { photo -> onEvent(AddOfferWizardEvent.OnPhotoRemoved(photo)) },
-            onAddPhotoClick = { launchGallery() },
+            onRemoveClick = if (!isReadOnly) { photo ->
+                onEvent(
+                    AddOfferWizardEvent.OnPhotoRemoved(
+                        photo
+                    )
+                )
+            } else null,
+            onAddPhotoClick = if (!isReadOnly) {
+                { launchGallery() }
+            } else null,
             onImageClick = { photo -> fullscreenImage = photo as Uri },
             modifier = Modifier.height(300.dp),
         )
@@ -1119,9 +1141,13 @@ fun SummaryStepContent(
             fontSize = LARGE,
             fontWeight = FontWeight.Bold,
             lineHeight = LineHeight.LARGE,
-            modifier = Modifier.clickable{
-                onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.BASIC_INFO_PICKER_STEP))
-            }
+            modifier = Modifier.then(
+                if (!isReadOnly) {
+                    Modifier.clickable {
+                        onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.BASIC_INFO_PICKER_STEP))
+                    }
+                } else Modifier
+            )
         )
         Spacer(Modifier.height(16.dp))
         Row(
@@ -1135,7 +1161,9 @@ fun SummaryStepContent(
                     Service
                 ),
                 title = "${selectedOfferType?.displayName?.asString()}",
-                onClick = { onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.OFFER_TYPE_PICKER_STEP)) },
+                onClick = {
+                    if (!isReadOnly) onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.OFFER_TYPE_PICKER_STEP))
+                },
                 modifier = Modifier.weight(1f),
             )
             SummarySquareCard(
@@ -1143,7 +1171,9 @@ fun SummaryStepContent(
                     Offering
                 ) else painterResource(Requesting),
                 title = "${selectedTransactionType?.displayName?.asString()}",
-                onClick = { onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.TRANSACTION_TYPE_PICKER_STEP)) },
+                onClick = {
+                    if (!isReadOnly) onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.TRANSACTION_TYPE_PICKER_STEP))
+                },
                 modifier = Modifier.weight(1f),
             )
         }
@@ -1157,44 +1187,79 @@ fun SummaryStepContent(
             SummaryFlatCard(
                 label = selectedSuperCategory?.displayName?.asString() ?: "",
                 icon = IconType.Vector(CategoryOutlined),
-                onClick = { onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.CATEGORY_PICKER_STEP)) }
+                onClick = {
+                    if (!isReadOnly) onEvent(
+                        AddOfferWizardEvent.OnGoToStep(
+                            AddOfferWizardStep.CATEGORY_PICKER_STEP
+                        )
+                    )
+                }
             )
             SummaryFlatCard(
                 label = selectedCategory?.displayName?.asString() ?: "",
                 icon = IconType.Vector(CategoryOutlined),
-                onClick = { onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.CATEGORY_PICKER_STEP)) }
+                onClick = {
+                    if (!isReadOnly) onEvent(
+                        AddOfferWizardEvent.OnGoToStep(
+                            AddOfferWizardStep.CATEGORY_PICKER_STEP
+                        )
+                    )
+                }
             )
             SummaryFlatCard(
                 label = "${priceState.text}  $selectedCurrency  /  ${selectedPriceUnit.displayName.asString()}",
                 icon = IconType.Drawable(Money),
-                onClick = { onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.BASIC_INFO_PICKER_STEP)) }
+                onClick = {
+                    if (!isReadOnly) onEvent(
+                        AddOfferWizardEvent.OnGoToStep(
+                            AddOfferWizardStep.BASIC_INFO_PICKER_STEP
+                        )
+                    )
+                }
             )
             if (selectedOfferType == OfferType.SERVICE) {
                 SummaryFlatCard(
                     label = cityState.text.toString(),
                     icon = IconType.Vector(LocationOutlined),
-                    onClick = { onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.DETAILS_PICKER_STEP)) }
+                    onClick = {
+                        if (!isReadOnly) onEvent(
+                            AddOfferWizardEvent.OnGoToStep(
+                                AddOfferWizardStep.DETAILS_PICKER_STEP
+                            )
+                        )
+                    }
                 )
             } else {
                 SummaryFlatCard(
                     label = selectedItemCondition.displayName.asString(),
                     icon = IconType.Drawable(Clean),
-                    onClick = { onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.DETAILS_PICKER_STEP)) }
+                    onClick = {
+                        if (!isReadOnly) onEvent(
+                            AddOfferWizardEvent.OnGoToStep(
+                                AddOfferWizardStep.DETAILS_PICKER_STEP
+                            )
+                        )
+                    }
                 )
             }
         }
         Spacer(Modifier.height(16.dp))
         Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable{
-                        onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.DETAILS_PICKER_STEP))
-                    },
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-        ){
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(
+                    if (!isReadOnly) {
+                        Modifier.clickable {
+                            onEvent(AddOfferWizardEvent.OnGoToStep(AddOfferWizardStep.DETAILS_PICKER_STEP))
+                        }
+                    } else Modifier
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
             Text(
-                text = UiText.StringResource(R.string.wizard_screen_text_step_7_subtitle_description).asString(),
+                text = UiText.StringResource(R.string.wizard_screen_text_step_7_subtitle_description)
+                    .asString(),
                 color = onColorBackground,
                 fontFamily = momoFont(),
                 fontSize = SEMI_LARGE,
@@ -1242,7 +1307,7 @@ fun SummarySquareCard(
         modifier = modifier
             .background(color = ColorSecondary, shape = RoundedCornerShape(22.dp))
             .padding(16.dp)
-            .clickable{ onClick() },
+            .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -1273,7 +1338,7 @@ fun SummaryFlatCard(
     Surface(
         color = ColorSecondary,
         shape = RoundedCornerShape(12.dp),
-        modifier = Modifier.clickable{ onClick() }
+        modifier = Modifier.clickable { onClick() }
     ) {
         Row(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
@@ -1288,6 +1353,7 @@ fun SummaryFlatCard(
                         contentDescription = null,
                     )
                 }
+
                 is IconType.Drawable -> {
                     Icon(
                         painter = painterResource(id = icon.id),

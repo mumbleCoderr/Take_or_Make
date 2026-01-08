@@ -11,7 +11,9 @@ import com.biernatmdev.simple_service.features.home.make_module.presentation.off
 import com.biernatmdev.simple_service.features.home.make_module.presentation.wizard.AddOfferWizardViewModel
 import com.biernatmdev.simple_service.features.user_details.presentation.UserDetailsViewModel
 import com.biernatmdev.simple_service.features.home.presentation.HomeViewModel
+import com.biernatmdev.simple_service.features.home.take_module.TakeViewModel
 import com.biernatmdev.simple_service.features.main.MainViewModel
+import com.biernatmdev.simple_service.features.offer_details.OfferDetailsViewModel
 import com.biernatmdev.simple_service.features.profile.presentation.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,7 +32,9 @@ val appModule = module {
     viewModel { ProfileViewModel(get()) }
     viewModel { UserDetailsViewModel(get()) }
     viewModel { MakeViewModel(get(), get()) }
+    viewModel { TakeViewModel(get()) }
     viewModel { AddOfferWizardViewModel(get(), get()) }
+    viewModel { OfferDetailsViewModel() }
     single { GoogleUiClient(
         context = androidContext(),
         auth = get(),

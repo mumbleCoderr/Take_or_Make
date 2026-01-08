@@ -7,14 +7,15 @@ import androidx.navigation.compose.rememberNavController
 import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.features.auth.presentation.AuthScreen
 import com.biernatmdev.simple_service.features.user_details.presentation.UserDetailsScreen
-import com.biernatmdev.simple_service.features.favourites.FavouritesScreen
 import com.biernatmdev.simple_service.features.history.HistoryScreen
 import com.biernatmdev.simple_service.features.home.make_module.presentation.wizard.AddOfferWizardScreen
 import com.biernatmdev.simple_service.features.home.presentation.HomeScreen
+import com.biernatmdev.simple_service.features.offer_details.OfferDetailsScreen
 import com.biernatmdev.simple_service.features.pro.ProScreen
 import com.biernatmdev.simple_service.features.reviews.ReviewsScreen
 import com.biernatmdev.simple_service.features.statistics.StatistiscScreen
 import com.biernatmdev.simple_service.features.splash.SplashScreen
+import com.biernatmdev.simple_service.features.success.SuccessScreen
 import com.biernatmdev.simple_service.features.wallet.WalletScreen
 
 @Composable
@@ -62,6 +63,10 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
                 navigateToProfileSubscreen = { screen ->
                     navController.navigate(screen)
                 },
+                navigateToOfferDetails = { offer ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set("offer_details", offer)
+                    navController.navigate(Screen.OfferDetailsScreen)
+                }
             )
         }
         composable<Screen.AddOfferWizardScreen> { backStackEntry ->
@@ -83,6 +88,26 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
                 }
             )
         }
+        composable<Screen.OfferDetailsScreen> {
+            val offer = navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.get<Offer>("offer_details")
+
+            if (offer != null) {
+                OfferDetailsScreen(
+                    offer = offer,
+                    navigateBack = {
+                        navController.popBackStack()
+                    },
+                    navigateToSuccessScreen = {
+                        navController.navigate(Screen.SuccessScreen)
+                    }
+                )
+            }
+        }
+        composable<Screen.WalletScreen> {
+            SuccessScreen()
+        }
         composable<Screen.WalletScreen> {
             WalletScreen()
         }
@@ -98,8 +123,8 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
         composable<Screen.ReviewsScreen> {
             ReviewsScreen()
         }
-        composable<Screen.FavouritesScreen> {
-            FavouritesScreen()
+        composable<Screen.SuccessScreen> {
+            ReviewsScreen()
         }
     }
 }

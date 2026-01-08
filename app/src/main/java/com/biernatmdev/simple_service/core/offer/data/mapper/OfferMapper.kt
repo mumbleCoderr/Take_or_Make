@@ -31,7 +31,7 @@ internal fun Offer.toFirestoreMap(): Map<String, Any?> {
     )
 }
 
-internal fun DocumentSnapshot.toDomainOffer(): Offer {
+internal fun DocumentSnapshot.toDomainOffer(userFavoriteIds: List<String>): Offer {
     return Offer(
         id = this.id,
         authorId = this.getString("authorId") ?: "",
@@ -74,6 +74,8 @@ internal fun DocumentSnapshot.toDomainOffer(): Offer {
             OfferStatus.valueOf(this.getString("status") ?: "")
         } catch (e: Exception) { OfferStatus.ACTIVE },
 
-        createdAt = this.getLong("createdAt") ?: 0L
+        createdAt = this.getLong("createdAt") ?: 0L,
+
+        isFavourite = userFavoriteIds.contains(this.id)
     )
 }

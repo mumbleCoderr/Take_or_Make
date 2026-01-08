@@ -13,8 +13,6 @@ import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.AddLink
-import androidx.compose.material.icons.filled.AddLocationAlt
-import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.BorderColor
 import androidx.compose.material.icons.filled.Campaign
@@ -23,9 +21,9 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Handshake
 import androidx.compose.material.icons.filled.History
@@ -53,7 +51,6 @@ import androidx.compose.material.icons.outlined.Campaign
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Construction
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.ErrorOutline
@@ -72,6 +69,7 @@ import androidx.compose.material.icons.outlined.Replay
 import androidx.compose.material.icons.outlined.Reviews
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Sell
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.outlined.Wallet
 import com.biernatmdev.simple_service.R
 
@@ -109,6 +107,7 @@ object Resources {
         val CheckFilled = Icons.Filled.Check
         val CheckOutlined = Icons.Outlined.Check
         val Google = R.drawable.google
+        val BuyOutlined = Icons.Outlined.ShoppingCart
 
         // BOTTOM BAR
         val HomeFilled = Icons.Filled.Home
@@ -154,8 +153,8 @@ object Resources {
 
         val ReviewsFilled = Icons.Filled.Reviews
         val ReviewsOutlined = Icons.Outlined.Reviews
-        val FavouritesFilled = Icons.Filled.FavoriteBorder
-        val FavouritesOutlined = Icons.Outlined.FavoriteBorder
+        val FavouriteOutlined = Icons.Filled.FavoriteBorder
+        val FavouriteFilled = Icons.Filled.Favorite
 
         val LinkFilled = Icons.Filled.AddLink
         val LinkOutlined = Icons.Outlined.AddLink
@@ -206,6 +205,7 @@ object Resources {
         val LocationOutlined = Icons.Outlined.LocationOn
         val Clean = R.drawable.clean
         val DeleteFilled = Icons.Filled.Delete
+        val Empty = R.drawable.empty
     }
 
     object Image {
