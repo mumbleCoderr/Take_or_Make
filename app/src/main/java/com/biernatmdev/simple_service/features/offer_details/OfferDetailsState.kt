@@ -5,5 +5,6 @@ import com.biernatmdev.simple_service.core.ui.models.UiText
 
 data class OfferDetailsState(
     val isLoading: Boolean = false,
-    val error: UiText? = null
+    val error: UiText? = null,
+    val currentUserId: String? = null
 )

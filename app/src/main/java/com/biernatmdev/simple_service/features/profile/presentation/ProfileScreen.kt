@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -126,15 +125,22 @@ fun ProfileScreenContent(
             .background(ColorBackground),
     ) {
         if (state.user != null) {
-            UserProfilePictureSection(
-                modifier = Modifier.align(Alignment.TopCenter),
-                user = state.user
-            )
-            ProfileOptionSection(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                onEvent = onEvent,
-                isUserGuest = state.isUserGuest,
-            )
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                UserProfilePictureSection(
+                    modifier = Modifier
+                        .weight(0.4f),
+                    user = state.user
+                )
+
+                ProfileOptionSection(
+                    modifier = Modifier.weight(0.6f),
+                    onEvent = onEvent,
+                    isUserGuest = state.isUserGuest,
+                )
+            }
         }
 
         val showErrorScreenLoader = state.error != null && state.user == null
@@ -163,8 +169,7 @@ fun UserProfilePictureSection(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.4f),
+            .fillMaxWidth(),
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -173,6 +178,7 @@ fun UserProfilePictureSection(
                 .build(),
             contentScale = ContentScale.Crop,
             contentDescription = null,
+            modifier = Modifier.fillMaxSize()
         )
         Box(
             modifier = Modifier
@@ -203,7 +209,7 @@ fun UserProfilePictureSection(
                     .clip(CircleShape)
                     .size(120.dp)
             )
-            Spacer(Modifier.height(26.dp))
+            Spacer(Modifier.height(16.dp))
             Text(
                 text = "${user.firstName} ${user.lastName}",
                 color = onColorBackground,
@@ -223,54 +229,50 @@ fun ProfileOptionSection(
 ) {
     val scrollState = rememberScrollState()
 
-    Box(
+    Column(
         modifier = modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.BottomCenter,
+            .fillMaxWidth()
+            .verticalScroll(scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(scrollState),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            ProfileOptionList(
-                category = ProfileOptionCategory.GENERAL,
-                isUserGuest = isUserGuest,
-                onProfileOptionClick = {
-                    onEvent(
-                        ProfileEvent.OnProfileOptionClick(
-                            it
-                        )
+        Spacer(Modifier.height(16.dp))
+
+        ProfileOptionList(
+            category = ProfileOptionCategory.GENERAL,
+            isUserGuest = isUserGuest,
+            onProfileOptionClick = {
+                onEvent(
+                    ProfileEvent.OnProfileOptionClick(
+                        it
                     )
-                }
-            )
-            Spacer(Modifier.height(22.dp))
-            ProfileOptionList(
-                category = ProfileOptionCategory.ACTIVITY,
-                isUserGuest = isUserGuest,
-                onProfileOptionClick = {
-                    onEvent(
-                        ProfileEvent.OnProfileOptionClick(
-                            it
-                        )
+                )
+            }
+        )
+        Spacer(Modifier.height(22.dp))
+        ProfileOptionList(
+            category = ProfileOptionCategory.ACTIVITY,
+            isUserGuest = isUserGuest,
+            onProfileOptionClick = {
+                onEvent(
+                    ProfileEvent.OnProfileOptionClick(
+                        it
                     )
-                }
-            )
-            Spacer(Modifier.height(22.dp))
-            ProfileOptionList(
-                category = ProfileOptionCategory.OTHER,
-                isUserGuest = isUserGuest,
-                onProfileOptionClick = {
-                    onEvent(
-                        ProfileEvent.OnProfileOptionClick(
-                            it
-                        )
+                )
+            }
+        )
+        Spacer(Modifier.height(22.dp))
+        ProfileOptionList(
+            category = ProfileOptionCategory.OTHER,
+            isUserGuest = isUserGuest,
+            onProfileOptionClick = {
+                onEvent(
+                    ProfileEvent.OnProfileOptionClick(
+                        it
                     )
-                }
-            )
-            Spacer(Modifier.height(18.dp))
-        }
+                )
+            }
+        )
+        Spacer(Modifier.height(18.dp))
     }
 }
 
@@ -408,4 +410,3 @@ fun ProfileOptionItem(
         }
     }
 }
-

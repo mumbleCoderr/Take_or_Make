@@ -4,6 +4,8 @@ import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.google_auth.GoogleUiClient
 import com.biernatmdev.simple_service.core.offer.data.repository.OfferRepositoryImpl
 import com.biernatmdev.simple_service.core.offer.domain.repository.OfferRepository
+import com.biernatmdev.simple_service.core.transaction.data.repository.TransactionRepositoryImpl
+import com.biernatmdev.simple_service.core.transaction.domain.repository.TransactionRepository
 import com.biernatmdev.simple_service.core.user.domain.repository.UserRepository
 import com.biernatmdev.simple_service.core.user.data.repository.UserRepositoryImpl
 import com.biernatmdev.simple_service.features.auth.presentation.AuthViewModel
@@ -26,6 +28,7 @@ val appModule = module {
     single<FirebaseFirestore> { FirebaseFirestore.getInstance() }
     single<UserRepository> { UserRepositoryImpl(get(), get()) }
     single<OfferRepository> { OfferRepositoryImpl(get(), get()) }
+    single<TransactionRepository> { TransactionRepositoryImpl(get(), get()) }
     viewModel { MainViewModel(get()) }
     viewModel { AuthViewModel(get(), get()) }
     viewModel { HomeViewModel() }
@@ -34,7 +37,7 @@ val appModule = module {
     viewModel { MakeViewModel(get(), get()) }
     viewModel { TakeViewModel(get()) }
     viewModel { AddOfferWizardViewModel(get(), get()) }
-    viewModel { OfferDetailsViewModel() }
+    viewModel { OfferDetailsViewModel(get(), get()) }
     single { GoogleUiClient(
         context = androidContext(),
         auth = get(),

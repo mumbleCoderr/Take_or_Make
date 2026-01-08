@@ -167,6 +167,10 @@
     <string name="offer_category_service_name_shoe_repair">Shoe Repair</string>
     <string name="offer_category_service_name_other">Other Services</string>
 
+    // -- TAKE MODULE --
+    <string name="take_module_snackbar_msg_author_cant_buy">As an author, you can not make a transaction</string>
+
+
     // -- MAKE MODULE --
 
     // MAKE BTN
