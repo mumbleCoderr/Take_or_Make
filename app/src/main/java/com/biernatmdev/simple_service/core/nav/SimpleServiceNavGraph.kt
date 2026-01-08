@@ -106,9 +106,6 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
             }
         }
         composable<Screen.WalletScreen> {
-            SuccessScreen()
-        }
-        composable<Screen.WalletScreen> {
             WalletScreen()
         }
         composable<Screen.ProScreen> {
@@ -124,7 +121,11 @@ fun SimpleServiceNavGraph(startDestination: Screen = Screen.SplashScreen) {
             ReviewsScreen()
         }
         composable<Screen.SuccessScreen> {
-            ReviewsScreen()
+            SuccessScreen(
+                onBackButtonClick = {
+                    navController.popBackStack(Screen.HomeGraph, inclusive = false)
+                }
+            )
         }
     }
 }

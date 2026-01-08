@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.BorderColor
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Celebration
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Construction
@@ -49,6 +50,7 @@ import androidx.compose.material.icons.outlined.AddPhotoAlternate
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Campaign
 import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.Celebration
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Construction
 import androidx.compose.material.icons.outlined.Description
@@ -206,6 +208,7 @@ object Resources {
         val Clean = R.drawable.clean
         val DeleteFilled = Icons.Filled.Delete
         val Empty = R.drawable.empty
+        val CelebrationOutlined = Icons.Outlined.Celebration
     }
 
     object Image {

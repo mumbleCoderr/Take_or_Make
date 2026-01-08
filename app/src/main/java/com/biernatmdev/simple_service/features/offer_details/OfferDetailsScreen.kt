@@ -141,10 +141,11 @@ fun OfferDetailsScreenContent(
             }else{
                 "I will do it"
             },
+            isEnabled = offer.authorId != state.currentUserId ,
             isAnimated = true,
             isLoading = state.isLoading,
             icon = if(offer.offerType == OfferType.PRODUCT) IconType.Vector(BuyOutlined) else IconType.Vector(HandshakeOutlined),
-            onClick = { onEvent(OfferDetailsEvent.OnBuyButtonClick) },
+            onClick = { onEvent(OfferDetailsEvent.OnBuyButtonClick(offer)) },
             modifier = Modifier
                 .fillMaxWidth()
         )

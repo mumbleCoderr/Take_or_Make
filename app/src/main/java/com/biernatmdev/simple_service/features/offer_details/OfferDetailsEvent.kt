@@ -1,10 +1,12 @@
 package com.biernatmdev.simple_service.features.offer_details
 
+import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.core.ui.models.UiText
 
 sealed interface OfferDetailsEvent {
     data object OnBackClick : OfferDetailsEvent
-    data object OnBuyButtonClick : OfferDetailsEvent
+    data class OnBuyButtonClick(val offer: Offer) : OfferDetailsEvent
+    data object OnDisabledBuyButtonClick : OfferDetailsEvent
 }
 
 sealed interface OfferDetailsEffect {

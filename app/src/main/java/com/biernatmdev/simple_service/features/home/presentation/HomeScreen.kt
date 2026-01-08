@@ -69,7 +69,9 @@ fun HomeScreen(
                         navigateToOfferDetails = { navigateToOfferDetails(it) }
                     )
                 }
-                composable<Screen.FavouritesScreen> {}
+                composable<Screen.FavouritesScreen> {
+
+                }
                 composable<Screen.NotificationScreen> {}
                 composable<Screen.ProfileScreen> {
                     ProfileScreen(
