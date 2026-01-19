@@ -1,6 +1,7 @@
 package com.biernatmdev.simple_service.core.offer.domain.repository
 
 import com.biernatmdev.simple_service.core.offer.domain.model.Offer
+import com.biernatmdev.simple_service.core.ui.components.filter.FilterState
 
 interface OfferRepository {
     suspend fun createOffer(offer: Offer): Result<Unit>
@@ -8,5 +9,7 @@ interface OfferRepository {
     suspend fun deleteOffer(offerId: String): Result<Unit>
     suspend fun getOffersByAuthorId(authorId: String, lastCreatedAt: Long?): Result<List<Offer>>
     suspend fun getAllOffers(lastCreatedAt: Long? = null): Result<List<Offer>>
+    suspend fun getInactiveOffersByAuthorId(authorId: String, lastCreatedAt: Long?): Result<List<Offer>>
+    suspend fun getFavoriteOffers(lastCreatedAt: Long?): Result<List<Offer>>
     suspend fun toggleFavorite(offerId: String, isNowFavorite: Boolean): Result<Unit>
 }

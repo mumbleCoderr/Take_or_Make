@@ -30,6 +30,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -106,11 +107,14 @@ import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 import com.biernatmdev.simple_service.core.ui.components.filter.FilterEvent
 import com.biernatmdev.simple_service.core.ui.components.filter.FilterState
+import com.biernatmdev.simple_service.core.ui.components.filter.MainFilterDropdown
+import com.biernatmdev.simple_service.core.ui.components.filter.SearchBarFilter
 import com.biernatmdev.simple_service.features.home.make_module.presentation.offer_list.MakeEffect.*
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MakeScreen( // TODO INACTIVE OFFERS BELOW DIVIDER WITH ALFA 0.5 && BUTTON FOR DISABLE OFFER SO API CALLS AND CHA NGE IT IN FB
+fun MakeScreen(
+    // TODO INACTIVE OFFERS BELOW DIVIDER WITH ALFA 0.5 && BUTTON FOR DISABLE OFFER SO API CALLS AND CHA NGE IT IN FB
     makeViewModel: MakeViewModel = koinViewModel(),
     navigateToWizard: (Offer?) -> Unit,
 ) {
@@ -133,10 +137,6 @@ fun MakeScreen( // TODO INACTIVE OFFERS BELOW DIVIDER WITH ALFA 0.5 && BUTTON FO
         }
     }
 
-    LaunchedEffect(Unit) {
-        makeViewModel.onEvent(MakeEvent.OnScreenRefresh)
-    }
-
     MakeScreenContent(
         onEvent = makeViewModel::onEvent,
         state = state,
@@ -149,6 +149,7 @@ fun MakeScreen( // TODO INACTIVE OFFERS BELOW DIVIDER WITH ALFA 0.5 && BUTTON FO
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MakeScreenContent(
     onEvent: (MakeEvent) -> Unit,
@@ -185,7 +186,7 @@ fun MakeScreenContent(
     }
 
     PullToRefreshBox(
-        isRefreshing = state.isLoading,
+        isRefreshing = state.isPullRefreshing,
         onRefresh = { onEvent(MakeEvent.OnPullToRefresh) },
         modifier = Modifier
             .fillMaxSize()
@@ -211,7 +212,7 @@ fun MakeScreenContent(
                 ) {
                     Spacer(Modifier.height(36.dp))
                     Text(
-                        text = "Your offers",
+                        text = UiText.StringResource(R.string.make_module_title).asString(),
                         fontSize = SEMI_LARGE,
                         lineHeight = LineHeight.SEMI_LARGE,
                         color = onColorBackground,
@@ -220,7 +221,7 @@ fun MakeScreenContent(
                     )
                     Spacer(Modifier.height(16.dp))
                     Text(
-                        text = "Here you can search, modify and remove",
+                        text = UiText.StringResource(R.string.make_module_subtitle).asString(),
                         fontSize = SEMI_LARGE,
                         lineHeight = LineHeight.SEMI_LARGE,
                         color = onColorBackgroundDarker,
@@ -252,15 +253,15 @@ fun MakeScreenContent(
                 )
                 Spacer(Modifier.height(16.dp))
             }
-            item{
+            item {
                 EmptyListComponent(
                     isOfferListEmpty = state.displayingOffers.isEmpty(),
                     isActiveFilter = isAnyFilterActive,
-                    isLoading = state.isLoading,
+                    isLoading = state.isPullRefreshing || state.isLoadingNextPage,
                 )
             }
             itemsIndexed(state.displayingOffers) { index, offer ->
-                if (index >= state.displayingOffers.lastIndex && !state.isLoading) {
+                if (index >= state.displayingOffers.lastIndex && !state.isLoadingNextPage && !state.isPullRefreshing) {
                     LaunchedEffect(Unit) {
                         onEvent(MakeEvent.OnLoadNextPage)
                     }
@@ -274,10 +275,18 @@ fun MakeScreenContent(
                 )
                 Spacer(Modifier.height(32.dp))
             }
-            if (state.isLoading && state.displayingOffers.isNotEmpty()) {
+            if (state.isLoadingNextPage && state.displayingOffers.isNotEmpty()) {
                 item {
-                    Box(Modifier.fillMaxWidth().padding(bottom = 16.dp), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = ColorPrimary, modifier = Modifier.size(32.dp))
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = ColorPrimary,
+                            modifier = Modifier.size(32.dp)
+                        )
                     }
                 }
             }
@@ -286,7 +295,7 @@ fun MakeScreenContent(
                 SimpleServiceButton(
                     text = UiText.StringResource(R.string.make_module_btn_text_add).asString(),
                     isAnimated = false,
-                    onClick = { navigateToWizard(null) },
+                    onClick = { onEvent(MakeEvent.OnAddNewOfferButtonClick) },
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(64.dp))
@@ -350,6 +359,8 @@ fun EmptyListComponent(
     isOfferListEmpty: Boolean,
     isActiveFilter: Boolean,
     isLoading: Boolean,
+    isFavouriteScreen: Boolean = false,
+    isNotificationScreenTmp: Boolean = false,
 ) {
     if (isOfferListEmpty && !isLoading) {
         Column(
@@ -359,7 +370,7 @@ fun EmptyListComponent(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Nothing here!",
+                text = UiText.StringResource(R.string.empty_list_component_title).asString(),
                 fontSize = SEMI_LARGE,
                 lineHeight = LineHeight.SEMI_LARGE,
                 color = onColorBackground,
@@ -375,7 +386,15 @@ fun EmptyListComponent(
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                text = if (isActiveFilter) "Adjust or remove filters" else "Add an offer by clicking below",
+                text = if (isActiveFilter && !isFavouriteScreen && !isNotificationScreenTmp) {
+                    UiText.StringResource(R.string.empty_list_component_filter).asString()
+                } else if (!isActiveFilter && !isFavouriteScreen && !isNotificationScreenTmp) {
+                    UiText.StringResource(R.string.empty_list_component_add_offer).asString()
+                } else if (!isActiveFilter && !isFavouriteScreen) {
+                    UiText.StringResource(R.string.empty_list_component_notification).asString()
+                } else {
+                    UiText.StringResource(R.string.empty_list_component_add_favourite).asString()
+                },
                 fontSize = SEMI_LARGE,
                 lineHeight = LineHeight.SEMI_LARGE,
                 color = onColorBackgroundDarker,
@@ -385,6 +404,7 @@ fun EmptyListComponent(
         }
     }
 }
+
 @Composable
 fun OfferCardPopUp(
     modifier: Modifier = Modifier,
@@ -396,7 +416,7 @@ fun OfferCardPopUp(
     status: OfferStatus = OfferStatus.ACTIVE,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
-){
+) {
     Column(
         modifier = modifier
     ) {
@@ -467,7 +487,7 @@ fun OfferCardPopUp(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             SimpleServiceButton(
-                text = "Delete",
+                text = UiText.StringResource(R.string.make_module_btn_text_delete).asString(),
                 isAnimated = false,
                 onClick = { onDeleteClick() },
                 textFontSize = MEDIUM,
@@ -482,7 +502,7 @@ fun OfferCardPopUp(
                 modifier = Modifier.weight(1f)
             )
             SimpleServiceButton(
-                text = "Edit",
+                text = UiText.StringResource(R.string.make_module_btn_text_edit).asString(),
                 isAnimated = false,
                 onClick = { onEditClick() },
                 textFontSize = MEDIUM,
@@ -497,625 +517,4 @@ fun OfferCardPopUp(
     }
 }
 
-@Composable
-fun DropdownExpandAnimation(
-    animationDuration: Int,
-    isExpanded: Boolean,
-    insideDropdown: @Composable () -> Unit,
-) {
-    AnimatedVisibility(
-        visible = isExpanded,
-        enter = expandVertically(
-            animationSpec = tween(animationDuration),
-            expandFrom = Alignment.Top
-        ) + fadeIn(animationSpec = tween(animationDuration)),
-
-        exit = shrinkVertically(
-            animationSpec = tween(animationDuration),
-            shrinkTowards = Alignment.Top
-        ) + fadeOut(animationSpec = tween(animationDuration))
-    ) {
-        Column {
-            insideDropdown()
-        }
-    }
-}
-
-@Composable
-fun MainFilterDropdown(
-    filterState: FilterState,
-    onFilterEvent: (FilterEvent) -> Unit,
-
-    priceFromState: TextFieldState,
-    priceToState: TextFieldState,
-    cityState: TextFieldState,
-
-    animationDuration: Int = 600,
-
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        FilterDropdown(
-            label = "Filters",
-            isExpanded = filterState.isFilterDropdownExpanded,
-            contentColor = onColorBackground,
-            onDropdownClick = { onFilterEvent(FilterEvent.OnMainFilterDropdownClick) },
-        )
-        Spacer(Modifier.height(16.dp))
-        DropdownExpandAnimation(
-            animationDuration = animationDuration,
-            isExpanded = filterState.isFilterDropdownExpanded,
-        ) {
-            TransactionAndOfferTypeFilter(
-                animationDuration = animationDuration,
-
-                selectedTransactionType = filterState.selectedTransactionType,
-                onTransactionTypeFilterDropdownClick = { onFilterEvent(FilterEvent.OnTransactionTypeFilterDropdownClick) },
-                onTransactionTypeFilterClick = { onFilterEvent(FilterEvent.OnTransactionTypeClick(it)) },
-                isTransactionTypeFilterDropdownExpanded = filterState.isTransactionTypeFilterDropdownExpanded,
-
-                selectedOfferType = filterState.selectedOfferType,
-                onOfferTypeFilterDropdownClick = { onFilterEvent(FilterEvent.OnOfferTypeFilterDropdownClick) },
-                onOfferTypeFilterClick = { onFilterEvent(FilterEvent.OnOfferTypeClick(it)) },
-                isOfferTypeFilterDropdownExpanded = filterState.isOfferTypeFilterDropdownExpanded,
-            )
-            Spacer(Modifier.height(16.dp))
-            CategoryFilter(
-                animationDuration = animationDuration,
-                isCategoryFilterDropdownExpanded = filterState.isCategoryDropdownExpanded,
-                onCategoryFilterDropdownClick = { onFilterEvent(FilterEvent.OnCategoryFilterDropdownClick) },
-
-                selectedSuperCategory = filterState.selectedSuperCategory,
-                isSuperCategoryFilterDropdownExpanded = filterState.isSuperCategoryDropdownExpanded,
-                onSuperCategoryFilterDropdownClick = { onFilterEvent(FilterEvent.OnSuperCategoryFilterDropdownClick) },
-                onSuperCategoryFilterClick = { onFilterEvent(FilterEvent.OnSuperCategoryClick(it)) },
-                onSuperCategoryFilterDropdownDismiss = { onFilterEvent(FilterEvent.OnSuperCategoryFilterDropdownDismiss) },
-                onDisabledSuperCategoryClick = { onFilterEvent(FilterEvent.OnDisabledSuperCategoryClick) },
-
-                selectedSubcategory = filterState.selectedSubcategory,
-                isSubcategoryFilterDropdownExpanded = filterState.isSubcategoryDropdownExpanded,
-                onSubcategoryFilterDropdownClick = { onFilterEvent(FilterEvent.OnSubcategoryFilterDropdownClick) },
-                onSubcategoryFilterClick = { onFilterEvent(FilterEvent.OnSubcategoryClick(it)) },
-                onSubcategoryFilterDropdownDismiss = { onFilterEvent(FilterEvent.OnSubcategoryFilterDropdownDismiss) },
-                onDisabledSubcategoryClick = { onFilterEvent(FilterEvent.OnDisabledSubcategoryClick) },
-
-                selectedOfferType = filterState.selectedOfferType,
-            )
-            Spacer(Modifier.height(16.dp))
-            PriceFilter(
-                animationDuration = animationDuration,
-
-                onPriceFilterDropdownClick = { onFilterEvent(FilterEvent.OnPriceFilterDropdownClick) },
-                isPriceFilterExpanded = filterState.isPriceDropdownExpanded,
-
-                selectedPriceFrom = priceFromState,
-                selectedPriceTo = priceToState,
-
-                selectedPriceCurrency = filterState.selectedCurrency,
-                isCurrencyDropdownExpanded = filterState.isCurrencyDropdownExpanded,
-                onCurrencyDropdownClick = { onFilterEvent(FilterEvent.OnPriceCurrencyFilterDropdownClick) },
-                onCurrencySelected = { onFilterEvent(FilterEvent.OnPriceCurrencyClick(it)) },
-                onCurrencyDropdownDismiss = { onFilterEvent(FilterEvent.OnPriceCurrencyFilterDropdownDismiss) },
-
-                selectedPriceUnit = filterState.selectedPriceUnit,
-                isPriceUnitDropdownExpanded = filterState.isPriceUnitDropdownExpanded,
-                onPriceUnitDropdownClick = { onFilterEvent(FilterEvent.OnPriceUnitFilterDropdownClick) },
-                onPriceUnitSelected = { onFilterEvent(FilterEvent.OnPriceUnitClick(it)) },
-                onPriceUnitDropdownDismiss = { onFilterEvent(FilterEvent.OnPriceUnitFilterDropdownDismiss) }
-            )
-            Spacer(Modifier.height(16.dp))
-            CityAndItemCondition(
-                selectedOfferType = filterState.selectedOfferType,
-
-                cityState = cityState,
-                onDisabledCityClick = { onFilterEvent(FilterEvent.OnDisabledCityClick) },
-
-                selectedItemCondition = filterState.selectedItemCondition,
-                isItemConditionFilterDropdownExpanded = filterState.isItemConditionFilterDropdownExpanded,
-                onItemConditionFilterDropdownClick = { onFilterEvent(FilterEvent.OnItemConditionFilterDropdownClick) },
-                onItemConditionFilterClick = { onFilterEvent(FilterEvent.OnItemConditionFilterClick(it)) },
-                onItemConditionFilterDropdownDismiss = { onFilterEvent(FilterEvent.OnItemConditionFilterDropdownDismiss) },
-                onDisabledItemConditionClick = { onFilterEvent(FilterEvent.OnDisabledItemConditionClick) },
-            )
-            Spacer(Modifier.height(16.dp))
-            FilterButtonsSection(
-                onApplyFiltersButtonClick = { onFilterEvent(FilterEvent.OnApplyFiltersButtonClick) },
-                onClearFiltersButtonClick = { onFilterEvent(FilterEvent.OnClearFiltersButtonClick) }
-            )
-            Spacer(Modifier.height(120.dp))
-        }
-    }
-}
-
-@Composable
-fun SearchBarFilter(
-    searchbarState: TextFieldState,
-    onSearchbarButtonClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier.weight(1f)
-        ) {
-            SimpleServiceTextField(
-                state = searchbarState,
-                onFocus = {},
-                errorText = null,
-                verticalPadding = 8.dp,
-                horizontalPadding = 16.dp,
-                roundedCornerShapeValue = 14.dp,
-                placeholder = "Search by title",
-                icon = IconType.Vector(SearchOutlined),
-            )
-        }
-        Spacer(Modifier.width(16.dp))
-        SimpleServiceButton(
-            text = "",
-            buttonPadding = 8.dp,
-            roundedCornerShapeValue = 14.dp,
-            icon = IconType.Vector(SearchOutlined),
-            iconSize = 24.dp,
-            isAnimated = false,
-            onClick = { onSearchbarButtonClick() }
-        )
-    }
-}
-
-@Composable
-fun TransactionAndOfferTypeFilter(
-    animationDuration: Int,
-
-    selectedTransactionType: TransactionType?,
-    onTransactionTypeFilterDropdownClick: () -> Unit,
-    onTransactionTypeFilterClick: (TransactionType?) -> Unit,
-    isTransactionTypeFilterDropdownExpanded: Boolean,
-
-    selectedOfferType: OfferType?,
-    onOfferTypeFilterDropdownClick: () -> Unit,
-    onOfferTypeFilterClick: (OfferType?) -> Unit,
-    isOfferTypeFilterDropdownExpanded: Boolean,
-) {
-
-    @Composable
-    fun TransactionAndOfferTypeChip(
-        onClick: () -> Unit,
-        label: String,
-        isSelected: Boolean,
-        painter: Painter,
-        modifier: Modifier = Modifier,
-    ) {
-        Surface(
-            color = ColorSecondary,
-            shape = RoundedCornerShape(14.dp),
-            modifier = modifier
-                .clickable { onClick() }
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    painter = painter,
-                    tint = Color.Unspecified,
-                    contentDescription = null,
-                    modifier = Modifier.size(36.dp)
-                )
-                Text(
-                    text = label,
-                    fontFamily = momoFont(),
-                    color = if (isSelected) ColorPrimary else onColorBackgroundDarker,
-                    fontSize = EXTRA_SMALL,
-                )
-            }
-
-        }
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.Top
-    ) {
-        Column(
-            modifier = Modifier.weight(1f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            FilterDropdown(
-                label = selectedTransactionType?.displayName?.asString() ?: "Transaction",
-                isExpanded = isTransactionTypeFilterDropdownExpanded,
-                contentColor = onColorBackgroundDarker,
-                onDropdownClick = { onTransactionTypeFilterDropdownClick() }
-            )
-            DropdownExpandAnimation(
-                animationDuration = animationDuration,
-                isExpanded = isTransactionTypeFilterDropdownExpanded
-            ) {
-                Spacer(Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TransactionAndOfferTypeChip(
-                        painter = painterResource(Offering),
-                        isSelected = selectedTransactionType == TransactionType.OFFER,
-                        onClick = {
-                            val next =
-                                if (selectedTransactionType == TransactionType.OFFER) null else TransactionType.OFFER
-                            onTransactionTypeFilterClick(next)
-                        },
-                        label = TransactionType.OFFER.displayName.asString(),
-                        modifier = Modifier.weight(1f)
-                    )
-                    TransactionAndOfferTypeChip(
-                        painter = painterResource(Requesting),
-                        isSelected = selectedTransactionType == TransactionType.REQUEST,
-                        onClick = {
-                            val next =
-                                if (selectedTransactionType == TransactionType.REQUEST) null else TransactionType.REQUEST
-                            onTransactionTypeFilterClick(next)
-                        },
-                        label = TransactionType.REQUEST.displayName.asString(),
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
-        }
-        Spacer(Modifier.width(16.dp))
-        Column(
-            modifier = Modifier.weight(1f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            FilterDropdown(
-                label = selectedOfferType?.displayName?.asString() ?: "Offer",
-                isExpanded = isOfferTypeFilterDropdownExpanded,
-                contentColor = onColorBackgroundDarker,
-                onDropdownClick = { onOfferTypeFilterDropdownClick() }
-            )
-            DropdownExpandAnimation(
-                animationDuration = animationDuration,
-                isExpanded = isOfferTypeFilterDropdownExpanded
-            ) {
-                Spacer(Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TransactionAndOfferTypeChip(
-                        painter = painterResource(Product),
-                        isSelected = selectedOfferType == OfferType.PRODUCT,
-                        onClick = {
-                            val next =
-                                if (selectedOfferType == OfferType.PRODUCT) null else OfferType.PRODUCT
-                            onOfferTypeFilterClick(next)
-                        },
-                        label = OfferType.PRODUCT.displayName.asString(),
-                        modifier = Modifier.weight(1f),
-                    )
-                    TransactionAndOfferTypeChip(
-                        painter = painterResource(Service),
-                        isSelected = selectedOfferType == OfferType.SERVICE,
-                        onClick = {
-                            val next =
-                                if (selectedOfferType == OfferType.SERVICE) null else OfferType.SERVICE
-                            onOfferTypeFilterClick(next)
-                        },
-                        label = OfferType.SERVICE.displayName.asString(),
-                        modifier = Modifier.weight(1f),
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun PriceFilter(
-    animationDuration: Int,
-
-    onPriceFilterDropdownClick: () -> Unit,
-    isPriceFilterExpanded: Boolean,
-    selectedPriceFrom: TextFieldState,
-    selectedPriceTo: TextFieldState,
-
-    selectedPriceCurrency: String,
-    isCurrencyDropdownExpanded: Boolean,
-    onCurrencyDropdownClick: () -> Unit,
-    onCurrencySelected: (String) -> Unit,
-    onCurrencyDropdownDismiss: () -> Unit,
-
-    selectedPriceUnit: OfferPriceUnit,
-    isPriceUnitDropdownExpanded: Boolean,
-    onPriceUnitDropdownClick: () -> Unit,
-    onPriceUnitSelected: (OfferPriceUnit) -> Unit,
-    onPriceUnitDropdownDismiss: () -> Unit,
-) {
-    FilterDropdown(
-        label = "Price",
-        isExpanded = isPriceFilterExpanded,
-        contentColor = onColorBackgroundDarker,
-        onDropdownClick = { onPriceFilterDropdownClick() }
-    )
-    DropdownExpandAnimation(
-        animationDuration = animationDuration,
-        isExpanded = isPriceFilterExpanded
-    ) {
-        Spacer(Modifier.height(8.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            SimpleServiceTextField(
-                state = selectedPriceFrom,
-                onFocus = {},
-                isPhoneNumber = true,
-                errorText = null,
-                placeholder = "From",
-                modifier = Modifier.weight(2.25f),
-                verticalPadding = 8.dp,
-                horizontalPadding = 8.dp,
-                roundedCornerShapeValue = 14.dp,
-            )
-            SimpleServiceTextField(
-                state = selectedPriceTo,
-                onFocus = {},
-                isPhoneNumber = true,
-                errorText = null,
-                placeholder = "To",
-                modifier = Modifier.weight(2.25f),
-                verticalPadding = 8.dp,
-                horizontalPadding = 8.dp,
-                roundedCornerShapeValue = 14.dp,
-            )
-            CurrencyDropdown(
-                selectedCurrency = selectedPriceCurrency,
-                isExpanded = isCurrencyDropdownExpanded,
-                onDropdownClick = { onCurrencyDropdownClick() },
-                onCurrencySelected = { onCurrencySelected(it) },
-                onDismiss = { onCurrencyDropdownDismiss() },
-                withAny = true,
-                labelSize = REGULAR,
-                modifier = Modifier.weight(2.5f)
-            )
-            PriceUnitDropdown(
-                selectedUnit = selectedPriceUnit,
-                isExpanded = isPriceUnitDropdownExpanded,
-                onDropdownClick = { onPriceUnitDropdownClick() },
-                onUnitSelected = { onPriceUnitSelected(it) },
-                onDismiss = { onPriceUnitDropdownDismiss() },
-                withAny = true,
-                labelSize = REGULAR,
-                horizontalPadding = 8.dp,
-                modifier = Modifier.weight(3f)
-            )
-        }
-    }
-}
-
-@Composable
-fun CategoryFilter(
-    animationDuration: Int,
-    isCategoryFilterDropdownExpanded: Boolean,
-    onCategoryFilterDropdownClick: () -> Unit,
-
-    selectedSuperCategory: OfferSuperCategory?,
-    isSuperCategoryFilterDropdownExpanded: Boolean,
-    onSuperCategoryFilterDropdownClick: () -> Unit,
-    onSuperCategoryFilterClick: (OfferSuperCategory) -> Unit,
-    onSuperCategoryFilterDropdownDismiss: () -> Unit,
-    onDisabledSuperCategoryClick: () -> Unit,
-
-    selectedSubcategory: OfferCategory?,
-    isSubcategoryFilterDropdownExpanded: Boolean,
-    onSubcategoryFilterDropdownClick: () -> Unit,
-    onSubcategoryFilterClick: (OfferCategory) -> Unit,
-    onSubcategoryFilterDropdownDismiss: () -> Unit,
-    onDisabledSubcategoryClick: () -> Unit,
-
-    selectedOfferType: OfferType?,
-) {
-    val superCategories = remember(selectedOfferType) {
-        if (selectedOfferType != null) {
-            OfferSuperCategory.getParentsByType(selectedOfferType)
-        } else {
-            emptyList()
-        }
-    }
-
-    val subCategories = remember(selectedSuperCategory) {
-        if (selectedSuperCategory != null) {
-            OfferCategory.getSubcategories(selectedSuperCategory)
-        } else {
-            emptyList()
-        }
-    }
-
-    FilterDropdown(
-        label = "Categories",
-        isExpanded = isCategoryFilterDropdownExpanded,
-        contentColor = onColorBackgroundDarker,
-        onDropdownClick = { onCategoryFilterDropdownClick() }
-    )
-    DropdownExpandAnimation(
-        animationDuration = animationDuration,
-        isExpanded = isCategoryFilterDropdownExpanded
-    ) {
-        Spacer(Modifier.height(16.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CategoryDropdown(
-                items = superCategories,
-                selectedItem = selectedSuperCategory,
-                isExpanded = isSuperCategoryFilterDropdownExpanded,
-                onDropdownClick = { onSuperCategoryFilterDropdownClick() },
-                onItemSelected = { onSuperCategoryFilterClick(it as OfferSuperCategory) },
-                onDismiss = { onSuperCategoryFilterDropdownDismiss() },
-                isEnabled = selectedOfferType != null,
-                onDisabledClick = { onDisabledSuperCategoryClick() },
-                placeholder = "Super category",
-                modifier = Modifier.weight(1f)
-            )
-            CategoryDropdown(
-                items = subCategories,
-                selectedItem = selectedSubcategory,
-                isExpanded = isSubcategoryFilterDropdownExpanded,
-                onDropdownClick = { onSubcategoryFilterDropdownClick() },
-                onItemSelected = { onSubcategoryFilterClick(it as OfferCategory) },
-                onDismiss = { onSubcategoryFilterDropdownDismiss() },
-                isEnabled = selectedSuperCategory != null,
-                onDisabledClick = { onDisabledSubcategoryClick() },
-                placeholder = "Subcategory",
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
-}
-
-@Composable
-fun CityAndItemCondition(
-    selectedOfferType: OfferType?,
-    cityState: TextFieldState,
-    selectedItemCondition: ItemCondition?,
-    isItemConditionFilterDropdownExpanded: Boolean,
-    onItemConditionFilterDropdownClick: () -> Unit,
-    onItemConditionFilterClick: (ItemCondition) -> Unit,
-    onItemConditionFilterDropdownDismiss: () -> Unit,
-    onDisabledCityClick: () -> Unit,
-    onDisabledItemConditionClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        SimpleServiceTextField(
-            state = cityState,
-            onFocus = {},
-            errorText = null,
-            verticalPadding = 8.dp,
-            horizontalPadding = 16.dp,
-            roundedCornerShapeValue = 14.dp,
-            icon = IconType.Vector(LocalisationOutlined),
-            placeholder = "City",
-            isEnabled = selectedOfferType == OfferType.SERVICE,
-            onDisabledClick = { onDisabledCityClick() },
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
-        )
-        ItemConditionDropdown(
-            selectedCondition = selectedItemCondition,
-            isExpanded = isItemConditionFilterDropdownExpanded,
-            onDropdownClick = { onItemConditionFilterDropdownClick() },
-            onConditionSelected = { onItemConditionFilterClick(it) },
-            onDismiss = { onItemConditionFilterDropdownDismiss() },
-            isEnabled = selectedOfferType == OfferType.PRODUCT,
-            onDisabledClick = { onDisabledItemConditionClick() },
-            withAny = true,
-            labelSize = MEDIUM,
-            horizontalPadding = 8.dp,
-            verticalPadding = 8.dp,
-            minHeight = false,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-        )
-    }
-}
-
-@Composable
-fun FilterButtonsSection(
-    onApplyFiltersButtonClick: () -> Unit,
-    onClearFiltersButtonClick: () -> Unit,
-){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        SimpleServiceButton(
-            text = "Clear filters",
-            isAnimated = false,
-            textFontSize = MEDIUM,
-            icon = IconType.Vector(CloseFilled),
-            iconTint = onColorBackgroundDarker,
-            backgroundColor = ColorSecondary,
-            textColor = onColorBackgroundDarker,
-            onClick = { onClearFiltersButtonClick() },
-            buttonPadding = 8.dp,
-            roundedCornerShapeValue = 14.dp,
-            modifier = Modifier.weight(1f)
-        )
-        SimpleServiceButton(
-            text = "Apply filters",
-            isAnimated = false,
-            textFontSize = MEDIUM,
-            icon = IconType.Vector(CheckFilled),
-            onClick = { onApplyFiltersButtonClick() },
-            buttonPadding = 8.dp,
-            roundedCornerShapeValue = 14.dp,
-            modifier = Modifier.weight(1f)
-        )
-    }
-
-}
-
-@Composable
-fun FilterDropdown(
-    label: String,
-    isExpanded: Boolean,
-    contentColor: Color,
-    onDropdownClick: () -> Unit,
-) {
-    Surface(
-        color = ColorSecondary,
-        shape = RoundedCornerShape(14.dp),
-        modifier = Modifier
-            .clickable { onDropdownClick() }
-            .fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = label,
-                fontSize = MEDIUM,
-                fontFamily = momoFont(),
-                fontWeight = FontWeight.Bold,
-                color = contentColor,
-                modifier = Modifier.padding(horizontal = 6.dp, vertical = 8.dp)
-            )
-            Icon(
-                imageVector = if (isExpanded) ArrowUp else ArrowDown,
-                contentDescription = null,
-                tint = contentColor,
-                modifier = Modifier.size(40.dp)
-            )
-        }
-    }
-}
 

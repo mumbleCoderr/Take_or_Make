@@ -262,6 +262,7 @@ fun FormItem(
             }
             SimpleServiceTextField(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .focusRequester(focusRequester),
                 isEmail = item == UserDetailsFormItem.EMAIL,
@@ -460,7 +461,7 @@ fun UserDetailTopNavSection(
             )
         }
         Text(
-            text = "Edit profile",
+            text = UiText.StringResource(R.string.user_details_screen_title).asString(),
             fontFamily = momoFont(),
             fontSize = LARGE,
             color = onColorBackground,

@@ -23,7 +23,6 @@ class TakeViewModelTest {
 
     @Test
     fun `OnFavouriteClick optimistically updates UI`() = runTest {
-        // Given
         val offer = mockk<Offer>(relaxed = true) {
             coEvery { id } returns "1"
             coEvery { isFavourite } returns false
@@ -45,7 +44,6 @@ class TakeViewModelTest {
 
     @Test
     fun `OnFavouriteClick rolls back on network error`() = runTest {
-        // Given
         val offer = mockk<Offer>(relaxed = true) {
             coEvery { id } returns "1"
             coEvery { isFavourite } returns false

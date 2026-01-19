@@ -5,8 +5,8 @@ import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.components.filter.FilterState
 
 data class TakeState (
-    val isLoading: Boolean = false,
-    val isRefreshing: Boolean = false,
+    val isPullRefreshing: Boolean = false,
+    val isLoadingNextPage: Boolean = false,
     val offers: List<Offer> = emptyList(),
     val displayingOffers: List<Offer> = emptyList(),
     val error: UiText? = null,

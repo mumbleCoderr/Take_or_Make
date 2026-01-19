@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -31,12 +32,16 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.biernatmdev.simple_service.R
 import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.offer.domain.enums.OfferPriceUnit
 import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.core.ui.components.OfferCard
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceSnackbar
 import com.biernatmdev.simple_service.core.ui.components.filter.FilterEvent
+import com.biernatmdev.simple_service.core.ui.components.filter.MainFilterDropdown
+import com.biernatmdev.simple_service.core.ui.components.filter.SearchBarFilter
+import com.biernatmdev.simple_service.core.ui.models.UiText
 import com.biernatmdev.simple_service.core.ui.theme.ColorPrimary
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.SEMI_LARGE
 import com.biernatmdev.simple_service.core.ui.theme.LineHeight
@@ -44,8 +49,6 @@ import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackgroundDarker
 import com.biernatmdev.simple_service.features.home.make_module.presentation.offer_list.EmptyListComponent
-import com.biernatmdev.simple_service.features.home.make_module.presentation.offer_list.MainFilterDropdown
-import com.biernatmdev.simple_service.features.home.make_module.presentation.offer_list.SearchBarFilter
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -87,6 +90,7 @@ fun TakeScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TakeScreenContent(
     state: TakeState,
@@ -99,7 +103,7 @@ fun TakeScreenContent(
 ){
     val focusManager = LocalFocusManager.current
     PullToRefreshBox(
-        isRefreshing = state.isLoading,
+        isRefreshing = state.isPullRefreshing,
         onRefresh = { onEvent(TakeEvent.OnPullToRefresh) },
         modifier = Modifier
             .fillMaxSize()
@@ -125,7 +129,7 @@ fun TakeScreenContent(
                 ) {
                     Spacer(Modifier.height(36.dp))
                     Text(
-                        text = "Newest offers",
+                        text = UiText.StringResource(R.string.take_module_dialog_title).asString(),
                         fontSize = SEMI_LARGE,
                         lineHeight = LineHeight.SEMI_LARGE,
                         color = onColorBackground,
@@ -134,7 +138,7 @@ fun TakeScreenContent(
                     )
                     Spacer(Modifier.height(16.dp))
                     Text(
-                        text = "Feel free to order something!",
+                        text = UiText.StringResource(R.string.take_module_dialog_subtitle).asString(),
                         fontSize = SEMI_LARGE,
                         lineHeight = LineHeight.SEMI_LARGE,
                         color = onColorBackgroundDarker,
@@ -170,11 +174,11 @@ fun TakeScreenContent(
                 EmptyListComponent(
                     isOfferListEmpty = state.displayingOffers.isEmpty(),
                     isActiveFilter = true,
-                    isLoading = state.isLoading,
+                    isLoading = state.isPullRefreshing,
                 )
             }
             itemsIndexed(state.displayingOffers) { index, offer ->
-                if (index >= state.displayingOffers.lastIndex && !state.isLoading) {
+                if (index >= state.displayingOffers.lastIndex && !state.isLoadingNextPage && !state.isPullRefreshing) {
                     LaunchedEffect(Unit) {
                         onEvent(TakeEvent.OnLoadNextPage)
                     }
@@ -190,7 +194,7 @@ fun TakeScreenContent(
                 )
                 Spacer(Modifier.height(32.dp))
             }
-            if (state.isLoading && state.displayingOffers.isNotEmpty()) {
+            if (state.isLoadingNextPage && state.displayingOffers.isNotEmpty()) {
                 item {
                     Box(
                         modifier = Modifier

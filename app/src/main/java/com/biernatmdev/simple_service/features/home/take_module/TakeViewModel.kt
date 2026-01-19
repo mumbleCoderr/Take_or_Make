@@ -38,6 +38,10 @@ class TakeViewModel(
     val priceToState = TextFieldState()
     val cityState = TextFieldState()
 
+    init {
+        fetchOffers(isNextPage = false, isSwipe = false)
+    }
+
     fun onEvent(event: TakeEvent){
         when(event){
             is TakeEvent.Filter -> {
@@ -81,12 +85,12 @@ class TakeViewModel(
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
-                            isLoading = true,
+                            isPullRefreshing = true,
                             isEndOfList = false,
                         )
                     }
                     delay(1000)
-                    fetchOffers(isNextPage = false)
+                    fetchOffers(isNextPage = false, isSwipe = true)
                 }
             }
             TakeEvent.OnScreenRefresh -> {
@@ -95,7 +99,7 @@ class TakeViewModel(
                         isEndOfList = false,
                     )
                 }
-                fetchOffers(isNextPage = false)
+                fetchOffers(isNextPage = false, isSwipe = false)
             }
             is TakeEvent.OnOfferClick -> {
                 sendEffect(TakeEffect.NavigateToOfferDetails(event.offer))
@@ -107,10 +111,14 @@ class TakeViewModel(
                 _state.update { currentState ->
                     currentState.copy(
                         offers = currentState.offers.map {
-                            if (it.id == offer.id) it.copy(isFavourite = newIsFavoriteState) else it
+                            if (it.id == offer.id) {
+                                it.copy(isFavourite = newIsFavoriteState)
+                            } else it
                         },
                         displayingOffers = currentState.displayingOffers.map {
-                            if (it.id == offer.id) it.copy(isFavourite = newIsFavoriteState) else it
+                            if (it.id == offer.id){
+                                it.copy(isFavourite = newIsFavoriteState)
+                            } else it
                         }
                     )
                 }
@@ -121,10 +129,14 @@ class TakeViewModel(
                             _state.update { currentState ->
                                 currentState.copy(
                                     offers = currentState.offers.map {
-                                        if (it.id == offer.id) it.copy(isFavourite = !newIsFavoriteState) else it
+                                        if (it.id == offer.id){
+                                            it.copy(isFavourite = !newIsFavoriteState)
+                                        } else it
                                     },
                                     displayingOffers = currentState.displayingOffers.map {
-                                        if (it.id == offer.id) it.copy(isFavourite = !newIsFavoriteState) else it
+                                        if (it.id == offer.id){
+                                            it.copy(isFavourite = !newIsFavoriteState)
+                                        } else it
                                     }
                                 )
                             }
@@ -134,8 +146,8 @@ class TakeViewModel(
             }
 
             TakeEvent.OnLoadNextPage -> {
-                if (!_state.value.isLoading && !_state.value.isEndOfList) {
-                    fetchOffers(isNextPage = true)
+                if (!_state.value.isLoadingNextPage && !_state.value.isPullRefreshing && !_state.value.isEndOfList) {
+                    fetchOffers(isNextPage = true, isSwipe = false)
                 }
             }
         }
@@ -163,9 +175,15 @@ class TakeViewModel(
         }
     }
 
-    private fun fetchOffers(isNextPage: Boolean) {
+    private fun fetchOffers(isNextPage: Boolean, isSwipe: Boolean) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
+            _state.update {
+                it.copy(
+                    isPullRefreshing = isSwipe,
+                    isLoadingNextPage = isNextPage,
+                    error = null
+                )
+            }
 
             val lastCreatedAt = if (isNextPage) {
                 _state.value.offers.lastOrNull()?.createdAt
@@ -183,7 +201,8 @@ class TakeViewModel(
                         }
 
                         currentState.copy(
-                            isLoading = false,
+                            isPullRefreshing = false,
+                            isLoadingNextPage = false,
                             offers = updatedList,
                             isEndOfList = newOffers.isEmpty(),
                         )
@@ -203,7 +222,8 @@ class TakeViewModel(
 
         _state.update {
             it.copy(
-                isLoading = false,
+                isPullRefreshing = false,
+                isLoadingNextPage = false,
                 error = errorMessage
             )
         }

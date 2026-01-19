@@ -25,7 +25,7 @@
     <string name="home_top_nav_bar_make">MAKE</string>
 
     // EXCEPTIONS
-    <string name="user_exception_not_signed_in">You are not signed in, please sign in again</string>
+    <string name="user_exception_not_signed_in">You are not signed in, please sign in and try again</string>
     <string name="user_exception_not_found">We have not found that user</string>
     <string name="user_exception_access_denied">You have no permission to do that</string>
     <string name="external_exception">External server exception</string>
@@ -173,8 +173,13 @@
 
     // -- MAKE MODULE --
 
+    <string name="make_module_title">Your offers</string>
+    <string name="make_module_subtitle">Here you can search, modify and remove</string>
+
     // MAKE BTN
     <string name="make_module_btn_text_add">Add new offer</string>
+    <string name="make_module_btn_text_delete">Delete</string>
+    <string name="make_module_btn_text_edit">Edit</string>
 
     // MAKE DIALOG
     <string name="make_module_dialog_title">Quit creating offer?</string>
@@ -188,6 +193,10 @@
     <string name="make_module_snackbar_msg_filter_city">City filter is applicable only for services</string>
     <string name="make_module_snackbar_msg_filter_item_condition">Item condition filter is applicable only for products</string>
     <string name="make_module_snackbar_msg_delete_offer">Offer deleted successfully</string>
+
+    // -- TAKE MODULE --
+    <string name="take_module_dialog_title">Newest offers</string>
+    <string name="take_module_dialog_subtitle">Feel free to order something!</string>
 
     // -- WIZARD --
 
@@ -243,6 +252,11 @@
     <string name="wizard_screen_text_step_7_title">Review your listing</string>
     <string name="wizard_screen_text_step_7_subtitle_description">Description:</string>
 
+    // -- FAVOURITES SCREEN --
+    <string name="favourites_screen_title">Your Favourites</string>
+    <string name="favourites_screen_subtitle">Here are the offers you saved</string>
+
+
     // -- PROFILE SCREEN --
 
     // PROFILE OPTION NAME
@@ -266,6 +280,9 @@
     <string name="profile_screen_dialog_links_acc_subtext">You have to fill required information first.</string>
     <string name="profile_screen_dialog_sign_out_title">Wait a second!</string>
     <string name="profile_screen_dialog_sign_out_subtext">If you sign out now, you will lose your data.\n\nLink your account first.</string>
+
+    // -- USER DETAILS --
+    <string name="user_details_screen_title">Edit profile</string>
 
 
     // -- AUTH SCREEN --
@@ -405,6 +422,32 @@
     <string name="product">Product</string>
     <string name="service">Service</string>
     <string name="price">Price</string>
+
+    // -- COMPONENTS --
+    <string name="empty_list_component_title">Nothing here!</string>
+    <string name="empty_list_component_filter">Adjust or remove filters</string>
+    <string name="empty_list_component_add_offer">Add an offer by clicking below</string>
+    <string name="empty_list_component_add_favourite">Add offers to your favourite!</string>
+    <string name="empty_list_component_notification">Coming soon!</string>
+
+    // -- FILTER COMPONENT --
+
+    <string name="filter_main_filter_dropdown_label">Filters</string>
+    <string name="filter_transaction_offer_filter_dropdown_label_transaction">Transaction</string>
+    <string name="filter_transaction_offer_filter_dropdown_label_offer">Offer</string>
+    <string name="filter_price_dropdown_label">Price</string>
+    <string name="filter_category_dropdown_label">Categories</string>
+    <string name="filter_category_dropdown_placeholder_super">Super category</string>
+    <string name="filter_category_dropdown_placeholder_sub">Subcategory</string>
+
+    <string name="filter_btn_clear">Clear filters</string>
+    <string name="filter_btn_apply">Apply filters</string>
+
+    <string name="filter_price_textfield_placeholder_from">From</string>
+    <string name="filter_price_textfield_placeholder_to">To</string>
+    <string name="filter_search_filter_textfield_placeholder">Search by title</string>
+    <string name="filter_city_condition_filter_textfield_placeholder">City</string>
+
 
 
 </resources>

@@ -42,10 +42,15 @@ class MakeViewModel(
     val priceToState = TextFieldState()
     val cityState = TextFieldState()
 
+    init {
+        fetchOffers()
+    }
+
+
     fun onEvent(event: MakeEvent) {
         when (event) {
             is MakeEvent.OnAddNewOfferButtonClick -> {
-                sendEffect(NavigateToWizard())
+                handleAddNewOffer()
             }
 
             MakeEvent.OnScreenRefresh -> {
@@ -57,12 +62,12 @@ class MakeViewModel(
                 viewModelScope.launch {
                     _state.update {
                         it.copy(
-                            isLoading = true,
-                            isEndOfList = false
+                            isEndOfList = false,
+                            isPullRefreshing = true,
                         )
                     }
                     delay(1000)
-                    fetchOffers(isNextPage = false)
+                    fetchOffers(isSwipe = true)
                 }
             }
 
@@ -90,17 +95,20 @@ class MakeViewModel(
                     FilterEvent.OnDisabledSubcategoryClick -> {
                         sendEffect(ShowSnackbar(StringResource(R.string.make_module_snackbar_msg_filter_subcategory)))
                     }
+
                     FilterEvent.OnDisabledSuperCategoryClick -> {
                         sendEffect(ShowSnackbar(StringResource(R.string.make_module_snackbar_msg_filter_supercategory)))
                     }
+
                     FilterEvent.OnDisabledCityClick -> {
                         sendEffect(ShowSnackbar(StringResource(R.string.make_module_snackbar_msg_filter_city)))
                     }
+
                     FilterEvent.OnDisabledItemConditionClick -> {
                         sendEffect(ShowSnackbar(StringResource(R.string.make_module_snackbar_msg_filter_item_condition)))
                     }
 
-                    else -> {  }
+                    else -> {}
                 }
             }
 
@@ -160,7 +168,7 @@ class MakeViewModel(
             }
 
             MakeEvent.OnLoadNextPage -> {
-                if (!_state.value.isLoading && !_state.value.isEndOfList) {
+                if (!_state.value.isLoadingNextPage && !_state.value.isPullRefreshing && !_state.value.isEndOfList) {
                     fetchOffers(isNextPage = true)
                 }
             }
@@ -173,9 +181,15 @@ class MakeViewModel(
         }
     }
 
-    private fun fetchOffers(isNextPage: Boolean = false) {
+    private fun fetchOffers(isNextPage: Boolean = false, isSwipe: Boolean = false) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
+            _state.update {
+                it.copy(
+                    isPullRefreshing = isSwipe,
+                    isLoadingNextPage = isNextPage,
+                    error = null
+                )
+            }
 
             val userId = userRepository.getCurrentUserId()
 
@@ -196,7 +210,8 @@ class MakeViewModel(
                             }
 
                             state.copy(
-                                isLoading = false,
+                                isPullRefreshing = false,
+                                isLoadingNextPage = false,
                                 offers = updatedList,
                                 isEndOfList = newOffers.isEmpty(),
                             )
@@ -252,6 +267,20 @@ class MakeViewModel(
         }
     }
 
+    private fun handleAddNewOffer() {
+        try {
+            val isGuest = userRepository.currentUser.value?.isGuest ?: true
+
+            if (isGuest) {
+                throw UserException.NotSignedIn
+            }
+
+            sendEffect(NavigateToWizard())
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
     private fun handleException(exception: Throwable) {
         val errorMessage: UiText = when (exception) {
             is OfferException.NetworkError -> UiText.StringResource(R.string.offer_exception_network)
@@ -263,7 +292,8 @@ class MakeViewModel(
 
         _state.update {
             it.copy(
-                isLoading = false,
+                isPullRefreshing = false,
+                isLoadingNextPage = false,
                 error = errorMessage
             )
         }

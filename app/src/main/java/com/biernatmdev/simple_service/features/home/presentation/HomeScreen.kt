@@ -19,6 +19,8 @@ import com.biernatmdev.simple_service.features.home.domain.HomeSubscreen
 import com.biernatmdev.simple_service.core.nav.Screen
 import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
+import com.biernatmdev.simple_service.features.favourites.FavouritesScreen
+import com.biernatmdev.simple_service.features.notification.NotificationScreen
 import com.biernatmdev.simple_service.features.profile.presentation.ProfileScreen
 
 @Composable
@@ -70,9 +72,13 @@ fun HomeScreen(
                     )
                 }
                 composable<Screen.FavouritesScreen> {
-
+                    FavouritesScreen(
+                        navigateToOfferDetails = { navigateToOfferDetails(it) },
+                    )
                 }
-                composable<Screen.NotificationScreen> {}
+                composable<Screen.NotificationScreen> {
+                    NotificationScreen()
+                }
                 composable<Screen.ProfileScreen> {
                     ProfileScreen(
                         navigateToProfileSubscreen = navigateToProfileSubscreen,
