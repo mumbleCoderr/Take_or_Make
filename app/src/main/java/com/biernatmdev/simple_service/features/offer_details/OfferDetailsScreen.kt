@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +38,7 @@ import com.biernatmdev.simple_service.core.offer.domain.enums.OfferType
 import com.biernatmdev.simple_service.core.offer.domain.enums.TransactionType
 import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.core.ui.components.SimpleServiceButton
+import com.biernatmdev.simple_service.core.ui.components.SimpleServiceSnackbar
 import com.biernatmdev.simple_service.core.ui.models.IconType
 import com.biernatmdev.simple_service.core.ui.theme.ColorBackground
 import com.biernatmdev.simple_service.core.ui.theme.FontSize.LARGE
@@ -49,7 +51,7 @@ import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun OfferDetailsScreen(
+fun OfferDetailsScreen( // TODO KUPNO TYLKO DLA ZALOGOWANYCH!
     offerDetailsViewModel: OfferDetailsViewModel = koinViewModel(),
     offer: Offer,
     navigateBack: () -> Unit,
@@ -80,6 +82,7 @@ fun OfferDetailsScreen(
         onEvent = offerDetailsViewModel::onEvent,
         state = state,
         offer = offer,
+        snackbar = snackbar
     )
 }
 
@@ -88,68 +91,86 @@ fun OfferDetailsScreenContent(
     onEvent: (OfferDetailsEvent) -> Unit,
     state: OfferDetailsState,
     offer: Offer,
+    snackbar: SnackbarHostState,
 ) {
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(ColorBackground)
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
-        val titleState = remember(offer) { TextFieldState(offer.title) }
-        val priceState = remember(offer) { TextFieldState(offer.price.toString()) }
-        val descriptionState = remember(offer) { TextFieldState(offer.description) }
-        val cityState = remember(offer) { TextFieldState(offer.city) }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            val titleState = remember(offer) { TextFieldState(offer.title) }
+            val priceState = remember(offer) { TextFieldState(offer.price.toString()) }
+            val descriptionState = remember(offer) { TextFieldState(offer.description) }
+            val cityState = remember(offer) { TextFieldState(offer.city) }
 
-        val photosUris = remember(offer) {
-            offer.images.map { it.toUri() }
+            val photosUris = remember(offer) {
+                offer.images.map { it.toUri() }
+            }
+            TopNav(
+                onBackClick = { onEvent(OfferDetailsEvent.OnBackClick) }
+            )
+            Spacer(Modifier.height(8.dp))
+            SummaryStepContent(
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .weight(1f),
+                selectedTransactionType = offer.transactionType,
+                selectedOfferType = offer.offerType,
+                titleState = titleState,
+                priceState = priceState,
+                selectedCurrency = offer.currency,
+                selectedPriceUnit = offer.priceUnit,
+                selectedSuperCategory = offer.superCategory,
+                selectedCategory = offer.subcategory,
+                descriptionState = descriptionState,
+                cityState = cityState,
+                selectedItemCondition = offer.itemCondition,
+                selectedPhotos = photosUris,
+                isReadOnly = true
+            )
+            Spacer(Modifier.height(24.dp))
+            SimpleServiceButton(
+                text = if (offer.offerType == OfferType.PRODUCT && offer.transactionType == TransactionType.OFFER) {
+                    "Buy"
+                } else if (offer.offerType == OfferType.PRODUCT && offer.transactionType == TransactionType.REQUEST) {
+                    "I have it"
+                } else if (offer.offerType == OfferType.SERVICE && offer.transactionType == TransactionType.OFFER) {
+                    "Order"
+                } else {
+                    "I will do it"
+                },
+                isEnabled = offer.authorId != state.currentUserId,
+                isAnimated = true,
+                isLoading = state.isLoading,
+                icon = if (offer.offerType == OfferType.PRODUCT) IconType.Vector(BuyOutlined) else IconType.Vector(
+                    HandshakeOutlined
+                ),
+                onClick = { onEvent(OfferDetailsEvent.OnBuyButtonClick(offer)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+            Spacer(Modifier.height(6.dp))
         }
-        TopNav(
-            onBackClick = { onEvent(OfferDetailsEvent.OnBackClick) }
-        )
-        Spacer(Modifier.height(8.dp))
-        SummaryStepContent(
+        SnackbarHost(
+            hostState = snackbar,
             modifier = Modifier
-                .padding(top = 16.dp)
-                .weight(1f),
-            selectedTransactionType = offer.transactionType,
-            selectedOfferType = offer.offerType,
-            titleState = titleState,
-            priceState = priceState,
-            selectedCurrency = offer.currency,
-            selectedPriceUnit = offer.priceUnit,
-            selectedSuperCategory = offer.superCategory,
-            selectedCategory = offer.subcategory,
-            descriptionState = descriptionState,
-            cityState = cityState,
-            selectedItemCondition = offer.itemCondition,
-            selectedPhotos = photosUris,
-            isReadOnly = true
+                .align(Alignment.TopCenter)
+                .statusBarsPadding()
+                .padding(top = 16.dp),
+            snackbar = { data ->
+                SimpleServiceSnackbar(data)
+            }
         )
-        Spacer(Modifier.height(24.dp))
-        SimpleServiceButton(
-            text = if(offer.offerType == OfferType.PRODUCT && offer.transactionType == TransactionType.OFFER){
-                "Buy"
-            } else if(offer.offerType == OfferType.PRODUCT && offer.transactionType == TransactionType.REQUEST) {
-                "I have it"
-            } else if(offer.offerType == OfferType.SERVICE && offer.transactionType == TransactionType.OFFER){
-                "Order"
-            }else{
-                "I will do it"
-            },
-            isEnabled = offer.authorId != state.currentUserId ,
-            isAnimated = true,
-            isLoading = state.isLoading,
-            icon = if(offer.offerType == OfferType.PRODUCT) IconType.Vector(BuyOutlined) else IconType.Vector(HandshakeOutlined),
-            onClick = { onEvent(OfferDetailsEvent.OnBuyButtonClick(offer)) },
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        Spacer(Modifier.height(6.dp))
     }
 }
 

@@ -19,8 +19,14 @@ class TransactionRepositoryImpl(
     private val collection = firestore.collection("transactions")
 
     override suspend fun createTransaction(transaction: Transaction): Result<Unit> = runCatching {
+        val user = auth.currentUser
+
         try {
-            if (auth.currentUser == null) {
+            if (user == null) {
+                throw UserException.NotSignedIn
+            }
+
+            if(user.isAnonymous){
                 throw UserException.NotSignedIn
             }
 

@@ -123,7 +123,7 @@ import com.biernatmdev.simple_service.features.home.make_module.domain.AddOfferW
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AddOfferWizardScreen(
+fun AddOfferWizardScreen( // TODO ADD OFFER TEZ TYLKO DLA ZALOGOWANYCH
     viewModel: AddOfferWizardViewModel = koinViewModel(),
     navigateBack: () -> Unit,
     offerToEdit: Offer? = null,

@@ -9,6 +9,7 @@ import com.biernatmdev.simple_service.core.transaction.domain.repository.Transac
 import com.biernatmdev.simple_service.core.user.domain.repository.UserRepository
 import com.biernatmdev.simple_service.core.user.data.repository.UserRepositoryImpl
 import com.biernatmdev.simple_service.features.auth.presentation.AuthViewModel
+import com.biernatmdev.simple_service.features.favourites.FavouritesViewModel
 import com.biernatmdev.simple_service.features.home.make_module.presentation.offer_list.MakeViewModel
 import com.biernatmdev.simple_service.features.home.make_module.presentation.wizard.AddOfferWizardViewModel
 import com.biernatmdev.simple_service.features.user_details.presentation.UserDetailsViewModel
@@ -38,6 +39,7 @@ val appModule = module {
     viewModel { TakeViewModel(get()) }
     viewModel { AddOfferWizardViewModel(get(), get()) }
     viewModel { OfferDetailsViewModel(get(), get()) }
+    viewModel { FavouritesViewModel(get()) }
     single { GoogleUiClient(
         context = androidContext(),
         auth = get(),

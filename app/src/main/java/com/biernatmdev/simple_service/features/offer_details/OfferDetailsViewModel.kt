@@ -57,34 +57,43 @@ class OfferDetailsViewModel(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            val currentUserId = userRepository.getCurrentUserId()
+            try {
+                val user = userRepository.currentUser.value
 
-            if (currentUserId == null) {
-                handleException(UserException.NotSignedIn)
-                return@launch
-            }
+                val isGuest = user?.isGuest ?: true
 
-            if (currentUserId == offer.authorId) {
-                _state.update { it.copy(isLoading = false) }
-                return@launch
-            }
+                if (isGuest) {
+                    throw UserException.NotSignedIn
+                }
 
-            val newTransaction = Transaction(
-                id = "",
-                userOrderingOfferId = currentUserId,
-                userAuthoringOfferId = offer.authorId,
-                offerId = offer.id,
-                createdAt = System.currentTimeMillis()
-            )
+                val currentUserId = user!!.id
 
-            transactionRepository.createTransaction(newTransaction)
-                .onSuccess {
+                if (currentUserId == offer.authorId) {
                     _state.update { it.copy(isLoading = false) }
-                    sendEffect(OfferDetailsEffect.NavigateToSuccessScreen)
+                    sendEffect(OfferDetailsEffect.ShowSnackbar(UiText.StringResource(R.string.take_module_snackbar_msg_author_cant_buy)))
+                    return@launch
                 }
-                .onFailure { error ->
-                    handleException(error)
-                }
+
+                val newTransaction = Transaction(
+                    id = "",
+                    userOrderingOfferId = currentUserId,
+                    userAuthoringOfferId = offer.authorId,
+                    offerId = offer.id,
+                    createdAt = System.currentTimeMillis()
+                )
+
+                transactionRepository.createTransaction(newTransaction)
+                    .onSuccess {
+                        _state.update { it.copy(isLoading = false) }
+                        sendEffect(OfferDetailsEffect.NavigateToSuccessScreen)
+                    }
+                    .onFailure { error ->
+                        handleException(error)
+                    }
+
+            } catch (e: Exception) {
+                handleException(e)
+            }
         }
     }
 

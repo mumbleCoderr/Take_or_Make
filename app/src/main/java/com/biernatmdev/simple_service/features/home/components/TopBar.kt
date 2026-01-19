@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
@@ -31,6 +32,7 @@ import com.biernatmdev.simple_service.core.ui.theme.momoFont
 import com.biernatmdev.simple_service.core.ui.theme.onColorBackground
 import com.biernatmdev.simple_service.features.home.domain.HomeMode
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,

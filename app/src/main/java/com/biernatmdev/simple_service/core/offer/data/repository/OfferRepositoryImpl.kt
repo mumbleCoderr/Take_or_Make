@@ -2,16 +2,22 @@ package com.biernatmdev.simple_service.core.offer.data.repository
 
 import com.biernatmdev.simple_service.core.offer.data.mapper.toDomainOffer
 import com.biernatmdev.simple_service.core.offer.data.mapper.toFirestoreMap
+import com.biernatmdev.simple_service.core.offer.domain.enums.OfferStatus
 import com.biernatmdev.simple_service.core.offer.domain.model.Offer
 import com.biernatmdev.simple_service.core.offer.domain.model.OfferException
 import com.biernatmdev.simple_service.core.offer.domain.repository.OfferRepository
+import com.biernatmdev.simple_service.core.ui.components.filter.FilterState
 import com.biernatmdev.simple_service.core.user.domain.model.UserException
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
 class OfferRepositoryImpl(
@@ -22,8 +28,13 @@ class OfferRepositoryImpl(
     private val collection = firestore.collection("offers")
 
     override suspend fun createOffer(offer: Offer): Result<Unit> = runCatching {
+
         try {
             val currentUser = auth.currentUser ?: throw UserException.NotSignedIn
+
+            if(currentUser.isAnonymous){
+                throw UserException.NotSignedIn
+            }
 
             val newDocRef = collection.document()
 
@@ -48,6 +59,10 @@ class OfferRepositoryImpl(
     override suspend fun updateOffer(offer: Offer): Result<Unit> = runCatching {
         try {
             val currentUser = auth.currentUser ?: throw UserException.NotSignedIn
+
+            if(currentUser.isAnonymous){
+                throw UserException.NotSignedIn
+            }
 
             if (offer.authorId != currentUser.uid) {
                 throw OfferException.AccessDenied
@@ -77,6 +92,10 @@ class OfferRepositoryImpl(
         try {
             val currentUser = auth.currentUser ?: throw UserException.NotSignedIn
 
+            if(currentUser.isAnonymous){
+                throw UserException.NotSignedIn
+            }
+
             collection.document(offerId)
                 .delete()
                 .await()
@@ -103,8 +122,9 @@ class OfferRepositoryImpl(
 
             var query = collection
                 .whereEqualTo("authorId", authorId)
+                .whereEqualTo("status", "ACTIVE")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
-                .limit(20)
+                .limit(100)
 
             if (lastCreatedAt != null) {
                 query = query.startAfter(lastCreatedAt)
@@ -130,7 +150,7 @@ class OfferRepositoryImpl(
             var query = collection
                 .whereEqualTo("status", "ACTIVE")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
-                .limit(20)
+                .limit(100)
 
             if (lastCreatedAt != null) {
                 query = query.startAfter(lastCreatedAt)
@@ -138,6 +158,78 @@ class OfferRepositoryImpl(
 
             val snapshot = query.get().await()
             snapshot.documents.map { doc -> doc.toDomainOffer(favoriteIds) }
+
+        } catch (e: Exception) {
+            throw when (e) {
+                is FirebaseNetworkException -> OfferException.NetworkError
+                is FirebaseFirestoreException -> OfferException.NetworkError
+                else -> e
+            }
+        }
+    }
+
+    override suspend fun getInactiveOffersByAuthorId(authorId: String, lastCreatedAt: Long?): Result<List<Offer>> = runCatching {
+        try {
+            val favoriteIds = getFavoriteIds()
+
+            var query = collection
+                .whereEqualTo("authorId", authorId)
+                .whereEqualTo("status", "INACTIVE")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(100)
+
+            if (lastCreatedAt != null) {
+                query = query.startAfter(lastCreatedAt)
+            }
+
+            val snapshot = query.get().await()
+
+            snapshot.documents.map { doc -> doc.toDomainOffer(favoriteIds) }
+
+        } catch (e: Exception) {
+            throw when (e) {
+                is FirebaseNetworkException -> OfferException.NetworkError
+                is FirebaseFirestoreException -> OfferException.NetworkError
+                else -> e
+            }
+        }
+    }
+
+    override suspend fun getFavoriteOffers(lastCreatedAt: Long?): Result<List<Offer>> = runCatching {
+        try {
+            val favoriteIds = getFavoriteIds()
+
+            if (favoriteIds.isEmpty()) {
+                return@runCatching emptyList()
+            }
+
+            val offers = coroutineScope {
+                favoriteIds.chunked(10).map { chunk ->
+                    async {
+                        try {
+                            val snapshot = collection
+                                .whereIn(FieldPath.documentId(), chunk)
+                                .get()
+                                .await()
+                            snapshot.documents.map { doc -> doc.toDomainOffer(favoriteIds) }
+                        } catch (e: Exception) {
+                            emptyList<Offer>()
+                        }
+                    }
+                }.awaitAll().flatten()
+            }
+
+            val sortedOffers = offers
+                .filter { it.status == OfferStatus.ACTIVE }
+                .sortedByDescending { it.createdAt }
+
+            if (lastCreatedAt == null) {
+                sortedOffers.take(100)
+            } else {
+                sortedOffers
+                    .filter { it.createdAt < lastCreatedAt }
+                    .take(100)
+            }
 
         } catch (e: Exception) {
             throw when (e) {

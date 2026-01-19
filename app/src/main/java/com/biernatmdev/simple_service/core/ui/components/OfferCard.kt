@@ -75,7 +75,7 @@ fun OfferCard(
             modifier = modifier
         ) {
             Icon(
-                imageVector = if(isFavourite) FavouriteFilled else FavouriteOutlined,
+                imageVector = if (isFavourite) FavouriteFilled else FavouriteOutlined,
                 tint = ColorPrimary,
                 contentDescription = "Add to favorites",
                 modifier = Modifier.size(28.dp)
@@ -107,6 +107,7 @@ fun OfferCard(
             modifier = modifier
                 .padding(12.dp),
             horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             if (shouldShowFavouriteInline) {
                 Row(
@@ -148,41 +149,38 @@ fun OfferCard(
                     )
                 )
             }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentAlignment = Alignment.CenterStart
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = if (offer.transactionType == TransactionType.OFFER) painterResource(
+                Icon(
+                    painter = if (offer.transactionType == TransactionType.OFFER){
+                        painterResource(
                             Offering
-                        ) else painterResource(
-                            Requesting
-                        ),
-                        tint = Color.Unspecified,
-                        contentDescription = null,
-                        modifier = Modifier.size(32.dp)
-                    )
-                    Spacer(Modifier.width(16.dp))
-                    Icon(
-                        painter = if (offer.offerType == OfferType.PRODUCT) painterResource(Product) else painterResource(
-                            Service
-                        ),
-                        tint = Color.Unspecified,
-                        contentDescription = null,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
+                        )
+                    } else painterResource(
+                        Requesting
+                    ),
+                    tint = Color.Unspecified,
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp)
+                )
+                Spacer(Modifier.width(16.dp))
+                Icon(
+                    painter = if (offer.offerType == OfferType.PRODUCT){
+                        painterResource(Product)
+                    } else painterResource(
+                        Service
+                    ),
+                    tint = Color.Unspecified,
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp)
+                )
             }
             Text(
-                text = "${offer.price ?: "-"} ${offer.currency} / ${offer.priceUnit.displayName.asString()}",
+                text = "${offer.price ?: "-"} ${offer.currency} /" +
+                        " ${offer.priceUnit.displayName.asString()}",
                 fontSize = REGULAR,
                 lineHeight = LineHeight.REGULAR,
                 color = onColorBackgroundDarker,
