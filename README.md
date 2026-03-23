@@ -10,7 +10,7 @@
 
 Click the image below to watch a short showcase of the app's capabilities on YouTube:
 
-[![Take or Make App Presentation](https://youtu.be/yacjtEgf6FU?si=320oDoP6HVnMz68P)
+[Take or Make App Presentation](https://youtu.be/yacjtEgf6FU?si=320oDoP6HVnMz68P)
 
 ---
 
