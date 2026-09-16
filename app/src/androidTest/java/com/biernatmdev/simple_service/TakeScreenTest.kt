@@ -47,7 +47,6 @@ class TakeScreenTest {
         )
 
         val fakeState = TakeState(
-            isLoading = false,
             displayingOffers = listOf(testOffer),
             offers = listOf(testOffer)
         )

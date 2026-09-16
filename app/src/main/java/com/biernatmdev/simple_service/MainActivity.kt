@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         }
         enableEdgeToEdge()
         setContent {
-            SimpleServiceTheme {
+            SimpleServiceTheme(darkTheme = true) { // Delete 'darkTheme = true' to enable auto light/dark theme
                 val state by mainViewModel.state.collectAsStateWithLifecycle()
                 if (!state.isLoading) {
                     SimpleServiceNavGraph(startDestination = state.startDestination)
