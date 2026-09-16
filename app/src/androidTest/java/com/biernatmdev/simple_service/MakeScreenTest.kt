@@ -45,7 +45,6 @@ class MakeScreenTest {
         )
 
         val fakeState = MakeState(
-            isLoading = false,
             displayingOffers = listOf(testOffer),
             offers = listOf(testOffer)
         )
